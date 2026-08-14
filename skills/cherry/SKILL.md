@@ -1,0 +1,76 @@
+---
+name: cherry
+description: Author, build, verify, theme, and deploy Cherry static sites through the `cherry` CLI, and keep the standalone binary current. Use when an agent needs to create or publish posts, projects, or talks, run builds, fix `cherry check` diagnostics, manage themes and overlay drift, generate deploy workflows, or self-update the binary. Do not use for developing Cherry itself unless the task also requires operating a site.
+---
+
+# Cherry
+
+Use the `cherry` CLI for deterministic, structured control of a Cherry site. Every verb behaves identically under the standalone binary (`cherry VERB`) and mix (`mix cherry.VERB`) — both are thin wrappers around one seam, so pick whichever the environment provides and never assume they differ.
+
+## Start safely
+
+1. Run `cherry version` (or `mix cherry.version`). If neither works, stop and report that Cherry must be installed — `curl -fsSL https://cherrybomb.dev/install.sh | sh` for the binary.
+2. Work from the site root: the directory containing `cherry.exs`. Most commands accept `--source DIR` when running from elsewhere; pass it explicitly in automation rather than relying on the working directory.
+3. Add `--json` to every read and every scripted mutation. Success envelopes are `{"ok":true,"command":VERB,"data":{...}}`; failures are `{"ok":false,"command":VERB,"error":{"code":...,"message":...,"details":{...}}}`. Exit codes: 0 success, 1 the command ran and failed, 2 usage error.
+4. Discover content shapes with `cherry schema posts --json` (or any collection name) instead of guessing frontmatter fields.
+
+## Follow the operating loop
+
+This is the loop the scaffolded site `AGENTS.md` teaches; keep to it:
+
+1. **Author** — `cherry gen.post "Title"` creates a draft; `cherry gen.project` and `cherry gen.talk` scaffold portfolio entries with valid frontmatter. Capture `data.path` from the envelope and edit that file.
+2. **Build** — `cherry build` emits the site to `_site/`. Treat a failing build as the first diagnostic, not an obstacle.
+3. **Verify** — `cherry check --strict --json` builds in memory (writes nothing) and reports structured diagnostics. Fix and re-run until clean; do not ship with warnings suppressed.
+4. **Preview** — `cherry serve` runs until interrupted (live reload, drafts included). In automation, background it or skip it; never let it block the loop.
+5. **Publish** — `cherry publish PATH` turns the draft into a dated post.
+6. **Deploy** — commit and push; the GitHub Actions workflow from `cherry gen.action` builds and deploys Pages. Regenerate the workflow only when deployment shape changes.
+
+Re-run `cherry check` after any content or theme mutation that later steps depend on; a clean earlier run proves nothing about the current tree.
+
+## Read diagnostics structurally
+
+`cherry check --strict --json` failing exits 1 with `error.code == "check_failed"` and `error.details.diagnostics`, a list of `{file, rule, message, severity}`. Fix by rule, not by message text:
+
+- `broken-link` — an internal href resolves to nothing the build emits.
+- `missing-description` / `missing-alt` / `duplicate-title` — SEO and accessibility contract.
+- `feed-missing` / `feed-invalid` — Atom or JSON Feed sanity.
+- `stale-overlay` / `untracked-overlay` — theme drift; go to the theme section below.
+
+Without `--strict`, warnings stay warnings and only errors fail the check.
+
+## Manage themes by provenance
+
+Never hand-copy a theme file — provenance is what keeps upgrades mergeable.
+
+- Inspect with `cherry theme.list` and `cherry theme.which TEMPLATE` (shows the three-level lookup chain and the winner).
+- Take ownership of a template with `cherry theme.eject TEMPLATE`; the copy records provenance.
+- After a Cherry upgrade, run `cherry theme.diff`: `current` needs nothing, `auto_updatable` re-ejects cleanly with `--apply`, `conflict` means both sides moved — merge by hand, then `theme.eject --force`; `untracked` has no provenance — re-eject to adopt it.
+- A whole-theme fork is `cherry gen.theme NAME [--from THEME]`.
+
+## Mutate deliberately
+
+- `gen.post`, `gen.project`, `gen.talk`, and `gen.theme` refuse to overwrite existing files; a refusal means the thing exists — read it instead of forcing.
+- `publish` moves a file; capture `data.from` and `data.to` and update anything referencing the old path.
+- `gen.post` and `publish` accept `--today YYYY-MM-DD` for deterministic dates in tests and reproducible runs.
+- The machine surface is part of the output contract: every route also emits an `index.md` mirror and the site serves `/llms.txt`. Do not treat those files as garbage or delete them from `_site/`.
+
+## Keep the binary current
+
+- `cherry upgrade --check` reports the running version against the latest stable GitHub release; it works under mix too and touches nothing.
+- `cherry upgrade` downloads this platform's asset, verifies it against the release's `SHA256SUMS`, and swaps the executable in place. It refuses on any checksum problem and leaves the current binary untouched.
+- No stable release exists yet? The error says so — pass `--version vX.Y.Z-rc.N` deliberately to track a prerelease.
+- Under mix, upgrading the library is `mix deps.update cherry`, not this command.
+- On Windows the replaced executable lingers as `.old` (locked while running); it is safe to delete later and the next upgrade reuses it.
+
+## Recover from errors
+
+- Exit 2 (`usage`) — the verb or a flag is wrong; consult the reference below rather than retrying variations.
+- `build_failed` — the message names the cause (`no cherry.exs found in ...` means wrong `--source`).
+- `check_failed` — work `details.diagnostics` as above.
+- `no_site` / `theme_invalid` / `no_overlay` — the site or theme context is missing; verify `--source` and `cherry.exs` before touching theme files.
+- `checksum_mismatch` / `checksum_missing` on upgrade — retry once for a torn download; a second failure is a real integrity problem to report, never bypass.
+- Do not retry a refused scaffold with force flags unless the user explicitly wants the overwrite.
+
+## Reference
+
+Read [references/commands.md](references/commands.md) for the complete generated per-verb reference — every verb, flag, and doc text, rendered from the CLI registry itself. It is regenerated by `mix run scripts/regen_skill.exs` and CI fails when it is stale, so treat it as current.
