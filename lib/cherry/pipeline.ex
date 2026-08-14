@@ -14,6 +14,7 @@ defmodule Cherry.Pipeline do
     Stages.Validate,
     Stages.Transform,
     Stages.Layout,
+    Stages.Feeds,
     Stages.Emit
   ]
 

@@ -12,6 +12,7 @@ defmodule Cherry.Pipeline.Stages.Layout do
 
   alias Cherry.Build
   alias Cherry.Content.{Asset, Document, Page}
+  alias Cherry.SEO.Head
   alias Cherry.Site
   alias Cherry.Theme
   alias Cherry.Theme.{Helpers, Renderer}
@@ -56,9 +57,10 @@ defmodule Cherry.Pipeline.Stages.Layout do
   defp render_document(%Document{} = doc, site, theme) do
     template = template_for(doc.collection)
     title = Map.get(doc.meta, :title, site.title)
+    head = Head.for_document(site, doc)
 
     with {:ok, html} <-
-           Renderer.render_in_layout(site, theme, template, [site: site, doc: doc], title) do
+           Renderer.render_in_layout(site, theme, template, [site: site, doc: doc], title, head) do
       {:ok, %Page{source: doc.source, path: doc.path, content: html}}
     end
   end
@@ -74,9 +76,19 @@ defmodule Cherry.Pipeline.Stages.Layout do
   end
 
   defp post_index(posts, site, theme) do
+    path = "blog/index.html"
+    head = Head.for_page(site, "Blog", path)
+
     with {:ok, html} <-
-           Renderer.render_in_layout(site, theme, :post_list, [site: site, posts: posts], "Blog") do
-      {:ok, %Page{source: ":post_list", path: "blog/index.html", content: html}}
+           Renderer.render_in_layout(
+             site,
+             theme,
+             :post_list,
+             [site: site, posts: posts],
+             "Blog",
+             head
+           ) do
+      {:ok, %Page{source: ":post_list", path: path, content: html}}
     end
   end
 
@@ -88,22 +100,21 @@ defmodule Cherry.Pipeline.Stages.Layout do
     |> map_while_ok(fn {slug, tag} ->
       tagged = Enum.filter(posts, fn post -> tag in post.meta.tags end)
       assigns = [site: site, tag: tag, posts: tagged]
+      title = "Tagged: #{tag}"
+      path = Path.join(["blog", "tags", slug, "index.html"])
+      head = Head.for_page(site, title, path)
 
-      with {:ok, html} <-
-             Renderer.render_in_layout(site, theme, :tag, assigns, "Tagged: #{tag}") do
-        {:ok,
-         %Page{
-           source: ":tag",
-           path: Path.join(["blog", "tags", slug, "index.html"]),
-           content: html
-         }}
+      with {:ok, html} <- Renderer.render_in_layout(site, theme, :tag, assigns, title, head) do
+        {:ok, %Page{source: ":tag", path: path, content: html}}
       end
     end)
   end
 
+  # The 404 page gets no SEO head: it serves at arbitrary URLs, so a
+  # canonical link or Open Graph URL would always be wrong.
   defp not_found(%Site{} = site, theme) do
     with {:ok, html} <-
-           Renderer.render_in_layout(site, theme, :not_found, [site: site], "Page not found") do
+           Renderer.render_in_layout(site, theme, :not_found, [site: site], "Page not found", "") do
       {:ok, %Page{source: ":not_found", path: "404.html", content: html}}
     end
   end

@@ -15,11 +15,12 @@ defmodule Cherry.Pipeline.Stages.Validate do
   alias Cherry.Collections
   alias Cherry.Collections.Schema
   alias Cherry.Content.Document
+  alias Cherry.Site
 
   @impl Cherry.Pipeline.Stage
   @spec run(Build.t()) :: {:ok, Build.t()} | {:error, String.t()}
   def run(%Build{} = build) do
-    results = Enum.map(build.documents, &validate_document/1)
+    results = Enum.map(build.documents, &validate_document(&1, build.site))
 
     case Enum.group_by(results, &elem(&1, 0), &elem(&1, 1)) do
       %{error: errors} ->
@@ -38,16 +39,17 @@ defmodule Cherry.Pipeline.Stages.Validate do
     end
   end
 
-  defp validate_document(%Document{raw?: true} = doc), do: {:ok, doc}
+  defp validate_document(%Document{raw?: true} = doc, _site), do: {:ok, doc}
 
-  defp validate_document(%Document{} = doc) do
+  defp validate_document(%Document{} = doc, site) do
     {:ok, collection} = Collections.fetch(doc.collection)
 
     case Schema.validate(doc.meta, collection.schema(), doc.source) do
       {:ok, meta} ->
         validated = %Document{doc | meta: meta}
         path = collection.route(validated)
-        {:ok, %Document{validated | path: path, url: Document.url_for(path)}}
+        url = Site.href(site, Document.rel_url(path))
+        {:ok, %Document{validated | path: path, url: url}}
 
       {:error, message} ->
         {:error, message}

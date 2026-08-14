@@ -21,15 +21,19 @@ defmodule Cherry.Theme.Renderer do
 
   @doc """
   Renders a content template and wraps it in the theme's `layout`.
+
+  `head_extra` is the framework-owned SEO head block (`Cherry.SEO.Head`);
+  the layout interpolates it verbatim inside `<head>`.
   """
-  @spec render_in_layout(Site.t(), Theme.t(), atom(), keyword(), String.t()) ::
+  @spec render_in_layout(Site.t(), Theme.t(), atom(), keyword(), String.t(), String.t()) ::
           {:ok, String.t()} | {:error, String.t()}
-  def render_in_layout(%Site{} = site, %Theme{} = theme, name, assigns, page_title) do
+  def render_in_layout(%Site{} = site, %Theme{} = theme, name, assigns, page_title, head_extra) do
     with {:ok, inner} <- render(site, theme, name, assigns) do
       render(site, theme, :layout,
         site: site,
         inner: inner,
-        page_title: page_title
+        page_title: page_title,
+        head_extra: head_extra
       )
     end
   end

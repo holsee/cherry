@@ -21,6 +21,14 @@ defmodule Cherry.Theme.Helpers do
   @spec format_date(Date.t()) :: String.t()
   def format_date(%Date{} = date), do: Calendar.strftime(date, "%B %-d, %Y")
 
+  @doc """
+  Site-rooted href for an output-relative location — respects `base_path`.
+
+      href(@site, "blog/")  #=> "/blog/" or "/repo/blog/"
+  """
+  @spec href(Cherry.Site.t(), String.t()) :: String.t()
+  defdelegate href(site, rel), to: Cherry.Site
+
   @doc "URL-safe slug for a tag name."
   @spec tag_slug(String.t()) :: String.t()
   def tag_slug(tag) do

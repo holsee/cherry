@@ -29,12 +29,7 @@ defmodule Cherry.Content.Document do
           raw?: boolean()
         }
 
-  @doc "Root-relative URL for an output path: `about/index.html` → `/about/`."
-  @spec url_for(String.t()) :: String.t()
-  def url_for(path) do
-    case String.trim_trailing(path, "index.html") do
-      "" -> "/"
-      trimmed -> "/" <> trimmed
-    end
-  end
+  @doc ~S(Output-relative URL for an output path: `about/index.html` → `about/`.)
+  @spec rel_url(String.t()) :: String.t()
+  def rel_url(path), do: String.trim_trailing(path, "index.html")
 end
