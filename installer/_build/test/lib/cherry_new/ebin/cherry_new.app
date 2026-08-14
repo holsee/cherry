@@ -1,1 +1,0 @@
-{application,cherry_new,[{modules,['Elixir.Mix.Tasks.Cherry.New']},{optional_applications,[]},{applications,[kernel,stdlib,elixir,eex]},{description,[67,104,101,114,114,121,32,112,114,111,106,101,99,116,32,103,101,110,101,114,97,116,111,114,32,8212,32,109,105,120,32,99,104,101,114,114,121,46,110,101,119,32,80,65,84,72]},{registered,[]},{vsn,"0.1.0-dev"}]}.
