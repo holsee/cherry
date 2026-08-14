@@ -8,7 +8,10 @@ defmodule Cherry.CLI.Registry do
 
   @commands %{
     "build" => Cherry.Commands.Build,
+    "gen.post" => Cherry.Commands.GenPost,
+    "publish" => Cherry.Commands.Publish,
     "schema" => Cherry.Commands.Schema,
+    "serve" => Cherry.Commands.Serve,
     "theme.eject" => Cherry.Commands.ThemeEject,
     "theme.list" => Cherry.Commands.ThemeList,
     "theme.which" => Cherry.Commands.ThemeWhich,
