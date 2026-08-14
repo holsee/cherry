@@ -63,7 +63,7 @@ defmodule Cherry.MixProject do
   # PLTs live in priv/plts (gitignored) so local runs and CI can cache them.
   defp dialyzer do
     [
-      plt_add_apps: [:mix, :ex_unit],
+      plt_add_apps: [:mix, :ex_unit, :eex],
       plt_local_path: "priv/plts",
       plt_core_path: "priv/plts"
     ]
@@ -94,7 +94,7 @@ defmodule Cherry.MixProject do
         "GitHub" => @source_url,
         "Site" => "https://cherrybomb.dev"
       },
-      files: ~w(lib mix.exs README.md LICENSE-MIT LICENSE-APACHE CHANGELOG.md)
+      files: ~w(lib priv mix.exs README.md LICENSE-MIT LICENSE-APACHE CHANGELOG.md)
     ]
   end
 end

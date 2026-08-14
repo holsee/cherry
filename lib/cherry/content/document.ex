@@ -15,6 +15,7 @@ defmodule Cherry.Content.Document do
             body: "",
             html: nil,
             path: nil,
+            url: nil,
             raw?: false
 
   @type t :: %__MODULE__{
@@ -24,6 +25,16 @@ defmodule Cherry.Content.Document do
           body: String.t(),
           html: String.t() | nil,
           path: String.t() | nil,
+          url: String.t() | nil,
           raw?: boolean()
         }
+
+  @doc "Root-relative URL for an output path: `about/index.html` → `/about/`."
+  @spec url_for(String.t()) :: String.t()
+  def url_for(path) do
+    case String.trim_trailing(path, "index.html") do
+      "" -> "/"
+      trimmed -> "/" <> trimmed
+    end
+  end
 end

@@ -1,0 +1,16 @@
+<% import Cherry.Theme.Helpers %><!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title><%= h(@page_title) %> · <%= h(@site.title) %></title>
+</head>
+<body>
+<header>
+<nav><a href="/"><%= h(@site.title) %></a> · <a href="/blog/">Blog</a></nav>
+</header>
+<main>
+<%= @inner %>
+</main>
+</body>
+</html>

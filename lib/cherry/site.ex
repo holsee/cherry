@@ -25,16 +25,22 @@ defmodule Cherry.Site do
               type: :string,
               default: "/",
               doc: "Base path when hosted under a subpath (GitHub project pages)."
+            ],
+            theme: [
+              type: :string,
+              default: "default",
+              doc: "\"default\" for the built-in theme, or a theme directory."
             ]
           )
 
   @enforce_keys [:title, :url, :base_path, :root, :output]
-  defstruct [:title, :url, :base_path, :root, :output]
+  defstruct [:title, :url, :base_path, :theme, :root, :output]
 
   @type t :: %__MODULE__{
           title: String.t(),
           url: String.t(),
           base_path: String.t(),
+          theme: String.t(),
           root: Path.t(),
           output: Path.t()
         }
@@ -69,6 +75,7 @@ defmodule Cherry.Site do
            title: validated[:title],
            url: validated[:url],
            base_path: validated[:base_path],
+           theme: validated[:theme],
            root: root,
            output: Keyword.get(opts, :output, Path.join(root, "_site"))
          }}
