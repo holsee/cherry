@@ -34,6 +34,12 @@ jobs:
           key: ${{ runner.os }}-mix-${{ hashFiles('mix.lock') }}
           restore-keys: ${{ runner.os }}-mix-
 
+      - uses: actions/cache@v4
+        with:
+          path: priv/plts
+          key: ${{ runner.os }}-plts-${{ hashFiles('mix.lock') }}
+          restore-keys: ${{ runner.os }}-plts-
+
       # Setup only below; the one and only quality gate is `mix precommit`.
       - run: mix deps.get
       - run: npm ci

@@ -44,13 +44,22 @@ that alias and nothing else — never a hand-copied list of steps in the workflo
 (Lesson inherited from tikichi F-0003: five stale copies of the gate list is how a
 green run lies.)
 
-The alias grows with the project; target contents:
+`mix ci` is an alias for `mix precommit` — run it locally for confidence and rapid
+feedback *before* pushing; GitHub CI should only ever confirm what you already saw.
+The alias grows with the project; current contents:
 
 1. `compile --warnings-as-errors`
 2. `format --check-formatted`
-3. `credo --strict`
-4. `test` (includes golden-fixture tests)
-5. Determinism gate: build a fixture site twice → the two `_site/` trees must be
+3. `credo --strict` — config in `.credo.exs`; `Readability.Specs` is enforced
+   (every public function carries a `@spec`). When a house standard needs
+   mechanical enforcement, write a custom check in `checks/` and require it
+   from `.credo.exs` rather than relying on review.
+4. `dialyzer` (dialyxir) — proves the specs; PLTs cached in `priv/plts`
+   (gitignored, cached in CI keyed on mix.lock)
+5. TS check (`npm run check` → `tsc --noEmit`, run via the OS shell — OTP can't
+   spawn `npm.cmd` directly on Windows)
+6. `test` (includes golden-fixture tests)
+7. Determinism gate: build a fixture site twice → the two `_site/` trees must be
    byte-identical (this is a test, not a script)
 
 CI matrix: **ubuntu + windows** from the first workflow. Cherry is developed on
@@ -93,6 +102,11 @@ Windows; path bugs are first-party bugs.
 
 - **Simple and clear beats clever.** Prefer the obvious implementation; reach for
   abstraction only when the third caller shows up.
+- **Well-typed Elixir.** Domain data rides in named structs (`%Site{}`, `%Post{}`,
+  `%Theme{}`), never loose maps; every struct has `@type t`; every public function
+  has a `@spec` (credo enforces, dialyzer proves). Modules are organised by domain
+  with a small number of high-level entry modules; developer aesthetics matter —
+  the module tree should read like the architecture.
 - **Comments are for what the code can't say**: constraints, invariants, "why not the
   obvious way." Never narrate what the next line does; just enough to ensure clarity,
   no more.
