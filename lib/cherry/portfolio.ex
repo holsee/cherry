@@ -90,4 +90,29 @@ defmodule Cherry.Portfolio do
   def entry_document?(%Document{collection: collection}) do
     Map.has_key?(@entry_modules, collection)
   end
+
+  @doc "Every tag used by any portfolio entry, sorted."
+  @spec tags(t()) :: [String.t()]
+  def tags(%__MODULE__{} = portfolio) do
+    portfolio
+    |> entries()
+    |> Enum.flat_map(& &1.tags)
+    |> Enum.uniq()
+    |> Enum.sort()
+  end
+
+  @doc "The portfolio narrowed to entries carrying one tag."
+  @spec filter_by_tag(t(), String.t()) :: t()
+  def filter_by_tag(%__MODULE__{} = portfolio, tag) do
+    tagged = fn entries -> Enum.filter(entries, &(tag in &1.tags)) end
+
+    %__MODULE__{
+      profile: portfolio.profile,
+      positions: tagged.(portfolio.positions),
+      projects: tagged.(portfolio.projects),
+      talks: tagged.(portfolio.talks),
+      oss: tagged.(portfolio.oss),
+      education: tagged.(portfolio.education)
+    }
+  end
 end

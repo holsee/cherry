@@ -6,7 +6,7 @@ defmodule Cherry.Theme.Renderer do
 
   alias Cherry.Site
   alias Cherry.Theme
-  alias Cherry.Theme.Resolver
+  alias Cherry.Theme.{RenderContext, Resolver}
 
   @doc """
   Renders a named template through the lookup chain with the given assigns.
@@ -22,18 +22,20 @@ defmodule Cherry.Theme.Renderer do
   @doc """
   Renders a content template and wraps it in the theme's `layout`.
 
-  `head_extra` is the framework-owned SEO head block (`Cherry.SEO.Head`);
-  the layout interpolates it verbatim inside `<head>`.
+  The context carries the layout's own assigns: page title, the
+  framework-owned SEO head block (`Cherry.SEO.Head`, interpolated
+  verbatim inside `<head>`), and the navigation.
   """
-  @spec render_in_layout(Site.t(), Theme.t(), atom(), keyword(), String.t(), String.t()) ::
+  @spec render_in_layout(RenderContext.t(), atom(), keyword()) ::
           {:ok, String.t()} | {:error, String.t()}
-  def render_in_layout(%Site{} = site, %Theme{} = theme, name, assigns, page_title, head_extra) do
+  def render_in_layout(%RenderContext{site: site, theme: theme} = context, name, assigns) do
     with {:ok, inner} <- render(site, theme, name, assigns) do
       render(site, theme, :layout,
         site: site,
         inner: inner,
-        page_title: page_title,
-        head_extra: head_extra
+        page_title: context.page_title,
+        head_extra: context.head_extra,
+        nav: context.nav
       )
     end
   end

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+<title>Folio</title>
+<subtitle>A developer story grown for Cherry's golden harness.</subtitle>
+<link href="https://folio.example/"/>
+<link rel="self" href="https://folio.example/feed.xml"/>
+<id>https://folio.example/</id>
+<updated>2026-01-10T00:00:00Z</updated>
+<author><name>Folio</name></author>
+<entry>
+<title>Pruning processes</title>
+<link href="https://folio.example/pruning-processes/"/>
+<id>https://folio.example/pruning-processes/</id>
+<published>2026-01-10T00:00:00Z</published>
+<updated>2026-01-10T00:00:00Z</updated>
+<summary>Supervision trees are orchards.</summary>
+<content type="html">&lt;p&gt;Prune early, prune often.&lt;/p&gt;</content>
+</entry>
+</feed>

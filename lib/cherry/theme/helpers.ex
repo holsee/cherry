@@ -21,6 +21,20 @@ defmodule Cherry.Theme.Helpers do
   @spec format_date(Date.t()) :: String.t()
   def format_date(%Date{} = date), do: Calendar.strftime(date, "%B %-d, %Y")
 
+  @doc "Formats a month for display, e.g. `Apr 2015`."
+  @spec format_month(Date.t()) :: String.t()
+  def format_month(%Date{} = date), do: Calendar.strftime(date, "%b %Y")
+
+  @doc ~S(A date span: `Jan 2020 — present`, `Jan 2020 — May 2022`, or `""`.)
+  @spec format_range(Date.t() | nil, Date.t() | nil) :: String.t()
+  def format_range(nil, nil), do: ""
+  def format_range(nil, %Date{} = ended), do: format_month(ended)
+  def format_range(%Date{} = started, nil), do: format_month(started) <> " — present"
+
+  def format_range(%Date{} = started, %Date{} = ended) do
+    format_month(started) <> " — " <> format_month(ended)
+  end
+
   @doc """
   Site-rooted href for an output-relative location — respects `base_path`.
 
