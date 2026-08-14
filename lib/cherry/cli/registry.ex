@@ -12,6 +12,7 @@ defmodule Cherry.CLI.Registry do
     "gen.post" => Cherry.Commands.GenPost,
     "gen.project" => Cherry.Commands.GenProject,
     "gen.talk" => Cherry.Commands.GenTalk,
+    "gen.theme" => Cherry.Commands.GenTheme,
     "publish" => Cherry.Commands.Publish,
     "schema" => Cherry.Commands.Schema,
     "serve" => Cherry.Commands.Serve,

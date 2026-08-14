@@ -50,21 +50,43 @@ defmodule Cherry.Theme do
 
   @doc "The directory of the built-in default theme."
   @spec default_root() :: Path.t()
-  def default_root do
-    :cherry |> :code.priv_dir() |> Path.join("themes/default")
+  def default_root, do: builtin_root("default")
+
+  @doc "The directory a built-in theme of this name would live in."
+  @spec builtin_root(String.t()) :: Path.t()
+  def builtin_root(name) do
+    :cherry |> :code.priv_dir() |> Path.join("themes/#{name}")
+  end
+
+  @doc "Names of the official themes shipped in Cherry's priv/, sorted."
+  @spec builtin_names() :: [String.t()]
+  def builtin_names do
+    themes = :cherry |> :code.priv_dir() |> Path.join("themes")
+
+    case File.ls(themes) do
+      {:ok, names} -> names |> Enum.filter(&File.dir?(Path.join(themes, &1))) |> Enum.sort()
+      {:error, _} -> []
+    end
   end
 
   @doc """
   Resolves and loads the active theme for a site.
 
-  `theme: "default"` loads the built-in; any other value is a directory
-  (relative to the site root) containing a `theme.exs`.
+  A bare name matching an official theme (`"default"`, `"cherrybomb"`)
+  loads the built-in; any other value is a directory (relative to the
+  site root) containing a `theme.exs`.
   """
   @spec load_active(Site.t()) :: {:ok, t()} | {:error, String.t()}
-  def load_active(%Site{theme: "default"}), do: load(default_root())
-
   def load_active(%Site{theme: theme, root: root}) do
-    load(Path.expand(theme, root))
+    if bare_name?(theme) and File.dir?(builtin_root(theme)) do
+      load(builtin_root(theme))
+    else
+      load(Path.expand(theme, root))
+    end
+  end
+
+  defp bare_name?(theme) do
+    not String.contains?(theme, ["/", "\\", "."])
   end
 
   @doc "Loads and conformance-checks a theme directory."
