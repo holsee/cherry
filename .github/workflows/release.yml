@@ -95,6 +95,20 @@ jobs:
         if: runner.os == 'macOS'
         run: brew install xz
 
+      # Burrito always builds Linux targets against musl, but it only
+      # recompiles elixir_make NIFs — rustler_precompiled ones (mdex,
+      # lumis) would ship as glibc and fail to load. These Nerves-style
+      # vars make rustler_precompiled fetch the musl artifacts instead.
+      - name: force musl NIFs (Linux)
+        if: runner.os == 'Linux'
+        run: |
+          {
+            echo "TARGET_OS=linux"
+            echo "TARGET_ABI=musl"
+            echo "TARGET_VENDOR=unknown"
+            echo "TARGET_ARCH=$(uname -m)"
+          } >> "$GITHUB_ENV"
+
       - name: build the binary
         shell: bash
         run: |

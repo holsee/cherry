@@ -11,14 +11,15 @@ defmodule Cherry.Binary do
 
   use Application
 
+  # Deliberately synchronous: after boot, Burrito's wrapper hands the
+  # plain arguments to `elixir start_cli`, whose Kernel.CLI would try
+  # to run them as a script file. Running the command inside start/2
+  # and halting first means that code path is never reached (this is
+  # Burrito's documented entrypoint pattern).
+  @dialyzer {:nowarn_function, start: 2}
   @impl Application
-  @spec start(Application.start_type(), term()) :: {:ok, pid()}
+  @spec start(Application.start_type(), term()) :: no_return()
   def start(_type, _args) do
-    Task.start(&run_and_halt/0)
-  end
-
-  @spec run_and_halt() :: no_return()
-  defp run_and_halt do
     code = Cherry.CLI.run(binary_argv())
     System.halt(code)
   end
