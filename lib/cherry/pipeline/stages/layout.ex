@@ -29,7 +29,9 @@ defmodule Cherry.Pipeline.Stages.Layout do
 
   # The theme's static files (CSS, compiled islands) ship under /assets/.
   defp theme_assets(theme) do
-    base = Path.join(theme.root, "assets")
+    # Path.wildcard/1 treats backslashes as escape characters, so a Windows
+    # theme root silently matches nothing.
+    base = theme.root |> Path.join("assets") |> String.replace("\\", "/")
 
     base
     |> Path.join("**")
