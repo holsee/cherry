@@ -9,3 +9,4 @@
 /priv/plts/
 erl_crash.dump
 cherry-*.tar
+/tmp/

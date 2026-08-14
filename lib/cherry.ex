@@ -21,4 +21,20 @@ defmodule Cherry do
   def version do
     :cherry |> Application.spec(:vsn) |> to_string()
   end
+
+  @doc """
+  Builds a site: loads `cherry.exs` from `:source` and runs the pipeline.
+
+  Options: `:source` (site root, required), `:output` (defaults to
+  `source/_site`).
+  """
+  @spec build(keyword()) :: {:ok, Cherry.Build.t()} | {:error, String.t()}
+  def build(opts) do
+    source = Keyword.fetch!(opts, :source)
+    output = Keyword.get(opts, :output, Path.join(source, "_site"))
+
+    with {:ok, site} <- Cherry.Site.load(source, output: output) do
+      Cherry.Pipeline.run(Cherry.Build.new(site), Cherry.Pipeline.default_stages())
+    end
+  end
 end

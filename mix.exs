@@ -10,6 +10,8 @@ defmodule Cherry.MixProject do
       version: @version,
       elixir: "~> 1.18",
       start_permanent: Mix.env() == :prod,
+      elixirc_paths: elixirc_paths(Mix.env()),
+      test_ignore_filters: [&String.starts_with?(&1, "test/fixtures/")],
       description: "A static site generator for hackers — a modern take on Octopress.",
       package: package(),
       deps: deps(),
@@ -27,8 +29,12 @@ defmodule Cherry.MixProject do
     [preferred_envs: [ci: :test, precommit: :test]]
   end
 
+  defp elixirc_paths(:test), do: ["lib", "test/support"]
+  defp elixirc_paths(_env), do: ["lib"]
+
   defp deps do
     [
+      {:nimble_options, "~> 1.1"},
       {:credo, "~> 1.7", only: [:dev, :test], runtime: false},
       {:dialyxir, "~> 1.4", only: [:dev, :test], runtime: false},
       {:ex_doc, "~> 0.34", only: :dev, runtime: false},
@@ -55,7 +61,7 @@ defmodule Cherry.MixProject do
   # PLTs live in priv/plts (gitignored) so local runs and CI can cache them.
   defp dialyzer do
     [
-      plt_add_apps: [:mix],
+      plt_add_apps: [:mix, :ex_unit],
       plt_local_path: "priv/plts",
       plt_core_path: "priv/plts"
     ]
