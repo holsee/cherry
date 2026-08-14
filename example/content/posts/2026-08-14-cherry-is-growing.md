@@ -13,7 +13,7 @@ A Cherry site is a directory with a config and some markdown:
 ```elixir
 # cherry.exs
 [
-  title: "Cherrybomb",
+  title: "CherryBomb",
   url: "https://cherrybomb.dev",
   description: "Cherry is a static site generator for hackers."
 ]

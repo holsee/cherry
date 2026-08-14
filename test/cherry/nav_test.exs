@@ -27,6 +27,25 @@ defmodule Cherry.NavTest do
     assert page(build, "blog/index.html") =~ "Guides"
   end
 
+  test "position: :start places an entry before the built-ins", %{tmp_dir: tmp} do
+    source =
+      fixture(
+        tmp,
+        ~s|, nav: [[label: "Guides", href: "guides/", position: :start], | <>
+          ~s|[label: "Source", href: "https://github.com/holsee/cherry"]]|
+      )
+
+    {:ok, build} = Cherry.build(source: source, output: Path.join(tmp, "out"), today: @today)
+
+    html = page(build, "hello-world/index.html")
+    guides_at = :binary.match(html, ~s(<a href="/guides/">Guides</a>)) |> elem(0)
+    blog_at = :binary.match(html, ~s(<a href="/blog/">Blog</a>)) |> elem(0)
+    source_at = :binary.match(html, ">Source</a>") |> elem(0)
+
+    assert guides_at < blog_at
+    assert blog_at < source_at
+  end
+
   test "site-relative hrefs pick up base_path; absolute pass verbatim", %{tmp_dir: tmp} do
     source =
       fixture(

@@ -27,6 +27,7 @@ defmodule Cherry.ExampleTest do
           "sitemap.xml",
           "robots.txt",
           "assets/site.css",
+          "assets/copy-code.js",
           # The brand surface: icons by convention, social card, hero art,
           # and the theme-shipped nav mark.
           "favicon.ico",
@@ -48,6 +49,16 @@ defmodule Cherry.ExampleTest do
     assert index =~ ~s(<meta name="twitter:card" content="summary_large_image">)
     assert index =~ ~s(<body class="page-home">)
     assert index =~ ~s(>Guides</a>)
+
+    # Guides leads the nav (position: :start), before the Blog built-in.
+    guides_at = :binary.match(index, ~s(>Guides</a>)) |> elem(0)
+    blog_at = :binary.match(index, ~s(>Blog</a>)) |> elem(0)
+    assert guides_at < blog_at
+
+    # The landing pitch: the top-ten checklist and the portfolio/CV story.
+    assert index =~ ~s(class="checks")
+    assert index =~ "AI-agent-friendly CLI"
+    assert index =~ "JSON Resume"
 
     # The real installers (ADR 0007): resolve latest stable, verify checksums.
     install = File.read!(Path.join(out, "install.sh"))

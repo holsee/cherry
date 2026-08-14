@@ -17,7 +17,7 @@
 
 ---
 
-Cherrybomb is a modern take on [Octopress](http://octopress.org): your site is a repo,
+CherryBomb is a modern take on [Octopress](http://octopress.org): your site is a repo,
 publishing is a task, everything is hackable — without the part where upgrading the
 framework ruins your week. The engine is Elixir, the CLI is `cherry`, and the output
 is plain HTML you can host anywhere.
@@ -105,6 +105,6 @@ itself.
 Dual-licensed under [MIT](LICENSE-MIT) or [Apache 2.0](LICENSE-APACHE) — your choice.
 Contributions are accepted under the same dual license.
 
-The Cherrybomb brand assets (logo, mascot, wordmark, and their derivatives such
+The CherryBomb brand assets (logo, mascot, wordmark, and their derivatives such
 as the favicon and og-card) are **not** covered by either license — they may not
 be reused as your own branding. See [assets/LICENSE](assets/LICENSE).

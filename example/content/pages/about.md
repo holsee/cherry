@@ -16,4 +16,4 @@ cherrybomb.dev is built by Cherry from the [example/ directory of Cherry's own r
 
 Cherry ships as a [single binary](/guides/quick-start/) for macOS, Linux, and Windows, with checksum-verified installs, provenance-attested releases, and [self-updating](/guides/upgrade/). Elixir developers can use it as a library instead; the verbs are identical by construction.
 
-Cherry's code is dual-licensed under MIT or Apache 2.0. The Cherrybomb artwork (the mascot, logo, and icons on this site) is copyright holsee, all rights reserved, and isn't covered by either license; see [the brand assets license](https://github.com/holsee/cherry/blob/develop/assets/LICENSE) before reusing it.
+Cherry's code is dual-licensed under MIT or Apache 2.0. The CherryBomb artwork (the mascot, logo, and icons on this site) is copyright holsee, all rights reserved, and isn't covered by either license; see [the brand assets license](https://github.com/holsee/cherry/blob/develop/assets/LICENSE) before reusing it.

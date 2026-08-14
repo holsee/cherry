@@ -20,7 +20,8 @@ defmodule Cherry.BuildTest do
       # + blog index.md mirror + llms.txt (raw pages get no mirrors)
       # + feed.json.
       assert length(build.pages) == 10
-      assert length(build.assets) == 3
+      # site.css + theme-toggle.js + copy-code.js + static file.
+      assert length(build.assets) == 4
 
       assert_trees_equal(@golden, out)
     end

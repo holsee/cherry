@@ -57,12 +57,14 @@ defmodule Cherry.Site do
                  {:keyword_list,
                   [
                     label: [type: :string, required: true],
-                    href: [type: :string, required: true]
+                    href: [type: :string, required: true],
+                    position: [type: {:in, [:start, :end]}, default: :end]
                   ]}},
               default: [],
               doc:
-                "Extra nav entries, appended after the built-ins (Blog, then " <>
-                  "Portfolio/CV when present). `href` is site-relative " <>
+                "Extra nav entries. `position: :end` (the default) appends an entry " <>
+                  "after the built-ins (Blog, then Portfolio/CV when present); " <>
+                  "`position: :start` places it before them. `href` is site-relative " <>
                   "(\"guides/\" — base_path is applied) or absolute (http…), passed verbatim."
             ]
           )
@@ -85,7 +87,7 @@ defmodule Cherry.Site do
     icons: %Icons{}
   ]
 
-  @type nav_entry :: %{label: String.t(), href: String.t()}
+  @type nav_entry :: %{label: String.t(), href: String.t(), position: :start | :end}
 
   @type t :: %__MODULE__{
           title: String.t(),
