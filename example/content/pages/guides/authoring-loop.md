@@ -1,6 +1,6 @@
 ---
 title: The authoring loop
-description: gen.post to publish — drafts, live preview, re-dating, and the markdown mirror every route ships.
+description: gen.post to publish. Drafts, live preview, re-dating, and the markdown mirror every route ships.
 ---
 # The authoring loop
 
@@ -37,7 +37,7 @@ description:
 ```
 
 > [!NOTE]
-> `data.path` is source-relative. Every later command that takes a path — `publish` included — wants it exactly in that form, so you can pipe one envelope straight into the next command untouched.
+> `data.path` is source-relative. Every later command that takes a path, `publish` included, wants it exactly in that form, so you can pipe one envelope straight into the next command untouched.
 
 ## Write with the server running
 
@@ -49,7 +49,7 @@ Drafts are included in serve mode and every save reloads the browser. Real build
 
 ## Publish
 
-Publishing flips the draft flag off and re-dates the post to today — filename, frontmatter, and URL all move together:
+Publishing flips the draft flag off and re-dates the post to today. Filename, frontmatter, and URL all move together:
 
 ```sh
 cherry publish content/posts/2026-08-10-growing-season.md --json
@@ -74,8 +74,8 @@ cherry publish content/posts/2026-08-10-growing-season.md --json
 
 One markdown file fans out into the built site as:
 
-- `growing-season/index.html` — the themed page
-- `growing-season/index.md` — a markdown mirror of the same content, curl-able with no theme wrapping
+- `growing-season/index.html`: the themed page
+- `growing-season/index.md`: a markdown mirror of the same content, curl-able with no theme wrapping
 - an entry in `feed.xml`, `feed.json`, `sitemap.xml`, and the blog index
 - a tag page per tag, with JSON-LD structured data in the post's head
 

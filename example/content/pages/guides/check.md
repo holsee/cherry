@@ -1,10 +1,10 @@
 ---
 title: The verifier
-description: cherry check builds the site in memory and returns structured diagnostics — the build, check, fix loop.
+description: cherry check builds the site in memory and returns structured diagnostics. The build, check, fix loop.
 ---
 # The verifier
 
-`cherry check` builds the whole site in memory — it writes nothing — and runs every rule against the result. It's the difference between "the build passed" and "the site is right."
+`cherry check` builds the whole site in memory, writes nothing, and runs every rule against the result. It's the difference between "the build passed" and "the site is right."
 
 ## A worked failure
 
@@ -58,18 +58,18 @@ Everything needed to fix it is in the diagnostic: the **file**, the **rule**, an
 
 | Rule | Catches | Severity |
 |---|---|---|
-| `broken-link` | internal hrefs the build doesn't emit — including nav links | error |
+| `broken-link` | internal hrefs the build doesn't emit, nav links included | error |
 | `missing-description` | posts and pages without a `description:` (SEO contract) | warning |
 | `missing-alt` | images without alt text | warning |
 | `duplicate-title` | two pages claiming the same title | warning |
 | `feed-missing` / `feed-invalid` | Atom or JSON Feed absent or malformed | error |
-| `stale-overlay` / `untracked-overlay` | theme drift — see [themes](/guides/themes/) | warning |
+| `stale-overlay` / `untracked-overlay` | theme drift (see [themes](/guides/themes/)) | warning |
 
-`--strict` promotes warnings to errors — use it in CI so nothing rots quietly. This site runs `check --strict` on every commit.
+`--strict` promotes warnings to errors; use it in CI so nothing rots quietly. This site runs `check --strict` on every commit.
 
 > [!TIP]
 > `check` accepts `--drafts` and `--future` too, so you can verify work-in-progress exactly as `serve` shows it.
 
 ## Where it fits
 
-Run it after every meaningful edit, not just before deploys — it's fast, it writes nothing, and the loop is the point: **build → check → fix → repeat** until exit 0, then ship. The [scripting guide](/guides/agents/) shows the same loop driven entirely through envelopes.
+Run it after every meaningful edit, not just before deploys. It's fast, it writes nothing, and the loop is the point: **build, check, fix, repeat** until exit 0, then ship. The [scripting guide](/guides/agents/) shows the same loop driven entirely through envelopes.
