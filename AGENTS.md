@@ -74,9 +74,11 @@ Windows; path bugs are first-party bugs.
 
 - **Vertical slices**: every DO_NEXT item is one agent-session-sized slice that
   ships something visible (task + test + doc), never a horizontal layer.
-- **Gitflow**: `main` holds releases; work merges to `develop` via short-lived
-  `feature/*` branches (plus `release/*` / `hotfix/*` when the time comes). PRs small
-  enough to review in one sitting. Conventional commits (`feat:`, `fix:`, `docs:`, …).
+- **Gitflow**: `main` holds tagged releases; work merges to `develop` via short-lived
+  `feature/*` branches (plus `release/*` / `hotfix/*` when the time comes). `develop`
+  is the GitHub default branch, so PRs target it automatically — never open a PR
+  against `main` except a release merge-down. PRs small enough to review in one
+  sitting. Conventional commits (`feat:`, `fix:`, `docs:`, …).
 - **ADR discipline**: new irreversible decision, or deviation from DESIGN.md →
   short ADR (Context / Decision / Consequences) in `docs/adr/`, numbered, filed in
   the same PR as the change.
