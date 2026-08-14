@@ -43,4 +43,20 @@ defmodule Cherry do
       Pipeline.run(Build.new(site, options), Pipeline.default_stages())
     end
   end
+
+  @doc """
+  Verifies a site: builds it in memory (nothing is written) and runs
+  every `Cherry.Check` rule against the result.
+  """
+  @spec check(keyword()) :: {:ok, Build.t(), [Cherry.Check.Diagnostic.t()]} | {:error, String.t()}
+  def check(opts) do
+    source = Keyword.fetch!(opts, :source)
+    options = Build.Options.new(opts)
+    stages = Pipeline.default_stages() -- [Pipeline.Stages.Emit]
+
+    with {:ok, site} <- Site.load(source),
+         {:ok, build} <- Pipeline.run(Build.new(site, options), stages) do
+      {:ok, build, Cherry.Check.run(build)}
+    end
+  end
 end
