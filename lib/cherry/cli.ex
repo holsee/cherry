@@ -82,7 +82,12 @@ defmodule Cherry.CLI do
 
   defp render_error(%Error{} = error, verb, json?: json?) do
     if json? do
-      envelope = %{ok: false, command: verb, error: %{code: error.code, message: error.message}}
+      envelope = %{
+        ok: false,
+        command: verb,
+        error: %{code: error.code, message: error.message, details: error.details}
+      }
+
       IO.puts(JSON.encode!(envelope))
     else
       IO.puts(:stderr, "error: #{error.message}")

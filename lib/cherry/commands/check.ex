@@ -73,7 +73,12 @@ defmodule Cherry.Commands.Check do
     }
 
     if errors > 0 do
-      {:error, %Error{code: :check_failed, message: IO.iodata_to_binary(human(data))}}
+      {:error,
+       %Error{
+         code: :check_failed,
+         message: IO.iodata_to_binary(human(data)),
+         details: data
+       }}
     else
       {:ok, data}
     end
