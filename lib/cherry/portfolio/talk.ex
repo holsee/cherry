@@ -2,7 +2,7 @@ defmodule Cherry.Portfolio.Talk do
   @moduledoc "A talk given at an event, with the recording and slides."
 
   alias Cherry.Content.Document
-  alias Cherry.Portfolio.CV
+  alias Cherry.Portfolio.Curation
 
   @enforce_keys [:slug, :title, :event, :date]
   defstruct [:slug, :title, :event, :date, :video, :slides, :cv, :html, tags: [], highlights: []]
@@ -16,7 +16,7 @@ defmodule Cherry.Portfolio.Talk do
           slides: String.t() | nil,
           tags: [String.t()],
           highlights: [String.t()],
-          cv: CV.t() | nil,
+          cv: Curation.t() | nil,
           html: String.t() | nil
         }
 

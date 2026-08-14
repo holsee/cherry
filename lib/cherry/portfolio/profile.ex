@@ -26,11 +26,24 @@ defmodule Cherry.Portfolio.Profile do
     updated: [
       type: {:custom, Types, :validate_date, []},
       doc: "Explicit freshness date; defaults to the newest portfolio entry."
+    ],
+    cv: [
+      type: {:custom, Cherry.CV.Settings, :validate, []},
+      doc: "CV publication settings: `{visibility: public | unlisted | off}`."
     ]
   ]
 
   @enforce_keys [:name]
-  defstruct [:name, :headline, :location, :avatar, :email, :updated, links: []]
+  defstruct [
+    :name,
+    :headline,
+    :location,
+    :avatar,
+    :email,
+    :updated,
+    links: [],
+    cv: %Cherry.CV.Settings{}
+  ]
 
   @type t :: %__MODULE__{
           name: String.t(),
@@ -39,7 +52,8 @@ defmodule Cherry.Portfolio.Profile do
           links: [Cherry.Portfolio.Link.t()],
           avatar: String.t() | nil,
           email: String.t() | nil,
-          updated: Date.t() | nil
+          updated: Date.t() | nil,
+          cv: Cherry.CV.Settings.t()
         }
 
   @doc "The profile schema, for introspection and docs."

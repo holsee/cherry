@@ -43,6 +43,15 @@ defmodule Cherry.Theme.Helpers do
   @spec href(Cherry.Site.t(), String.t()) :: String.t()
   defdelegate href(site, rel), to: Cherry.Site
 
+  @doc """
+  The CV bullets for an entry: the `cv:` block's curated highlights win
+  over the timeline ones (curation, not duplication — DESIGN.md §4).
+  """
+  @spec cv_highlights(%{cv: Cherry.Portfolio.Curation.t() | nil, highlights: [String.t()]}) ::
+          [String.t()]
+  def cv_highlights(%{cv: %Cherry.Portfolio.Curation{highlights: [_ | _] = curated}}), do: curated
+  def cv_highlights(%{highlights: highlights}), do: highlights
+
   @doc "URL-safe slug for a tag name."
   @spec tag_slug(String.t()) :: String.t()
   def tag_slug(tag) do

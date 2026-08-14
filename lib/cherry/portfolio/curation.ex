@@ -1,4 +1,4 @@
-defmodule Cherry.Portfolio.CV do
+defmodule Cherry.Portfolio.Curation do
   @moduledoc """
   The `cv:` curation block on a portfolio entry (DESIGN.md §4): whether
   the entry appears on the CV, how prominently, and with which punchy

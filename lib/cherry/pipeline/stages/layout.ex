@@ -14,6 +14,8 @@ defmodule Cherry.Pipeline.Stages.Layout do
 
   alias Cherry.Build
   alias Cherry.Content.{Asset, Document, Page}
+  alias Cherry.CV
+  alias Cherry.CV.JsonResume
   alias Cherry.Portfolio
   alias Cherry.SEO.{Head, Person}
   alias Cherry.Site
@@ -24,27 +26,36 @@ defmodule Cherry.Pipeline.Stages.Layout do
   @spec run(Build.t()) :: {:ok, Build.t()} | {:error, String.t()}
   def run(%Build{site: site} = build) do
     portfolio = Portfolio.from_build(build)
+    cv = if Portfolio.present?(portfolio), do: CV.project(portfolio, build.options.today)
 
     with {:ok, theme} <- Theme.load_active(site),
-         context = base_context(site, theme, portfolio),
+         context = base_context(site, theme, portfolio, cv),
          {:ok, content_pages} <- render_documents(build.documents, context),
-         {:ok, synthetic} <- synthetic_pages(build.documents, portfolio, context) do
+         {:ok, synthetic} <- synthetic_pages(build.documents, portfolio, cv, context) do
       assets = build.assets ++ theme_assets(theme)
       {:ok, %Build{build | pages: content_pages ++ synthetic, assets: assets}}
     end
   end
 
-  defp base_context(site, theme, portfolio) do
+  defp base_context(site, theme, portfolio, cv) do
     nav =
       [%NavItem{label: "Blog", href: Site.href(site, "blog/")}] ++
         if Portfolio.present?(portfolio) do
           [%NavItem{label: "Portfolio", href: Site.href(site, "portfolio/")}]
         else
           []
+        end ++
+        if cv_visibility(cv) == :public do
+          [%NavItem{label: "CV", href: Site.href(site, "cv/")}]
+        else
+          []
         end
 
     %RenderContext{site: site, theme: theme, nav: nav}
   end
+
+  defp cv_visibility(%CV{profile: profile}), do: profile.cv.visibility
+  defp cv_visibility(_cv), do: :off
 
   # The theme's static files (CSS, compiled islands) ship under /assets/.
   defp theme_assets(theme) do
@@ -85,16 +96,49 @@ defmodule Cherry.Pipeline.Stages.Layout do
     end
   end
 
-  defp synthetic_pages(documents, portfolio, context) do
+  defp synthetic_pages(documents, portfolio, cv, context) do
     posts = posts_newest_first(documents)
 
     with {:ok, index} <- post_index(posts, context),
          {:ok, tag_pages} <- tag_pages(posts, portfolio, context),
          {:ok, portfolio_pages} <- portfolio_pages(portfolio, posts, context),
+         {:ok, cv_pages} <- cv_pages(cv, context),
          {:ok, not_found} <- not_found(context) do
-      {:ok, [index | tag_pages] ++ portfolio_pages ++ [not_found]}
+      {:ok, [index | tag_pages] ++ portfolio_pages ++ cv_pages ++ [not_found]}
     end
   end
+
+  # The CV ships as a web page plus its JSON Resume twin; unlisted
+  # keeps both out of nav and sitemap with noindex on the page.
+  defp cv_pages(cv, context) do
+    case cv_visibility(cv) do
+      :off ->
+        {:ok, []}
+
+      visibility ->
+        unlisted? = visibility == :unlisted
+        path = "cv/index.html"
+        head = Head.for_page(context.site, "CV", path) <> noindex(unlisted?)
+        page_context = RenderContext.page(context, "CV", head)
+
+        with {:ok, html} <-
+               Renderer.render_in_layout(page_context, :cv, site: context.site, cv: cv) do
+          {:ok,
+           [
+             %Page{source: ":cv", path: path, content: html, unlisted?: unlisted?},
+             %Page{
+               source: ":cv_json",
+               path: "cv.json",
+               content: JsonResume.render(cv, context.site),
+               unlisted?: unlisted?
+             }
+           ]}
+        end
+    end
+  end
+
+  defp noindex(true), do: ~s(<meta name="robots" content="noindex">\n)
+  defp noindex(false), do: ""
 
   defp post_index(posts, context) do
     path = "blog/index.html"

@@ -8,6 +8,7 @@ Entries are terse one-liners linked to their PR: `- Thing that changed. (#12)`
 ## [Unreleased]
 
 ### Added
+- The CV view: `/cv/` as an employer-shaped projection of the portfolio (cv: curation, weight ordering, curated bullets), evidence-backed skills derived from merged calendar spans and linked to story pages, `/cv.json` in JSON Resume format, print-first stylesheet (black-on-white, no chrome, no split entries), and `visibility: public | unlisted | off` with noindex/sitemap handling. (#13)
 - Portfolio views: `/portfolio/` timeline (profile header, year-railed entries, open source as standing roles), `/story/:tag/` pages cross-linking positions/projects/talks/OSS/education with blog posts on one tag, `Person` JSON-LD, nav that knows the portfolio exists, and blog tag pages linking to their story. (#12)
 - Portfolio data layer: typed collections (`portfolio/positions`, `projects`, `talks`, `oss`, `education`) with introspectable schemas, `portfolio.yaml` profile, `cv:` curation blocks, and domain structs (`Position`, `Project`, `Talk`, `OpenSource`, `Education`, `Profile`, `CV`, `Link`) materialised via `Cherry.Portfolio.from_build/1`; entries are data-only (no page routes). (#11)
 - cherrybomb.dev deploy: Pages workflow building `example/` on push to main with CNAME; reserved `/install.sh` and `/install.ps1` installer paths (ADR 0007). (#10)

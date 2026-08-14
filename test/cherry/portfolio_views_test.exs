@@ -18,8 +18,8 @@ defmodule Cherry.PortfolioViewsTest do
       assert {:ok, build} = Cherry.build(source: @fixture, output: out, today: @today)
 
       # 1 page + 1 post + blog index + 1 tag page + timeline + 2 stories
-      # + 404 + feed/sitemap/robots.
-      assert length(build.pages) == 11
+      # + cv page + cv.json + 404 + feed/sitemap/robots.
+      assert length(build.pages) == 13
       assert_trees_equal(@golden, out)
     end
 

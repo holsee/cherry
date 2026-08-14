@@ -644,3 +644,119 @@ pre.lumis {
   font-size: 0.875rem;
   margin: -1rem 0 2rem;
 }
+
+/* ---------- the CV: employer-shaped, print-first ---------- */
+
+.cv-header h1 {
+  margin-bottom: 0.25rem;
+}
+
+.cv-headline {
+  font-size: 1.125rem;
+  color: var(--color-muted);
+  margin: 0 0 0.75rem;
+}
+
+.cv-contact {
+  font-family: var(--font-mono);
+  font-size: 0.8125rem;
+  color: var(--color-muted);
+  margin: 0 0 0.3rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem 1.1rem;
+}
+
+.cv-contact a {
+  color: var(--color-muted);
+}
+
+.cv-contact a:hover {
+  color: var(--color-accent);
+}
+
+.cv-updated {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--color-muted);
+  margin: 0 0 2rem;
+}
+
+.cv-section h2 {
+  font-size: 1rem;
+  font-family: var(--font-mono);
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--color-muted);
+  border-bottom: 1px solid var(--color-border);
+  padding-bottom: 0.35rem;
+  margin: 2.25rem 0 1rem;
+}
+
+.cv-entry {
+  margin: 0 0 1.25rem;
+}
+
+.cv-entry h3 {
+  font-size: 1.0625rem;
+  margin: 0 0 0.15rem;
+}
+
+/* Skills are claims with receipts: each links to its story page. */
+
+.cv-skills {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 1.4rem;
+}
+
+.cv-skills li {
+  font-family: var(--font-mono);
+  font-size: 0.875rem;
+}
+
+.cv-skill-years {
+  color: var(--color-muted);
+}
+
+/* Print: black on white, no chrome, never split an entry. */
+
+@media print {
+  :root,
+  :root[data-theme="dark"] {
+    --color-bg: #ffffff;
+    --color-fg: #000000;
+    --color-muted: #444444;
+    --color-border: #bbbbbb;
+    --color-accent: #000000;
+    --color-accent-strong: #000000;
+  }
+
+  .site-header,
+  .site-footer,
+  .theme-toggle {
+    display: none;
+  }
+
+  body {
+    font-size: 11pt;
+  }
+
+  .cv-entry,
+  .cv-section h2 {
+    break-inside: avoid;
+  }
+
+  .cv a {
+    text-decoration: none;
+    color: inherit;
+  }
+
+  .cv-json-link {
+    display: none;
+  }
+}

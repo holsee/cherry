@@ -39,8 +39,19 @@ defmodule Cherry.ThemeTokensTest do
       definitions = css |> String.split("\n") |> Enum.count(&(&1 =~ ~r/^\s*#{name}:/))
 
       # Color tokens appear three times (light, dark-via-media, dark-via-toggle);
+      # the six the print rendition overrides appear a fourth time;
       # rendition-independent tokens (fonts, measure) once.
-      expected = if name =~ ~r/^--(color|syn)-/, do: 3, else: 1
+      print_overridden = ~w(
+        --color-bg --color-fg --color-muted --color-border
+        --color-accent --color-accent-strong
+      )
+
+      expected =
+        cond do
+          name in print_overridden -> 4
+          name =~ ~r/^--(color|syn)-/ -> 3
+          true -> 1
+        end
 
       assert definitions == expected,
              "#{name} defined #{definitions}x in site.css, expected #{expected}"

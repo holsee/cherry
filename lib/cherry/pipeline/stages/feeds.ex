@@ -34,6 +34,7 @@ defmodule Cherry.Pipeline.Stages.Feeds do
   defp sitemap(site, pages) do
     urls =
       pages
+      |> Enum.reject(& &1.unlisted?)
       |> Enum.map(& &1.path)
       |> Enum.reject(&(&1 == "404.html"))
       |> Enum.sort()
