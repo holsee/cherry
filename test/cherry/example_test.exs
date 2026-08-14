@@ -24,7 +24,10 @@ defmodule Cherry.ExampleTest do
           "feed.xml",
           "sitemap.xml",
           "robots.txt",
-          "assets/site.css"
+          "assets/site.css",
+          # Reserved installer paths (ADR 0007) — cherrybomb.dev serves these.
+          "install.sh",
+          "install.ps1"
         ] do
       assert File.exists?(Path.join(out, file)), "missing #{file}"
     end
