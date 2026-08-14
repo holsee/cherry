@@ -859,9 +859,12 @@ pre.lumis {
 
 /* --- Search (Pagefind, opt-in via `search: "pagefind"`) --------------- */
 /* The Pagefind UI colors itself from these bridges to our tokens, so it
-   follows both renditions for free. */
+   follows both renditions for free. The drawer is lifted out of the page
+   flow into a panel anchored under the input, so results overlay the page
+   instead of shoving it down. */
 
 .site-search {
+  position: relative;
   min-width: 14rem;
 }
 
@@ -872,6 +875,95 @@ pre.lumis {
   --pagefind-ui-border: var(--color-border);
   --pagefind-ui-tag: var(--color-surface);
   --pagefind-ui-font: var(--font-prose);
+  --pagefind-ui-scale: 0.85;
+}
+
+#search .pagefind-ui__search-input {
+  font-family: var(--font-mono);
+  font-weight: 400;
+  background: color-mix(in srgb, var(--color-surface) 55%, var(--color-bg));
+}
+
+#search .pagefind-ui__search-input:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+}
+
+#search .pagefind-ui__search-clear {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--color-muted);
+  background: none;
+}
+
+#search .pagefind-ui__drawer:not(.pagefind-ui__hidden) {
+  position: absolute;
+  top: calc(100% + 0.625rem);
+  right: 0;
+  z-index: 60;
+  width: min(30rem, 88vw);
+  max-height: min(65vh, 30rem);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding: 0.5rem 1.25rem 1.25rem;
+  background: color-mix(in srgb, var(--color-surface) 70%, var(--color-bg));
+  border: 1px solid color-mix(in srgb, var(--color-accent) 35%, var(--color-border));
+  border-radius: 10px;
+  box-shadow: 0 18px 48px color-mix(in srgb, black 45%, transparent);
+}
+
+#search .pagefind-ui__message {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--color-muted);
+}
+
+#search .pagefind-ui__result {
+  border-top: 1px solid var(--color-border);
+}
+
+#search .pagefind-ui__result-link {
+  color: var(--color-fg);
+}
+
+#search .pagefind-ui__result-link:hover {
+  color: var(--color-accent);
+}
+
+#search .pagefind-ui__result-excerpt mark {
+  background: color-mix(in srgb, var(--color-accent) 30%, transparent);
+  color: var(--color-fg);
+  padding: 0 0.15em;
+  border-radius: 3px;
+}
+
+#search .pagefind-ui__button {
+  font-family: var(--font-mono);
+  background: none;
+  color: var(--color-accent);
+  border: 1px solid var(--color-border);
+}
+
+@media (max-width: 44rem) {
+  .site-header .wrap {
+    flex-wrap: wrap;
+  }
+
+  .site-nav {
+    flex-wrap: wrap;
+  }
+
+  .site-search {
+    order: 10;
+    flex: 1 1 100%;
+    min-width: 0;
+  }
+
+  #search .pagefind-ui__drawer:not(.pagefind-ui__hidden) {
+    left: 0;
+    right: 0;
+    width: auto;
+  }
 }
 
 /* --- The dogfood surfaces: landing (page-home) and guides ------------- */

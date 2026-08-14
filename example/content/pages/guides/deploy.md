@@ -13,10 +13,18 @@ cherry gen.action --json
 ```
 
 ```json
-{"command":"gen.action","data":{"path":".github/workflows/pages.yml","cname":"example.com","branch":"main"},"ok":true}
+{
+  "ok": true,
+  "command": "gen.action",
+  "data": {
+    "path": ".github/workflows/pages.yml",
+    "cname": "example.com",
+    "branch": "main"
+  }
+}
 ```
 
-The workflow builds your site with the published [Cherry build action](https://github.com/holsee/cherry/tree/develop/action) — toolchain setup, dependency caching, `cherry.build`, and `cherry.check --strict` in one `uses:` step — then uploads and deploys via GitHub's official Pages actions. It adds `.nojekyll`, and a `CNAME` when your site's `url` is a custom domain.
+The workflow builds your site with the published [Cherry build action](https://github.com/holsee/cherry/tree/develop/action) (toolchain setup, dependency caching, `cherry.build`, and `cherry.check --strict` in one `uses:` step), then uploads and deploys via GitHub's official Pages actions. It adds `.nojekyll`, and a `CNAME` when your site's `url` is a custom domain.
 
 ## One-time repo setup
 
@@ -39,7 +47,7 @@ url: "https://user.github.io",
 base_path: "/myrepo"
 ```
 
-Every emitted URL — pages, assets, feeds, canonical links, icons, nav — respects it. No template ever concatenates URL strings, so there's no class of half-prefixed bugs to chase. This is gate-tested on every commit at root *and* under a base path.
+Every emitted URL (pages, assets, feeds, canonical links, icons, nav) respects it. No template ever concatenates URL strings, so there's no class of half-prefixed bugs to chase. This is gate-tested on every commit at root *and* under a base path.
 
 > [!NOTE]
 > Sites with `search: "pagefind"` need Node available in the workflow (the post-build stage shells `npx pagefind`). The generated action handles toolchains for you; if you hand-roll a workflow, add `actions/setup-node` before the build.

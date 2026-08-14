@@ -150,7 +150,7 @@ defmodule Cherry.MixProject do
         "GitHub" => @source_url,
         "Site" => "https://cherrybomb.dev"
       },
-      files: ~w(lib priv mix.exs README.md LICENSE-MIT LICENSE-APACHE CHANGELOG.md)
+      files: ~w(lib priv mix.exs README.md LICENSE-MIT LICENSE-APACHE assets/LICENSE CHANGELOG.md)
     ]
   end
 end

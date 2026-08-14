@@ -44,7 +44,7 @@
 </div>
 </footer>
 <%= if @search do %><script src="<%= href(@site, "pagefind/pagefind-ui.js") %>"></script>
-<script>window.addEventListener("DOMContentLoaded", function () { new PagefindUI({ element: "#search" }); });</script>
+<script>window.addEventListener("DOMContentLoaded", function () { new PagefindUI({ element: "#search", showImages: false }); });</script>
 <% end %><script src="<%= href(@site, "assets/theme-toggle.js") %>" defer></script>
 </body>
 </html>

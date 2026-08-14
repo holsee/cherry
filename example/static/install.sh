@@ -1,5 +1,5 @@
 #!/bin/sh
-# cherry installer — https://cherrybomb.dev/install.sh (ADR 0007)
+# cherry installer, https://cherrybomb.dev/install.sh (ADR 0007)
 # Detects OS/arch, resolves the latest stable release, verifies the
 # SHA-256 checksum, installs to ~/.local/bin (or $CHERRY_INSTALL_DIR).
 set -eu
@@ -24,7 +24,7 @@ esac
 
 asset="cherry-$os-$arch"
 
-# releases/latest never resolves a prerelease — casual installs stay stable.
+# releases/latest never resolves a prerelease, so casual installs stay stable.
 base="https://github.com/$repo/releases/latest/download"
 
 tmp=$(mktemp -d)

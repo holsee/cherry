@@ -1,6 +1,6 @@
 ---
 title: Quick-start
-description: Install Cherry, make a site, write a post, and deploy it to GitHub Pages — the whole path, with real output at every step.
+description: Install Cherry, make a site, write a post, and deploy it to GitHub Pages. The whole path, with real output at every step.
 ---
 # Quick-start
 
@@ -29,7 +29,7 @@ cherry 0.1.0-rc.1
 ```
 
 > [!NOTE]
-> Elixir developers can skip the binary entirely: add `{:cherry, "~> 0.1"}` to a mix project and every command below is `mix cherry.<verb>` — same verbs, same flags, same output, by construction.
+> Elixir developers can skip the binary entirely: add `{:cherry, "~> 0.1"}` to a mix project and every command below is `mix cherry.<verb>`. Same verbs, same flags, same output, by construction.
 
 ## 2 · Make a site
 
@@ -103,7 +103,7 @@ cherry build
 Built 12 page(s), 2 asset(s) → _site
 ```
 
-`check` fails loudly on broken links, missing descriptions, images without alt text, and duplicate titles — see [the verifier](/guides/check/). `_site/` is the whole deliverable: HTML, feeds, sitemap, `llms.txt`, and a markdown mirror of every page.
+`check` fails loudly on broken links, missing descriptions, images without alt text, and duplicate titles (see [the verifier](/guides/check/)). `_site/` is the whole deliverable: HTML, feeds, sitemap, `llms.txt`, and a markdown mirror of every page.
 
 ## 6 · Deploy
 
