@@ -13,4 +13,5 @@ Entries are terse one-liners linked to their PR: `- Thing that changed. (#12)`
 - End-state README with the Cherrybomb identity.
 - Devcontainer reference environment (Elixir 1.20.2 / OTP 28 / Node 22, pinned).
 - Minimal 0.0.1 package stub to claim `cherry` on Hex (published).
-- Résumé view design: `/resume/` as a projection of portfolio data (DESIGN.md §4).
+- Portfolio dual-view design: Careers-style timeline + `/cv/` web CV, both
+  projections of one dataset (DESIGN.md §4).

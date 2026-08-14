@@ -59,10 +59,10 @@ talks, open source — rendered as a timeline, cross-linked with your blog throu
 shared tag taxonomy. The "Elixir" page shows your jobs, projects, *and* every post
 you've written about it.
 
-**…and a résumé when you need one.** The same data renders a Careers-2.0-style CV at
-`/resume/` — link employers to it instead of sending a PDF. Print-perfect via the
-browser's print dialog, every skill claim linked to its evidence in your story,
-JSON Resume export at `/resume.json`, and an unlisted mode for quiet job hunts.
+**…and a CV when you need one.** The same data also renders at `/cv/` as a web page
+that reads like a CV — link employers to it instead of attaching a file. Every skill
+claim links to its evidence in your story, it prints pixel-perfect, exports as
+JSON Resume at `/cv.json`, and has an unlisted mode for quiet job hunts.
 
 **Themes you can actually swap.** Themes implement a versioned contract (templates +
 design tokens), so switching is one config line. Customization is a ladder — config →
