@@ -5,7 +5,7 @@
   cherry_contract: "1.0",
   templates: [
     layout: [
-      assigns: [:site, :inner, :page_title, :head_extra, :nav, :search],
+      assigns: [:site, :inner, :page_title, :head_extra, :nav, :search, :page_class],
       doc: "Outer HTML shell wrapped around every rendered page."
     ],
     page: [

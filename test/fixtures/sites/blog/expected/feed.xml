@@ -17,7 +17,14 @@
 &lt;pre class="lumis"&gt;&lt;code class="language-elixir" translate="no" tabindex="0"&gt;&lt;div class="l-line" data-line="1"&gt;&lt;span class="l-keyword-function"&gt;defmodule&lt;/span&gt; &lt;span class="l-module"&gt;Basket&lt;/span&gt; &lt;span class="l-keyword"&gt;do&lt;/span&gt;
 &lt;/div&gt;&lt;div class="l-line" data-line="2"&gt;  &lt;span class="l-keyword-function"&gt;def&lt;/span&gt; &lt;span class="l-function"&gt;pick&lt;/span&gt;&lt;span class="l-punctuation-bracket"&gt;(&lt;/span&gt;&lt;span class="l-variable"&gt;tree&lt;/span&gt;&lt;span class="l-punctuation-bracket"&gt;)&lt;/span&gt;&lt;span class="l-punctuation-delimiter"&gt;,&lt;/span&gt; &lt;span class="l-string-special-symbol"&gt;do: &lt;/span&gt;&lt;span class="l-punctuation-bracket"&gt;{&lt;/span&gt;&lt;span class="l-string-special-symbol"&gt;:ok&lt;/span&gt;&lt;span class="l-punctuation-delimiter"&gt;,&lt;/span&gt; &lt;span class="l-variable"&gt;tree&lt;/span&gt;&lt;span class="l-punctuation-bracket"&gt;}&lt;/span&gt;
 &lt;/div&gt;&lt;div class="l-line" data-line="3"&gt;&lt;span class="l-keyword"&gt;end&lt;/span&gt;
-&lt;/div&gt;&lt;/code&gt;&lt;/pre&gt;</content>
+&lt;/div&gt;&lt;/code&gt;&lt;/pre&gt;
+&lt;h2 id="ripeness-matters"&gt;Ripeness matters&lt;a href="#ripeness-matters" aria-label="Link to heading 'Ripeness matters'" data-heading-content="Ripeness matters" class="anchor"&gt;&lt;/a&gt;&lt;/h2&gt;
+&lt;p&gt;Headings carry ids and a trailing anchor link, so deep links work.&lt;/p&gt;
+&lt;div class="markdown-alert markdown-alert-note"&gt;
+&lt;p class="markdown-alert-title"&gt;Note&lt;/p&gt;
+&lt;p&gt;Alerts render as GitHub-style callouts — this one bakes the markup
+into the goldens.&lt;/p&gt;
+&lt;/div&gt;</content>
 </entry>
 <entry>
 <title>Hello, world</title>

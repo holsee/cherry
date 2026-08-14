@@ -291,6 +291,75 @@ img {
   height: auto;
 }
 
+/* Heading deep links: the transform stage appends an empty a.anchor to
+ * every heading. Quiet by default, a # on hover — never in the way. */
+a.anchor {
+  margin-left: 0.35em;
+  text-decoration: none;
+  opacity: 0;
+  transition: opacity 120ms ease;
+}
+
+a.anchor::before {
+  content: "#";
+  color: var(--color-muted);
+}
+
+h1:hover a.anchor,
+h2:hover a.anchor,
+h3:hover a.anchor,
+h4:hover a.anchor,
+a.anchor:focus-visible {
+  opacity: 1;
+}
+
+a.anchor:hover::before,
+a.anchor:focus-visible::before {
+  color: var(--color-accent);
+}
+
+/* GitHub-style alerts (> [!NOTE] …) from the transform stage. Each
+ * variant borrows a hue from the syntax palette — no new tokens. */
+.markdown-alert {
+  --alert-hue: var(--color-accent);
+  margin: 1.5rem 0;
+  padding: 0.75rem 1.25rem 0.5rem;
+  border-left: 3px solid var(--alert-hue);
+  background: color-mix(in srgb, var(--alert-hue) 7%, transparent);
+}
+
+.markdown-alert > p {
+  margin-bottom: 0.75rem;
+}
+
+.markdown-alert-title {
+  font-weight: 700;
+  font-size: 0.8125rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--alert-hue);
+}
+
+.markdown-alert-note {
+  --alert-hue: var(--syn-type);
+}
+
+.markdown-alert-tip {
+  --alert-hue: var(--syn-string);
+}
+
+.markdown-alert-important {
+  --alert-hue: var(--syn-function);
+}
+
+.markdown-alert-warning {
+  --alert-hue: var(--syn-constant);
+}
+
+.markdown-alert-caution {
+  --alert-hue: var(--syn-keyword);
+}
+
 /* The transform stage wraps every table in .table-scroll, so tables keep
  * their semantics for assistive tech and still scroll on narrow screens. */
 .table-scroll {
