@@ -8,6 +8,7 @@ Entries are terse one-liners linked to their PR: `- Thing that changed. (#12)`
 ## [Unreleased]
 
 ### Added
+- The cherry agent skill (`skills/cherry/`, fizzy-cli layout): a canonical `SKILL.md` teaching agents the safe-start checks, the author → build → check → publish → deploy loop, structured-diagnostic handling, provenance-based theme management, and binary self-update — plus a command reference generated from the CLI verb registry and CI-gated against drift (`mix run scripts/regen_skill.exs`), with `.claude/skills/` and `.agents/skills/` pointer shims. New verbs cannot land without the skill teaching them. (#27)
 - `cherry upgrade`: first-class self-update for the standalone binary (ADR 0007) — resolves the latest stable GitHub release (or `--version` for any tag, prereleases included), verifies this platform's asset against `SHA256SUMS`, and swaps the running executable rustup-style; `--check` reports without touching anything and works under mix too. Zero new deps (`:httpc` + OS trust store). (#26)
 
 ## [0.1.0-rc.1] — 2026-08-14

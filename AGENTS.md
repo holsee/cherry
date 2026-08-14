@@ -71,6 +71,11 @@ Windows; path bugs are first-party bugs.
   output compared file-by-file. Failures print a real diff. Regeneration is an
   explicit task (`mix cherry.goldens --update`) so golden churn is visible in PR
   diffs, never silent.
+- **Agent skill drift gate**: `skills/cherry/SKILL.md` (canonical; `.claude/` and
+  `.agents/` carry pointers) teaches agents the CLI. Its command reference is
+  generated from the verb registry — after any verb/flag/doc change run
+  `mix run scripts/regen_skill.exs`; the test suite fails while it is stale, and
+  also fails when SKILL.md doesn't mention a registry verb.
 - **Stages are pure**: every pipeline stage is token-in → token-out, unit-testable
   without touching disk beyond the load stage. Architecture serves testability on
   purpose.
