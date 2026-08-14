@@ -4,7 +4,8 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title><%= h(@page_title) %> · <%= h(@site.title) %></title>
-<%= @head_extra %><link rel="stylesheet" href="<%= href(@site, "assets/site.css") %>">
+<%= @head_extra %><%= if @search do %><link rel="stylesheet" href="<%= href(@site, "pagefind/pagefind-ui.css") %>">
+<% end %><link rel="stylesheet" href="<%= href(@site, "assets/site.css") %>">
 <script>
 /* No-flash: apply the stored theme before first paint. */
 (function () {
@@ -27,7 +28,8 @@
 <svg data-theme-icon="dark" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true" style="display:none"><path d="M13.5 9.5A6 6 0 1 1 6.5 2.5a5 5 0 0 0 7 7Z"/></svg>
 <span data-theme-label>auto</span>
 </button>
-</nav>
+<%= if @search do %><div id="search" class="site-search"></div>
+<% end %></nav>
 </div>
 </header>
 <main>
@@ -41,6 +43,8 @@
 <a href="<%= href(@site, "feed.xml") %>">RSS</a>
 </div>
 </footer>
-<script src="<%= href(@site, "assets/theme-toggle.js") %>" defer></script>
+<%= if @search do %><script src="<%= href(@site, "pagefind/pagefind-ui.js") %>"></script>
+<script>window.addEventListener("DOMContentLoaded", function () { new PagefindUI({ element: "#search" }); });</script>
+<% end %><script src="<%= href(@site, "assets/theme-toggle.js") %>" defer></script>
 </body>
 </html>

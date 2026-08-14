@@ -786,3 +786,20 @@ pre.lumis {
     display: none;
   }
 }
+
+/* --- Search (Pagefind, opt-in via `search: "pagefind"`) --------------- */
+/* The Pagefind UI colors itself from these bridges to our tokens, so it
+   follows both renditions for free. */
+
+.site-search {
+  min-width: 14rem;
+}
+
+#search {
+  --pagefind-ui-primary: var(--color-accent);
+  --pagefind-ui-text: var(--color-fg);
+  --pagefind-ui-background: var(--color-bg);
+  --pagefind-ui-border: var(--color-border);
+  --pagefind-ui-tag: var(--color-surface);
+  --pagefind-ui-font: var(--font-prose);
+}

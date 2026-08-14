@@ -16,7 +16,8 @@ defmodule Cherry.Pipeline do
     Stages.Layout,
     Stages.Feeds,
     Stages.Machine,
-    Stages.Emit
+    Stages.Emit,
+    Stages.Post
   ]
 
   @doc "The standard build pipeline, in order."
