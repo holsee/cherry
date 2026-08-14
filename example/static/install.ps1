@@ -1,4 +1,4 @@
-# cherry installer — https://cherrybomb.dev/install.ps1 (ADR 0007)
+# cherry installer, https://cherrybomb.dev/install.ps1 (ADR 0007)
 # Resolves the latest stable release, verifies the SHA-256 checksum,
 # installs to $env:LOCALAPPDATA\cherry\bin (or $env:CHERRY_INSTALL_DIR).
 $ErrorActionPreference = "Stop"
@@ -7,7 +7,7 @@ $repo = "holsee/cherry"
 $asset = "cherry-windows-x86_64.exe"
 $installDir = if ($env:CHERRY_INSTALL_DIR) { $env:CHERRY_INSTALL_DIR } else { Join-Path $env:LOCALAPPDATA "cherry\bin" }
 
-# releases/latest never resolves a prerelease — casual installs stay stable.
+# releases/latest never resolves a prerelease, so casual installs stay stable.
 $base = "https://github.com/$repo/releases/latest/download"
 $tmp = Join-Path ([System.IO.Path]::GetTempPath()) ([System.IO.Path]::GetRandomFileName())
 New-Item -ItemType Directory -Path $tmp | Out-Null

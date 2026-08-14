@@ -38,8 +38,11 @@ defmodule Cherry.Pipeline.Stages.Layout do
   end
 
   defp base_context(site, theme, portfolio, cv) do
+    {leading, trailing} = Enum.split_with(site.nav, &(&1.position == :start))
+
     nav =
-      [%NavItem{label: "Blog", href: Site.href(site, "blog/")}] ++
+      Enum.map(leading, &custom_nav_item(site, &1)) ++
+        [%NavItem{label: "Blog", href: Site.href(site, "blog/")}] ++
         if Portfolio.present?(portfolio) do
           [%NavItem{label: "Portfolio", href: Site.href(site, "portfolio/")}]
         else
@@ -49,9 +52,20 @@ defmodule Cherry.Pipeline.Stages.Layout do
           [%NavItem{label: "CV", href: Site.href(site, "cv/")}]
         else
           []
-        end
+        end ++ Enum.map(trailing, &custom_nav_item(site, &1))
 
     %RenderContext{site: site, theme: theme, nav: nav, search?: site.search == "pagefind"}
+  end
+
+  # Configured entries keep their declared order within their position
+  # group (:start before the built-ins, :end after). Absolute URLs pass
+  # verbatim; anything else is site-relative and base_path-aware.
+  defp custom_nav_item(site, %{label: label, href: href}) do
+    if String.starts_with?(href, ["http://", "https://"]) do
+      %NavItem{label: label, href: href}
+    else
+      %NavItem{label: label, href: Site.href(site, String.trim_leading(href, "/"))}
+    end
   end
 
   defp cv_visibility(%CV{profile: profile}), do: profile.cv.visibility
@@ -88,7 +102,9 @@ defmodule Cherry.Pipeline.Stages.Layout do
   defp render_document(%Document{} = doc, context) do
     template = template_for(doc.collection)
     title = Map.get(doc.meta, :title, context.site.title)
-    page_context = RenderContext.page(context, title, Head.for_document(context.site, doc))
+
+    page_context =
+      RenderContext.page(context, title, Head.for_document(context.site, doc), page_class(doc))
 
     with {:ok, html} <-
            Renderer.render_in_layout(page_context, template, site: context.site, doc: doc) do
@@ -119,7 +135,7 @@ defmodule Cherry.Pipeline.Stages.Layout do
         unlisted? = visibility == :unlisted
         path = "cv/index.html"
         head = Head.for_page(context.site, "CV", path) <> noindex(unlisted?)
-        page_context = RenderContext.page(context, "CV", head)
+        page_context = RenderContext.page(context, "CV", head, path_class(path))
 
         with {:ok, html} <-
                Renderer.render_in_layout(page_context, :cv, site: context.site, cv: cv) do
@@ -142,7 +158,14 @@ defmodule Cherry.Pipeline.Stages.Layout do
 
   defp post_index(posts, context) do
     path = "blog/index.html"
-    page_context = RenderContext.page(context, "Blog", Head.for_page(context.site, "Blog", path))
+
+    page_context =
+      RenderContext.page(
+        context,
+        "Blog",
+        Head.for_page(context.site, "Blog", path),
+        path_class(path)
+      )
 
     with {:ok, html} <-
            Renderer.render_in_layout(page_context, :post_list, site: context.site, posts: posts) do
@@ -168,7 +191,14 @@ defmodule Cherry.Pipeline.Stages.Layout do
         end
 
       assigns = [site: context.site, tag: tag, posts: tagged, story_href: story_href]
-      page_context = RenderContext.page(context, title, Head.for_page(context.site, title, path))
+
+      page_context =
+        RenderContext.page(
+          context,
+          title,
+          Head.for_page(context.site, title, path),
+          path_class(path)
+        )
 
       with {:ok, html} <- Renderer.render_in_layout(page_context, :tag, assigns) do
         {:ok, %Page{source: ":tag", path: path, content: html}}
@@ -193,7 +223,7 @@ defmodule Cherry.Pipeline.Stages.Layout do
     head =
       Head.for_page(context.site, "Portfolio", path) <> Person.json_ld(context.site, portfolio)
 
-    page_context = RenderContext.page(context, "Portfolio", head)
+    page_context = RenderContext.page(context, "Portfolio", head, path_class(path))
     assigns = [site: context.site, portfolio: portfolio]
 
     with {:ok, html} <- Renderer.render_in_layout(page_context, :portfolio_timeline, assigns) do
@@ -217,7 +247,13 @@ defmodule Cherry.Pipeline.Stages.Layout do
         posts: tagged_posts
       ]
 
-      page_context = RenderContext.page(context, title, Head.for_page(context.site, title, path))
+      page_context =
+        RenderContext.page(
+          context,
+          title,
+          Head.for_page(context.site, title, path),
+          path_class(path)
+        )
 
       with {:ok, html} <- Renderer.render_in_layout(page_context, :story, assigns) do
         {:ok, %Page{source: ":story", path: path, content: html}}
@@ -228,7 +264,7 @@ defmodule Cherry.Pipeline.Stages.Layout do
   # The 404 page gets no SEO head: it serves at arbitrary URLs, so a
   # canonical link or Open Graph URL would always be wrong.
   defp not_found(context) do
-    page_context = RenderContext.page(context, "Page not found", "")
+    page_context = RenderContext.page(context, "Page not found", "", path_class("404.html"))
 
     with {:ok, html} <- Renderer.render_in_layout(page_context, :not_found, site: context.site) do
       {:ok, %Page{source: ":not_found", path: "404.html", content: html}}
@@ -243,6 +279,25 @@ defmodule Cherry.Pipeline.Stages.Layout do
 
   defp template_for("posts"), do: :post
   defp template_for(_collection), do: :page
+
+  # The layout's body class: themes restyle whole sections (home hero,
+  # guide reading rhythm) without needing extra templates.
+  defp page_class(%Document{collection: "posts"}), do: "page-post"
+  defp page_class(%Document{path: path}), do: path_class(path)
+
+  defp path_class("index.html"), do: "page-home"
+  defp path_class("404.html"), do: "page-not-found"
+
+  defp path_class(path) do
+    segment =
+      path
+      |> String.split("/")
+      |> hd()
+      |> String.downcase()
+      |> String.replace(~r/[^a-z0-9-]/, "-")
+
+    "page-" <> segment
+  end
 
   defp map_while_ok(enum, fun) do
     Enum.reduce_while(enum, {:ok, []}, fn item, {:ok, acc} ->

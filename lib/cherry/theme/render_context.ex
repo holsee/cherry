@@ -13,7 +13,15 @@ defmodule Cherry.Theme.RenderContext do
   alias Cherry.Theme.NavItem
 
   @enforce_keys [:site, :theme]
-  defstruct [:site, :theme, page_title: "", head_extra: "", nav: [], search?: false]
+  defstruct [
+    :site,
+    :theme,
+    page_title: "",
+    head_extra: "",
+    nav: [],
+    search?: false,
+    page_class: ""
+  ]
 
   @type t :: %__MODULE__{
           site: Site.t(),
@@ -21,12 +29,19 @@ defmodule Cherry.Theme.RenderContext do
           page_title: String.t(),
           head_extra: String.t(),
           nav: [NavItem.t()],
-          search?: boolean()
+          search?: boolean(),
+          page_class: String.t()
         }
 
-  @doc "Derives a page's context from the base: same site/theme/nav."
-  @spec page(t(), String.t(), String.t()) :: t()
-  def page(%__MODULE__{} = context, page_title, head_extra) do
-    %__MODULE__{context | page_title: page_title, head_extra: head_extra}
+  @doc """
+  Derives a page's context from the base: same site/theme/nav.
+
+  `page_class` is the layout's body class (`page-home`, `page-guides`,
+  `page-post`, …) so a theme can restyle whole sections without new
+  templates.
+  """
+  @spec page(t(), String.t(), String.t(), String.t()) :: t()
+  def page(%__MODULE__{} = context, page_title, head_extra, page_class \\ "") do
+    %__MODULE__{context | page_title: page_title, head_extra: head_extra, page_class: page_class}
   end
 end

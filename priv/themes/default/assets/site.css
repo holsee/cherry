@@ -291,6 +291,75 @@ img {
   height: auto;
 }
 
+/* Heading deep links: the transform stage appends an empty a.anchor to
+ * every heading. Quiet by default, a # on hover — never in the way. */
+a.anchor {
+  margin-left: 0.35em;
+  text-decoration: none;
+  opacity: 0;
+  transition: opacity 120ms ease;
+}
+
+a.anchor::before {
+  content: "#";
+  color: var(--color-muted);
+}
+
+h1:hover a.anchor,
+h2:hover a.anchor,
+h3:hover a.anchor,
+h4:hover a.anchor,
+a.anchor:focus-visible {
+  opacity: 1;
+}
+
+a.anchor:hover::before,
+a.anchor:focus-visible::before {
+  color: var(--color-accent);
+}
+
+/* GitHub-style alerts (> [!NOTE] …) from the transform stage. Each
+ * variant borrows a hue from the syntax palette — no new tokens. */
+.markdown-alert {
+  --alert-hue: var(--color-accent);
+  margin: 1.5rem 0;
+  padding: 0.75rem 1.25rem 0.5rem;
+  border-left: 1px solid var(--alert-hue);
+  background: color-mix(in srgb, var(--alert-hue) 7%, transparent);
+}
+
+.markdown-alert > p {
+  margin-bottom: 0.75rem;
+}
+
+.markdown-alert-title {
+  font-weight: 700;
+  font-size: 0.8125rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--alert-hue);
+}
+
+.markdown-alert-note {
+  --alert-hue: var(--syn-type);
+}
+
+.markdown-alert-tip {
+  --alert-hue: var(--syn-string);
+}
+
+.markdown-alert-important {
+  --alert-hue: var(--syn-function);
+}
+
+.markdown-alert-warning {
+  --alert-hue: var(--syn-constant);
+}
+
+.markdown-alert-caution {
+  --alert-hue: var(--syn-keyword);
+}
+
 /* The transform stage wraps every table in .table-scroll, so tables keep
  * their semantics for assistive tech and still scroll on narrow screens. */
 .table-scroll {
@@ -766,6 +835,7 @@ pre.lumis {
    follows both renditions for free. */
 
 .site-search {
+  position: relative;
   min-width: 14rem;
 }
 
@@ -776,4 +846,113 @@ pre.lumis {
   --pagefind-ui-border: var(--color-border);
   --pagefind-ui-tag: var(--color-surface);
   --pagefind-ui-font: var(--font-prose);
+  --pagefind-ui-scale: 0.85;
+}
+
+/* The drawer becomes a panel anchored under the input, overlaying the
+   page instead of pushing it down. */
+#search .pagefind-ui__drawer:not(.pagefind-ui__hidden) {
+  position: absolute;
+  top: calc(100% + 0.625rem);
+  right: 0;
+  z-index: 60;
+  width: min(30rem, 88vw);
+  max-height: min(65vh, 30rem);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding: 0.5rem 1.25rem 1.25rem;
+  background: var(--color-bg);
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  box-shadow: 0 14px 40px color-mix(in srgb, black 25%, transparent);
+}
+
+#search .pagefind-ui__message {
+  font-size: 0.8125rem;
+  color: var(--color-muted);
+}
+
+#search .pagefind-ui__result {
+  border-top: 1px solid var(--color-border);
+}
+
+#search .pagefind-ui__result-excerpt mark {
+  background: color-mix(in srgb, var(--color-accent) 22%, transparent);
+  color: var(--color-fg);
+  padding: 0 0.15em;
+  border-radius: 3px;
+}
+
+@media (max-width: 44rem) {
+  .site-header .wrap {
+    flex-wrap: wrap;
+  }
+
+  .site-nav {
+    flex-wrap: wrap;
+  }
+
+  .site-search {
+    order: 10;
+    flex: 1 1 100%;
+    min-width: 0;
+  }
+
+  #search .pagefind-ui__drawer:not(.pagefind-ui__hidden) {
+    left: 0;
+    right: 0;
+    width: auto;
+  }
+}
+
+/* --- Copy buttons on code blocks (copy-code.js island) ---------------- */
+/* The island wraps each pre in .code-copy so the button anchors to the
+   block while the code scrolls beneath it. */
+
+.code-copy {
+  position: relative;
+}
+
+.copy-code {
+  position: absolute;
+  top: 0.5rem;
+  right: 0.5rem;
+  z-index: 2;
+  padding: 0.15rem 0.55rem;
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  line-height: 1.6;
+  color: var(--color-muted);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: 6px;
+  cursor: pointer;
+  /* Visible at rest so blocks read as copyable; full strength on hover. */
+  opacity: 0.55;
+  transition: opacity 120ms ease, color 120ms ease, border-color 120ms ease;
+}
+
+.code-copy:hover .copy-code,
+[data-copy]:hover .copy-code,
+.copy-code:focus-visible {
+  opacity: 1;
+}
+
+.copy-code:hover,
+.copy-code-done {
+  color: var(--color-accent);
+  border-color: color-mix(in srgb, var(--color-accent) 45%, var(--color-border));
+  opacity: 1;
+}
+
+@media (hover: none) {
+  .copy-code {
+    opacity: 1;
+  }
+}
+
+@media print {
+  .copy-code {
+    display: none;
+  }
 }

@@ -1,4 +1,4 @@
-/* Cherrybomb — Cherry's brand theme.
+/* CherryBomb — Cherry's brand theme.
  *
  * THESIS: the logo's night, inhabited — the graffiti/retrowave energy of
  * the cherrybomb mark carried by ground, glow, and color, while the prose
@@ -159,6 +159,10 @@ a:focus-visible {
  * the logo's tail, redrawn in CSS from the theme's own tokens. */
 .site-title {
   position: relative;
+  display: inline-flex;
+  align-items: center;
+  white-space: nowrap;
+  flex-shrink: 0;
   font-weight: 800;
   font-size: 1.0625rem;
   letter-spacing: -0.01em;
@@ -311,6 +315,76 @@ hr {
 img {
   max-width: 100%;
   height: auto;
+}
+
+/* Heading deep links: the transform stage appends an empty a.anchor to
+ * every heading. Quiet by default, a # on hover — never in the way. */
+a.anchor {
+  margin-left: 0.35em;
+  text-decoration: none;
+  opacity: 0;
+  transition: opacity 120ms ease;
+}
+
+a.anchor::before {
+  content: "#";
+  color: var(--color-muted);
+}
+
+h1:hover a.anchor,
+h2:hover a.anchor,
+h3:hover a.anchor,
+h4:hover a.anchor,
+a.anchor:focus-visible {
+  opacity: 1;
+}
+
+a.anchor:hover::before,
+a.anchor:focus-visible::before {
+  color: var(--color-accent);
+}
+
+/* GitHub-style alerts (> [!NOTE] …) from the transform stage. Each
+ * variant borrows a hue from the syntax palette — no new tokens. */
+.markdown-alert {
+  --alert-hue: var(--color-accent);
+  margin: 1.5rem 0;
+  padding: 0.75rem 1.25rem 0.5rem;
+  border-left: 1px solid var(--alert-hue);
+  border-radius: 0 8px 8px 0;
+  background: color-mix(in srgb, var(--alert-hue) 7%, transparent);
+}
+
+.markdown-alert > p {
+  margin-bottom: 0.75rem;
+}
+
+.markdown-alert-title {
+  font-weight: 700;
+  font-size: 0.8125rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--alert-hue);
+}
+
+.markdown-alert-note {
+  --alert-hue: var(--syn-type);
+}
+
+.markdown-alert-tip {
+  --alert-hue: var(--syn-string);
+}
+
+.markdown-alert-important {
+  --alert-hue: var(--syn-function);
+}
+
+.markdown-alert-warning {
+  --alert-hue: var(--syn-constant);
+}
+
+.markdown-alert-caution {
+  --alert-hue: var(--syn-keyword);
 }
 
 /* The transform stage wraps every table in .table-scroll, so tables keep
@@ -789,9 +863,12 @@ pre.lumis {
 
 /* --- Search (Pagefind, opt-in via `search: "pagefind"`) --------------- */
 /* The Pagefind UI colors itself from these bridges to our tokens, so it
-   follows both renditions for free. */
+   follows both renditions for free. The drawer is lifted out of the page
+   flow into a panel anchored under the input, so results overlay the page
+   instead of shoving it down. */
 
 .site-search {
+  position: relative;
   min-width: 14rem;
 }
 
@@ -802,4 +879,423 @@ pre.lumis {
   --pagefind-ui-border: var(--color-border);
   --pagefind-ui-tag: var(--color-surface);
   --pagefind-ui-font: var(--font-prose);
+  --pagefind-ui-scale: 0.85;
+}
+
+#search .pagefind-ui__search-input {
+  font-family: var(--font-mono);
+  font-weight: 400;
+  background: color-mix(in srgb, var(--color-surface) 55%, var(--color-bg));
+}
+
+#search .pagefind-ui__search-input:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+}
+
+#search .pagefind-ui__search-clear {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--color-muted);
+  background: none;
+}
+
+#search .pagefind-ui__drawer:not(.pagefind-ui__hidden) {
+  position: absolute;
+  top: calc(100% + 0.625rem);
+  right: 0;
+  z-index: 60;
+  width: min(30rem, 88vw);
+  max-height: min(65vh, 30rem);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding: 0.5rem 1.25rem 1.25rem;
+  background: color-mix(in srgb, var(--color-surface) 70%, var(--color-bg));
+  border: 1px solid color-mix(in srgb, var(--color-accent) 35%, var(--color-border));
+  border-radius: 10px;
+  box-shadow: 0 18px 48px color-mix(in srgb, black 45%, transparent);
+}
+
+#search .pagefind-ui__message {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--color-muted);
+}
+
+#search .pagefind-ui__result {
+  border-top: 1px solid var(--color-border);
+}
+
+#search .pagefind-ui__result-link {
+  color: var(--color-fg);
+}
+
+#search .pagefind-ui__result-link:hover {
+  color: var(--color-accent);
+}
+
+#search .pagefind-ui__result-excerpt mark {
+  background: color-mix(in srgb, var(--color-accent) 30%, transparent);
+  color: var(--color-fg);
+  padding: 0 0.15em;
+  border-radius: 3px;
+}
+
+#search .pagefind-ui__button {
+  font-family: var(--font-mono);
+  background: none;
+  color: var(--color-accent);
+  border: 1px solid var(--color-border);
+}
+
+@media (max-width: 44rem) {
+  .site-header .wrap {
+    flex-wrap: wrap;
+  }
+
+  .site-nav {
+    flex-wrap: wrap;
+  }
+
+  .site-search {
+    order: 10;
+    flex: 1 1 100%;
+    min-width: 0;
+  }
+
+  #search .pagefind-ui__drawer:not(.pagefind-ui__hidden) {
+    left: 0;
+    right: 0;
+    width: auto;
+  }
+}
+
+/* --- Copy buttons on code blocks (copy-code.js island) ---------------- */
+/* The island wraps each pre in .code-copy so the button anchors to the
+   block while the code scrolls beneath it. */
+
+.code-copy {
+  position: relative;
+}
+
+.copy-code {
+  position: absolute;
+  top: 0.5rem;
+  right: 0.5rem;
+  z-index: 2;
+  padding: 0.15rem 0.55rem;
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  line-height: 1.6;
+  color: var(--color-muted);
+  background: color-mix(in srgb, var(--color-surface) 85%, var(--color-bg));
+  border: 1px solid var(--color-border);
+  border-radius: 6px;
+  cursor: pointer;
+  /* Visible at rest so blocks read as copyable; full strength on hover. */
+  opacity: 0.55;
+  transition: opacity 120ms ease, color 120ms ease, border-color 120ms ease;
+}
+
+.code-copy:hover .copy-code,
+[data-copy]:hover .copy-code,
+.copy-code:focus-visible {
+  opacity: 1;
+}
+
+.copy-code:hover,
+.copy-code-done {
+  color: var(--color-accent);
+  border-color: color-mix(in srgb, var(--color-accent) 55%, var(--color-border));
+  opacity: 1;
+}
+
+/* The install one-liners are flex rows; the button rides the row. */
+.cmd .copy-code {
+  position: static;
+  margin-left: auto;
+  flex-shrink: 0;
+}
+
+@media (hover: none) {
+  .copy-code {
+    opacity: 1;
+  }
+}
+
+@media print {
+  .copy-code {
+    display: none;
+  }
+}
+
+/* --- The dogfood surfaces: landing (page-home) and guides ------------- */
+/* The nav mark ships with the theme; any cherrybomb site gets it. */
+
+.site-title::before {
+  content: "";
+  flex-shrink: 0;
+  width: 1.35em;
+  height: 1.35em;
+  margin-right: 0.4em;
+  background: url("cherrybomb-mark.png") center / contain no-repeat;
+}
+
+/* The brush underline clears the mark and sits under the wordmark only. */
+.site-title::after {
+  left: 1.6em;
+}
+
+/* Landing: the wrap widens; each section owns its own measure. */
+.page-home main .wrap {
+  max-width: 64rem;
+}
+
+.page-home .loop,
+.page-home .closing {
+  max-width: var(--measure);
+  margin: 0 auto;
+}
+
+.hero {
+  text-align: center;
+  padding: 1rem 0 2.5rem;
+}
+
+.hero-mark {
+  width: clamp(180px, 30vw, 300px);
+  height: auto;
+  filter: drop-shadow(0 12px 34px color-mix(in srgb, var(--color-accent) 38%, transparent));
+  animation: hero-rise 640ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.hero h1 {
+  font-size: clamp(2.25rem, 6vw, 3.5rem);
+  font-weight: 800;
+  letter-spacing: -0.035em;
+  line-height: 1.05;
+  margin: 1.25rem 0 1rem;
+  animation: hero-rise 640ms cubic-bezier(0.16, 1, 0.3, 1) 70ms both;
+}
+
+.hero h1 em {
+  font-style: italic;
+  color: var(--color-accent);
+}
+
+.hero-tagline {
+  font-size: 1.1875rem;
+  color: var(--color-muted);
+  margin: 0 auto 1.75rem;
+  max-width: 36rem;
+  animation: hero-rise 640ms cubic-bezier(0.16, 1, 0.3, 1) 130ms both;
+}
+
+.hero-actions {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  margin: 0 0 2.25rem;
+  animation: hero-rise 640ms cubic-bezier(0.16, 1, 0.3, 1) 190ms both;
+}
+
+/* Buttons wear the brush: the title underline's gradient as a full block,
+ * skewed like the swash in the lockup. */
+.button {
+  display: inline-block;
+  padding: 0.6rem 1.5rem;
+  font-weight: 800;
+  text-decoration: none;
+  color: var(--color-bg);
+  background: linear-gradient(100deg, var(--color-accent), var(--color-accent-strong));
+  transform: skewX(-6deg);
+  border-radius: 0.4rem 0.9rem 0.5rem 1rem;
+  box-shadow: 0 6px 18px color-mix(in srgb, var(--color-accent) 30%, transparent);
+}
+
+.button:hover {
+  color: var(--color-bg);
+  transform: skewX(-6deg) translateY(-1px);
+}
+
+.button-ghost {
+  background: transparent;
+  color: var(--color-accent);
+  border: 1px solid color-mix(in srgb, var(--color-accent) 55%, var(--color-border));
+  box-shadow: none;
+}
+
+.button-ghost:hover {
+  color: var(--color-accent-strong);
+}
+
+.cmd {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+  max-width: 33rem;
+  margin: 0.6rem auto;
+  padding: 0.55rem 1.1rem;
+  background: var(--color-surface);
+  border: 1px solid color-mix(in srgb, var(--color-accent) 25%, var(--color-border));
+  border-radius: 8px;
+  font-family: var(--font-mono);
+  font-size: 0.9375rem;
+  overflow-x: auto;
+}
+
+.cmd-os {
+  flex: none;
+  font-size: 0.6875rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--color-muted);
+}
+
+.cmd code {
+  background: none;
+  border: 0;
+  padding: 0;
+  white-space: nowrap;
+}
+
+@keyframes hero-rise {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-mark,
+  .hero h1,
+  .hero-tagline,
+  .hero-actions {
+    animation: none;
+  }
+
+  .copy-code {
+    transition: none;
+  }
+}
+
+/* Beyond the blog: the portfolio/CV pitch, one wide poster paragraph. */
+.beyond {
+  max-width: 52rem;
+  margin: 4rem auto 0;
+}
+
+.beyond p {
+  font-size: 1.125rem;
+  line-height: 1.6;
+  padding-left: 1.1rem;
+  border-left: 1px solid color-mix(in srgb, var(--color-accent) 45%, var(--color-border));
+}
+
+/* The top ten: a brush-checked list, two ragged columns on desktop. */
+.checklist {
+  max-width: 56rem;
+  margin: 4rem auto 0;
+}
+
+.checks {
+  list-style: none;
+  margin: 2rem 0 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.2rem 2.75rem;
+}
+
+.checks li {
+  position: relative;
+  padding-left: 2.15rem;
+  line-height: 1.55;
+}
+
+.checks li:nth-child(even) {
+  transform: rotate(0.2deg);
+}
+
+.checks li:nth-child(odd) {
+  transform: rotate(-0.2deg);
+}
+
+.checks li strong {
+  font-weight: 800;
+  letter-spacing: -0.01em;
+}
+
+/* The checkbox: a brush-skewed accent tile with a painted tick. */
+.checks li::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0.14em;
+  width: 1.2em;
+  height: 1.2em;
+  border: 1px solid color-mix(in srgb, var(--color-accent) 60%, var(--color-border));
+  border-radius: 0.25em;
+  transform: skewX(-6deg) rotate(-2deg);
+  background: linear-gradient(
+    100deg,
+    color-mix(in srgb, var(--color-accent) 26%, transparent),
+    color-mix(in srgb, var(--color-accent-strong) 16%, transparent)
+  );
+}
+
+.checks li::after {
+  content: "";
+  position: absolute;
+  left: 0.26em;
+  top: 0.4em;
+  width: 0.68em;
+  height: 0.36em;
+  border-left: 2px solid var(--color-accent);
+  border-bottom: 2px solid var(--color-accent);
+  transform: rotate(-48deg);
+}
+
+@media (max-width: 40rem) {
+  .checks {
+    grid-template-columns: 1fr;
+  }
+
+  .checks li:nth-child(odd),
+  .checks li:nth-child(even) {
+    transform: none;
+  }
+
+  .hero-actions {
+    flex-wrap: wrap;
+  }
+}
+
+/* Guides: a reading section — index list plus tightened rhythm. */
+.guide-list {
+  list-style: none;
+  padding: 0;
+  margin: 2rem 0;
+}
+
+.guide-list li {
+  margin: 0 0 1.5rem;
+}
+
+.guide-list a {
+  font-weight: 800;
+  font-size: 1.1875rem;
+  text-decoration-thickness: 2px;
+}
+
+.guide-list p {
+  margin: 0.2rem 0 0;
+  color: var(--color-muted);
+}
+
+@media print {
+  .hero-actions,
+  .cmd {
+    display: none;
+  }
 }

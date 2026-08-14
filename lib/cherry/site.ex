@@ -50,8 +50,26 @@ defmodule Cherry.Site do
             social_image: [
               type: :string,
               doc: "Site-relative path to a fallback social card image, e.g. `card.png`."
+            ],
+            nav: [
+              type:
+                {:list,
+                 {:keyword_list,
+                  [
+                    label: [type: :string, required: true],
+                    href: [type: :string, required: true],
+                    position: [type: {:in, [:start, :end]}, default: :end]
+                  ]}},
+              default: [],
+              doc:
+                "Extra nav entries. `position: :end` (the default) appends an entry " <>
+                  "after the built-ins (Blog, then Portfolio/CV when present); " <>
+                  "`position: :start` places it before them. `href` is site-relative " <>
+                  "(\"guides/\" — base_path is applied) or absolute (http…), passed verbatim."
             ]
           )
+
+  alias Cherry.Site.Icons
 
   @enforce_keys [:title, :url, :base_path, :root, :output]
   defstruct [
@@ -64,8 +82,12 @@ defmodule Cherry.Site do
     :author,
     :social_image,
     :root,
-    :output
+    :output,
+    nav: [],
+    icons: %Icons{}
   ]
+
+  @type nav_entry :: %{label: String.t(), href: String.t(), position: :start | :end}
 
   @type t :: %__MODULE__{
           title: String.t(),
@@ -76,6 +98,8 @@ defmodule Cherry.Site do
           description: String.t() | nil,
           author: String.t(),
           social_image: String.t() | nil,
+          nav: [nav_entry()],
+          icons: Icons.t(),
           root: Path.t(),
           output: Path.t()
         }
@@ -132,6 +156,8 @@ defmodule Cherry.Site do
            description: validated[:description],
            author: Keyword.get(validated, :author, validated[:title]),
            social_image: validated[:social_image],
+           nav: Enum.map(validated[:nav], &Map.new/1),
+           icons: Icons.detect(root),
            root: root,
            output: Keyword.get(opts, :output, Path.join(root, "_site"))
          }}
