@@ -46,7 +46,8 @@ defmodule Cherry.Pipeline.Stages.Validate do
     case Schema.validate(doc.meta, collection.schema(), doc.source) do
       {:ok, meta} ->
         validated = %Document{doc | meta: meta}
-        {:ok, %Document{validated | path: collection.route(validated)}}
+        path = collection.route(validated)
+        {:ok, %Document{validated | path: path, url: Document.url_for(path)}}
 
       {:error, message} ->
         {:error, message}
