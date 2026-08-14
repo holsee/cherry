@@ -8,6 +8,7 @@ Entries are terse one-liners linked to their PR: `- Thing that changed. (#12)`
 ## [Unreleased]
 
 ### Added
+- Published build action (`holsee/cherry/action`): composite GitHub Action doing toolchain setup, caching, `cherry.build`, and `cherry.check` (strict by default) in one `uses:` step — GH Pages users never touch Elixir locally; `gen.action` workflows now wrap it, and CI exercises the action against a fresh `cherry.new` site on both OSes. (#23)
 - Optional Pagefind search: `search: "pagefind"` in `cherry.exs` — the new Post pipeline stage indexes the emitted site (`npx pagefind`), both official themes grow a token-styled search island only when enabled, and default builds stay byte-identical and dependency-free. (#22)
 - `mix cherry.new PATH` (the `cherry_new` installer, `installer/`): scaffolds an agent-ready site — content dirs, config (including the Lumis NIF selection consumers must carry), first post, `AGENTS.md` documenting the operate loop, and a `.claude/skills/publish` skill; CI dogfoods a generated site with `build` + `check --strict` against every commit. (#21)
 - `cherry theme.diff`: managed drift — every overlay's three-way status against the installed theme (`current` / `auto_updatable` / `conflict` / `untracked`), `--apply` re-ejects auto-updatable ones with fresh provenance, and `cherry check` warns on stale or untracked overlays. Frozen theme copies, answered. (#20)

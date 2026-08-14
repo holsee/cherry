@@ -17,7 +17,7 @@ defmodule Cherry.Commands.GenActionTest do
 
     workflow = File.read!(Path.join(tmp, @workflow))
     assert workflow =~ "branches: [main]"
-    assert workflow =~ "mix cherry.build"
+    assert workflow =~ "uses: holsee/cherry/action@develop"
     assert workflow =~ "touch _site/.nojekyll"
     assert workflow =~ ~s|echo "cherrybomb.dev" > _site/CNAME|
     assert workflow =~ "actions/upload-pages-artifact"
