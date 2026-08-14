@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+<url><loc>https://orchard.example/about/</loc></url>
+<url><loc>https://orchard.example/blog/</loc></url>
+<url><loc>https://orchard.example/blog/tags/elixir/</loc></url>
+<url><loc>https://orchard.example/blog/tags/meta/</loc></url>
+<url><loc>https://orchard.example/hello-world/</loc></url>
+<url><loc>https://orchard.example/</loc></url>
+<url><loc>https://orchard.example/picking-cherries/</loc></url>
+</urlset>

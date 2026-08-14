@@ -14,9 +14,9 @@ defmodule Cherry.CollectionsTest do
 
       assert {:ok, build} = Cherry.build(source: @fixture, output: out, today: @today)
 
-      # 2 pages + 2 published posts + blog index + 2 tag pages + 404;
-      # the draft and the 2099 post are filtered.
-      assert length(build.pages) == 8
+      # 2 pages + 2 published posts + blog index + 2 tag pages + 404
+      # + feed/sitemap/robots; the draft and the 2099 post are filtered.
+      assert length(build.pages) == 11
       assert_trees_equal(@golden, out)
     end
 
