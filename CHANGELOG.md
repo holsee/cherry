@@ -7,6 +7,8 @@ Entries are terse one-liners linked to their PR: `- Thing that changed. (#12)`
 
 ## [Unreleased]
 
+## [0.1.0-rc.1] — 2026-08-14
+
 ### Added
 - Standalone binary + release pipeline (ADR 0007): Burrito packaging (`Cherry.Binary` boots the CLI seam only in `CHERRY_RELEASE` builds), tag-gated release workflow with a five-target native-runner matrix, per-binary smoke tests, `SHA256SUMS` + build-provenance attestation, prerelease-aware publishing, and real checksum-verifying `install.sh` / `install.ps1` served from cherrybomb.dev; `workflow_dispatch` runs the whole matrix as a publish-nothing dry run. (#24)
 - Published build action (`holsee/cherry/action`): composite GitHub Action doing toolchain setup, caching, `cherry.build`, and `cherry.check` (strict by default) in one `uses:` step — GH Pages users never touch Elixir locally; `gen.action` workflows now wrap it, and CI exercises the action against a fresh `cherry.new` site on both OSes. (#23)
