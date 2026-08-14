@@ -86,9 +86,10 @@ jobs:
           otp-version: "28.x"
           elixir-version: "1.20.x"
 
+      # Burrito 1.6 hard-requires exactly this Zig version.
       - uses: mlugg/setup-zig@v2
         with:
-          version: "0.14.1"
+          version: "0.16.0"
 
       - name: xz (macOS)
         if: runner.os == 'macOS'
