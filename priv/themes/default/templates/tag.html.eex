@@ -1,4 +1,6 @@
 <% import Cherry.Theme.Helpers %><h1>Tagged: <%= h(@tag) %></h1>
+<%= if @story_href do %><p class="story-link"><a href="<%= @story_href %>">The <%= h(@tag) %> story — positions, projects, and talks →</a></p>
+<% end %>
 <ul class="post-list">
 <%= for post <- @posts do %><li>
 <time datetime="<%= Date.to_iso8601(post.meta.date) %>"><%= Date.to_iso8601(post.meta.date) %></time>

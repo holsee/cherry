@@ -5,7 +5,7 @@
   cherry_contract: "1.0",
   templates: [
     layout: [
-      assigns: [:site, :inner, :page_title, :head_extra],
+      assigns: [:site, :inner, :page_title, :head_extra, :nav],
       doc: "Outer HTML shell wrapped around every rendered page."
     ],
     page: [
@@ -21,8 +21,16 @@
       doc: "Reverse-chronological index of published posts."
     ],
     tag: [
-      assigns: [:site, :tag, :posts],
-      doc: "Published posts carrying one tag."
+      assigns: [:site, :tag, :posts, :story_href],
+      doc: "Published posts carrying one tag; links to the tag's story when one exists."
+    ],
+    portfolio_timeline: [
+      assigns: [:site, :portfolio],
+      doc: "The developer story: profile header, dated timeline, open source."
+    ],
+    story: [
+      assigns: [:site, :tag, :portfolio, :posts],
+      doc: "One tag across the whole story: portfolio entries plus blog posts."
     ],
     not_found: [
       assigns: [:site],

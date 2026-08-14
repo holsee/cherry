@@ -5,7 +5,7 @@
 # Review the diff — the goldens are the output contract.
 today = ~D[2026-08-14]
 
-for fixture <- ["minimal", "blog"] do
+for fixture <- ["minimal", "blog", "folio"] do
   source = Path.join("test/fixtures/sites", fixture)
   output = Path.join(source, "expected")
 
