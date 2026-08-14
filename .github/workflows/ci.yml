@@ -17,6 +17,10 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      # file_system needs inotify-tools for the serve tests.
+      - if: runner.os == 'Linux'
+        run: sudo apt-get update && sudo apt-get install -y inotify-tools
+
       - uses: erlef/setup-beam@v1
         with:
           otp-version: "28.x"
