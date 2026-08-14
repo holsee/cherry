@@ -1,4 +1,4 @@
-/* Cherrybomb — Cherry's brand theme.
+/* CherryBomb — Cherry's brand theme.
  *
  * THESIS: the logo's night, inhabited — the graffiti/retrowave energy of
  * the cherrybomb mark carried by ground, glow, and color, while the prose
@@ -159,6 +159,10 @@ a:focus-visible {
  * the logo's tail, redrawn in CSS from the theme's own tokens. */
 .site-title {
   position: relative;
+  display: inline-flex;
+  align-items: center;
+  white-space: nowrap;
+  flex-shrink: 0;
   font-weight: 800;
   font-size: 1.0625rem;
   letter-spacing: -0.01em;
@@ -971,12 +975,16 @@ pre.lumis {
 
 .site-title::before {
   content: "";
-  display: inline-block;
+  flex-shrink: 0;
   width: 1.35em;
   height: 1.35em;
   margin-right: 0.4em;
-  vertical-align: -0.34em;
   background: url("cherrybomb-mark.png") center / contain no-repeat;
+}
+
+/* The brush underline clears the mark and sits under the wordmark only. */
+.site-title::after {
+  left: 1.6em;
 }
 
 /* Landing: the wrap widens; each section owns its own measure. */

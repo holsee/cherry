@@ -3,7 +3,7 @@ title: Home
 description: Cherry is a static site generator for hackers. Typed content, deterministic builds, real theming, one binary.
 ---
 <section class="hero">
-<img class="hero-mark" src="/brand/cherrybomb-mark.webp" alt="Cherrybomb: two cherries with a lit fuse and sunglasses" width="320" height="320">
+<img class="hero-mark" src="/brand/cherrybomb-mark.webp" alt="CherryBomb: two cherries with a lit fuse and sunglasses" width="320" height="320">
 <h1>A static site generator<br>for <em>hackers</em></h1>
 <p class="hero-tagline">A modern take on Octopress: typed content, deterministic builds, themes that survive upgrades. One binary, fuse lit.</p>
 <p class="hero-actions"><a class="button" href="/guides/quick-start/">Quick-start</a> <a class="button button-ghost" href="https://github.com/holsee/cherry">GitHub</a></p>

@@ -24,7 +24,7 @@ defmodule Cherry.CherrybombThemeTest do
     out = build_with_theme(tmp, ~s("cherrybomb"))
 
     css = File.read!(Path.join(out, "assets/site.css"))
-    assert css =~ "Cherrybomb"
+    assert css =~ "CherryBomb"
     assert css =~ "--color-accent: #ff4d7d"
 
     # Same pages, same routes — only the world changed.

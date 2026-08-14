@@ -1,5 +1,5 @@
 [
-  title: "Cherrybomb",
+  title: "CherryBomb",
   url: "https://cherrybomb.dev",
   description: "Cherry is a static site generator for hackers, a modern take on Octopress.",
   author: "holsee",

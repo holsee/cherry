@@ -11,7 +11,7 @@ Entries are terse one-liners linked to their PR: `- Thing that changed. (#12)`
 - Pagefind search drawer rendered in document flow inside the nav, pushing the whole page down with an off-centre results column, a dead thumbnail gutter, browser-yellow highlight marks, and a search input that overflowed the viewport on mobile. Both themes now anchor the drawer as a token-themed overlay panel under the input (`showImages: false`, internal scroll), and the header wraps at 44rem so search gets a full-width row on small screens. (#30)
 
 ### Changed
-- Cherrybomb brand assets (logo, mascot, wordmark, and all repo derivatives) are excluded from the MIT/Apache-2.0 dual license: `assets/LICENSE` reserves them while permitting in-product display and nominative use; the hex package ships the notice alongside the theme's nav mark. (#30)
+- CherryBomb brand assets (logo, mascot, wordmark, and all repo derivatives) are excluded from the MIT/Apache-2.0 dual license: `assets/LICENSE` reserves them while permitting in-product display and nominative use; the hex package ships the notice alongside the theme's nav mark. (#30)
 - Site prose voice pass: no em dashes anywhere on cherrybomb.dev, all JSON code blocks fully pretty-printed. (#30)
 
 ### Added
