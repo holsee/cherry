@@ -835,6 +835,7 @@ pre.lumis {
    follows both renditions for free. */
 
 .site-search {
+  position: relative;
   min-width: 14rem;
 }
 
@@ -845,4 +846,61 @@ pre.lumis {
   --pagefind-ui-border: var(--color-border);
   --pagefind-ui-tag: var(--color-surface);
   --pagefind-ui-font: var(--font-prose);
+  --pagefind-ui-scale: 0.85;
+}
+
+/* The drawer becomes a panel anchored under the input, overlaying the
+   page instead of pushing it down. */
+#search .pagefind-ui__drawer:not(.pagefind-ui__hidden) {
+  position: absolute;
+  top: calc(100% + 0.625rem);
+  right: 0;
+  z-index: 60;
+  width: min(30rem, 88vw);
+  max-height: min(65vh, 30rem);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding: 0.5rem 1.25rem 1.25rem;
+  background: var(--color-bg);
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  box-shadow: 0 14px 40px color-mix(in srgb, black 25%, transparent);
+}
+
+#search .pagefind-ui__message {
+  font-size: 0.8125rem;
+  color: var(--color-muted);
+}
+
+#search .pagefind-ui__result {
+  border-top: 1px solid var(--color-border);
+}
+
+#search .pagefind-ui__result-excerpt mark {
+  background: color-mix(in srgb, var(--color-accent) 22%, transparent);
+  color: var(--color-fg);
+  padding: 0 0.15em;
+  border-radius: 3px;
+}
+
+@media (max-width: 44rem) {
+  .site-header .wrap {
+    flex-wrap: wrap;
+  }
+
+  .site-nav {
+    flex-wrap: wrap;
+  }
+
+  .site-search {
+    order: 10;
+    flex: 1 1 100%;
+    min-width: 0;
+  }
+
+  #search .pagefind-ui__drawer:not(.pagefind-ui__hidden) {
+    left: 0;
+    right: 0;
+    width: auto;
+  }
 }
