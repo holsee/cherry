@@ -1,7 +1,7 @@
 defmodule CherryNew.MixProject do
   use Mix.Project
 
-  @version "0.1.0-dev"
+  @version "0.1.0-rc.1"
   @source_url "https://github.com/holsee/cherry"
 
   def project do

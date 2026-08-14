@@ -5,7 +5,7 @@ CI — contributors edit markdown in the web UI, the action does the rest.
 No local Elixir toolchain required.
 
 ```yaml
-- uses: actions/checkout@v4
+- uses: actions/checkout@v7
 
 # TODO: pin to a release tag once cherry ships one.
 - uses: holsee/cherry/action@develop
@@ -13,7 +13,7 @@ No local Elixir toolchain required.
     source: .        # the site's mix project (default ".")
     check: strict    # strict | warn | off (default "strict")
 
-- uses: actions/upload-pages-artifact@v3
+- uses: actions/upload-pages-artifact@v5
   with:
     path: _site
 ```

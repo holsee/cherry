@@ -116,7 +116,7 @@ defmodule Cherry.Commands.GenAction do
       build:
         runs-on: ubuntu-latest
         steps:
-          - uses: actions/checkout@v4
+          - uses: actions/checkout@v7
 
           # Toolchain setup, caching, build, and cherry.check in one step.
           # TODO: pin to a release tag once cherry ships one.
@@ -124,7 +124,7 @@ defmodule Cherry.Commands.GenAction do
 
           - run: touch _site/.nojekyll#{cname_step}
 
-          - uses: actions/upload-pages-artifact@v3
+          - uses: actions/upload-pages-artifact@v5
             with:
               path: _site
 
@@ -136,7 +136,7 @@ defmodule Cherry.Commands.GenAction do
           url: ${{ steps.deployment.outputs.page_url }}
         steps:
           - id: deployment
-            uses: actions/deploy-pages@v4
+            uses: actions/deploy-pages@v5
     """
   end
 end
