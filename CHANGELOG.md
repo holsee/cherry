@@ -8,6 +8,7 @@ Entries are terse one-liners linked to their PR: `- Thing that changed. (#12)`
 ## [Unreleased]
 
 ### Added
+- Library skeleton with `mix precommit` gate, TS toolchain, and CI on ubuntu + windows. (#1)
 - Project constitution (AGENTS.md), design doc (DESIGN.md), ADRs 0001–0006, backlog.
 - Dual MIT / Apache-2.0 license.
 - End-state README with the Cherrybomb identity.
