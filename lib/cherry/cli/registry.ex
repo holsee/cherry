@@ -8,6 +8,7 @@ defmodule Cherry.CLI.Registry do
 
   @commands %{
     "build" => Cherry.Commands.Build,
+    "gen.action" => Cherry.Commands.GenAction,
     "gen.post" => Cherry.Commands.GenPost,
     "publish" => Cherry.Commands.Publish,
     "schema" => Cherry.Commands.Schema,
