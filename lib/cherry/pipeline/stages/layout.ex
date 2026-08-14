@@ -11,7 +11,7 @@ defmodule Cherry.Pipeline.Stages.Layout do
   @behaviour Cherry.Pipeline.Stage
 
   alias Cherry.Build
-  alias Cherry.Content.{Document, Page}
+  alias Cherry.Content.{Asset, Document, Page}
   alias Cherry.Site
   alias Cherry.Theme
   alias Cherry.Theme.{Helpers, Renderer}
@@ -22,8 +22,24 @@ defmodule Cherry.Pipeline.Stages.Layout do
     with {:ok, theme} <- Theme.load_active(site),
          {:ok, content_pages} <- render_documents(build.documents, site, theme),
          {:ok, synthetic} <- synthetic_pages(build.documents, site, theme) do
-      {:ok, %Build{build | pages: content_pages ++ synthetic}}
+      assets = build.assets ++ theme_assets(theme)
+      {:ok, %Build{build | pages: content_pages ++ synthetic, assets: assets}}
     end
+  end
+
+  # The theme's static files (CSS, compiled islands) ship under /assets/.
+  defp theme_assets(theme) do
+    base = Path.join(theme.root, "assets")
+
+    base
+    |> Path.join("**")
+    |> Path.wildcard()
+    |> Enum.filter(&File.regular?/1)
+    |> Enum.sort()
+    |> Enum.map(fn abs ->
+      rel = abs |> Path.relative_to(base) |> String.replace("\\", "/")
+      %Asset{source: abs, path: "assets/" <> rel}
+    end)
   end
 
   defp render_documents(documents, site, theme) do

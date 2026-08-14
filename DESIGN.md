@@ -282,7 +282,7 @@ This directly answers Jekyll's frozen-copies problem and shadcn's unanswered FAQ
 ### The default theme itself
 
 - **Design tokens on `:root`** (full light palette), redefined under `prefers-color-scheme: dark` and under an explicit `data-theme` attribute so a manual toggle beats system preference. No-flash inline script reads `localStorage` before first paint.
-- **Code blocks follow the theme for free:** MDEx's `html_multi_themes` formatter emits both highlight palettes (e.g. `github_light`/`github_dark`) switched by CSS — no JS re-highlighting.
+- **Code blocks follow the theme for free:** MDEx's `html_linked` formatter (Lumis engine — it superseded the old `html_multi_themes` API) emits class-based tokens with no baked colors; the theme's own `--syn-*` custom properties color them in both renditions, so the toggle swaps code and prose as one world — no JS re-highlighting.
 - Hand-rolled tokens CSS, no Tailwind: design is a feature of this product, the CSS should be readable, and zero node/binary build deps keeps the pipeline pure. (Sites that want Tailwind add it as a watcher; we don't ship it.)
 - Zero JS by default; enhancements (theme toggle, search UI) are `<script>` islands that fail soft — authored in TypeScript in the cherry repo, shipped as compiled JS assets (user site builds stay node-free).
 - Design pass will be done with the impeccable skill when we build it. Typography-first; the old site's "code and stuff" personality, modernized.
@@ -313,7 +313,7 @@ Elsewhere: Netlify/Cloudflare/Vercel need nothing but "build command + output di
 Pipeline (load→validate→transform→layout→emit), `pages` + `posts` collections, tags, default theme with light/dark, theme contract v1 (manifest, tokens, shadowing via `theme.eject` with provenance, `theme.list`/`theme.which`), `gen.post`/`build`/`serve`/`publish`, Atom feed, sitemap, canonical/OG/JSON-LD basics, GH Pages action + base-path handling. Migrate holsee.github.io content from `original/` (source branch markdown) as the dogfood.
 
 **Phase 2 — Portfolio**
-Portfolio collections + schemas (incl. `education`), `portfolio.yaml` profile, timeline theme section, shared-taxonomy story pages, **the CV view** (`/cv/` — a web page that reads like a CV, print-ready, curation frontmatter, derived skills, `/cv.json`, visibility controls), `Person` JSON-LD, `gen.project`/`gen.talk`. Also `mix cherry.gen.theme` + a second official theme — the proof that the swap contract is real, not aspirational.
+Portfolio collections + schemas (incl. `education`), `portfolio.yaml` profile, timeline theme section, shared-taxonomy story pages, **the CV view** (`/cv/` — a web page that reads like a CV, print-ready, curation frontmatter, derived skills, `/cv.json`, visibility controls), `Person` JSON-LD, `gen.project`/`gen.talk`. Also `mix cherry.gen.theme` + a second official theme — the proof that the swap contract is real, not aspirational. Decided (2026-08-14): the second theme is **`cherrybomb`**, carrying the brand's graffiti/retrowave energy (logo art in `assets/`); the default theme stays clean and brand-free.
 
 **Phase 3 — Agent, binary & polish**
 `cherry.check` suite, `--json` everywhere it isn't yet, llms.txt + markdown mirrors, JSON Feed, `cherry.schema`, scaffolded `AGENTS.md` + skill, Pagefind integration, published build-action, `cherry_new` archive on Hex, **`theme.diff` managed-drift upgrades**, **Burrito standalone binary + binary-mode sites** (the `Cherry.CLI.run/1` seam that makes it cheap is built in Phase 1).
