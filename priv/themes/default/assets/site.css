@@ -324,7 +324,7 @@ a.anchor:focus-visible::before {
   --alert-hue: var(--color-accent);
   margin: 1.5rem 0;
   padding: 0.75rem 1.25rem 0.5rem;
-  border-left: 3px solid var(--alert-hue);
+  border-left: 1px solid var(--alert-hue);
   background: color-mix(in srgb, var(--alert-hue) 7%, transparent);
 }
 
