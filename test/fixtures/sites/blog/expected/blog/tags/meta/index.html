@@ -4,20 +4,48 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Tagged: meta · Orchard</title>
+<link rel="stylesheet" href="/assets/site.css">
+<script>
+/* No-flash: apply the stored theme before first paint. */
+(function () {
+  try {
+    var t = localStorage.getItem("cherry-theme");
+    if (t === "light" || t === "dark") document.documentElement.dataset.theme = t;
+  } catch (e) {}
+})();
+</script>
 </head>
 <body>
-<header>
-<nav><a href="/">Orchard</a> · <a href="/blog/">Blog</a></nav>
+<header class="site-header">
+<div class="wrap">
+<a class="site-title" href="/">Orchard</a>
+<nav class="site-nav"><a href="/blog/">Blog</a>
+<button class="theme-toggle" type="button" aria-label="Theme">
+<svg data-theme-icon="auto" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><circle cx="8" cy="8" r="6"/><path d="M8 2 A6 6 0 0 1 8 14 Z" fill="currentColor" stroke="none"/></svg>
+<svg data-theme-icon="light" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true" style="display:none"><circle cx="8" cy="8" r="3.5"/><path d="M8 1v2M8 13v2M1 8h2M13 8h2M3 3l1.4 1.4M11.6 11.6L13 13M13 3l-1.4 1.4M4.4 11.6L3 13"/></svg>
+<svg data-theme-icon="dark" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true" style="display:none"><path d="M13.5 9.5A6 6 0 1 1 6.5 2.5a5 5 0 0 0 7 7Z"/></svg>
+<span data-theme-label>auto</span>
+</button>
+</nav>
+</div>
 </header>
 <main>
+<div class="wrap">
 <h1>Tagged: meta</h1>
 <ul class="post-list">
 <li>
-<time datetime="2026-01-15">January 15, 2026</time>
+<time datetime="2026-01-15">2026-01-15</time>
 <a href="/hello-world/">Hello, world</a>
 </li>
 </ul>
 
+</div>
 </main>
+<footer class="site-footer">
+<div class="wrap">
+<span>© Orchard</span>
+</div>
+</footer>
+<script src="/assets/theme-toggle.js" defer></script>
 </body>
 </html>

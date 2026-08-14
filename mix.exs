@@ -34,6 +34,7 @@ defmodule Cherry.MixProject do
 
   defp deps do
     [
+      {:lumis, "~> 0.1"},
       {:mdex, "~> 0.13"},
       {:nimble_options, "~> 1.1"},
       {:yaml_elixir, "~> 2.12"},

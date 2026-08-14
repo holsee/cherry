@@ -18,7 +18,7 @@ defmodule Cherry.BuildTest do
 
       # 2 raw pages + the synthetic blog index and 404.
       assert length(build.pages) == 4
-      assert length(build.assets) == 1
+      assert length(build.assets) == 3
 
       assert_trees_equal(@golden, out)
     end

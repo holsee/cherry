@@ -29,7 +29,34 @@
       doc: "The 404 page."
     ]
   ],
-  # The token manifest is the theme's public styling API; it is filled in
-  # by the design pass (DO_NEXT slice 6).
-  tokens: []
+  # The token manifest is the theme's public styling API. Defaults are the
+  # light rendition; the dark rendition redefines every color token.
+  tokens: [
+    "--color-bg": [default: "#ffffff", doc: "Page background."],
+    "--color-surface": [default: "#f6f6f4", doc: "Raised ground: code blocks, inline code."],
+    "--color-fg": [default: "#1f2328", doc: "Body text."],
+    "--color-muted": [default: "#59626c", doc: "Secondary text: metadata, nav, footer."],
+    "--color-border": [default: "#e4e4e1", doc: "Hairline rules and control borders."],
+    "--color-accent": [default: "#b3173e", doc: "Links and interactive accents."],
+    "--color-accent-strong": [default: "#8f1132", doc: "Hover/active accent."],
+    "--color-selection": [default: "#ffdce2", doc: "Text selection ground."],
+    "--syn-keyword": [default: "#b3173e", doc: "Syntax: keywords."],
+    "--syn-string": [default: "#0a3069", doc: "Syntax: strings and characters."],
+    "--syn-comment": [default: "#5d6570", doc: "Syntax: comments (italic)."],
+    "--syn-function": [default: "#6639ba", doc: "Syntax: functions and methods."],
+    "--syn-constant": [default: "#0550ae", doc: "Syntax: constants, numbers, booleans."],
+    "--syn-type": [default: "#953800", doc: "Syntax: types, modules, tags, attributes."],
+    "--syn-variable": [default: "#1f2328", doc: "Syntax: variables and default code text."],
+    "--syn-punct": [default: "#59626c", doc: "Syntax: punctuation and operators."],
+    "--font-prose": [
+      default: "Charter, 'Bitstream Charter', 'Sitka Text', Cambria, Georgia, serif",
+      doc: "Long-form reading face (system stack, zero bytes)."
+    ],
+    "--font-mono": [
+      default:
+        "ui-monospace, 'Cascadia Code', 'SF Mono', Consolas, 'DejaVu Sans Mono', monospace",
+      doc: "Structure and code face."
+    ],
+    "--measure": [default: "42rem", doc: "Reading column width (~66ch)."]
+  ]
 ]

@@ -4,7 +4,7 @@
   "description": "TypeScript toolchain for Cherry's client-side islands (compiled JS ships with themes; user sites stay node-free).",
   "scripts": {
     "check": "tsc --noEmit",
-    "build": "esbuild assets/js/index.ts --bundle --minify --format=esm --target=es2020 --outdir=priv/static/js"
+    "build": "esbuild assets/js/theme-toggle.ts --bundle --minify --format=iife --target=es2020 --outfile=priv/themes/default/assets/theme-toggle.js"
   },
   "devDependencies": {
     "esbuild": "^0.25.0",
