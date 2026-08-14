@@ -58,7 +58,8 @@ defmodule Cherry.MixProject do
         "credo --strict",
         "dialyzer",
         &check_assets/1,
-        "test"
+        "test",
+        "cmd --cd installer mix test"
       ]
     ]
   end

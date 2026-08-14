@@ -48,3 +48,15 @@ jobs:
       - run: mix deps.get
       - run: npm ci
       - run: mix precommit
+
+      # Dogfood the generator: a fresh `cherry.new` site must build and
+      # check clean against this very checkout.
+      - name: cherry.new dogfood
+        if: runner.os == 'Linux'
+        working-directory: installer
+        run: |
+          mix cherry.new /tmp/orchard --cherry-path "$GITHUB_WORKSPACE"
+          cd /tmp/orchard
+          mix deps.get
+          mix cherry.build
+          mix cherry.check --strict

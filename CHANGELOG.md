@@ -8,6 +8,7 @@ Entries are terse one-liners linked to their PR: `- Thing that changed. (#12)`
 ## [Unreleased]
 
 ### Added
+- `mix cherry.new PATH` (the `cherry_new` installer, `installer/`): scaffolds an agent-ready site — content dirs, config (including the Lumis NIF selection consumers must carry), first post, `AGENTS.md` documenting the operate loop, and a `.claude/skills/publish` skill; CI dogfoods a generated site with `build` + `check --strict` against every commit. (#21)
 - `cherry theme.diff`: managed drift — every overlay's three-way status against the installed theme (`current` / `auto_updatable` / `conflict` / `untracked`), `--apply` re-ejects auto-updatable ones with fresh provenance, and `cherry check` warns on stale or untracked overlays. Frozen theme copies, answered. (#20)
 - JSON Feed: `feed.json` (jsonfeed.org 1.1) alongside Atom with a discovery `<link>` on every page; `cherry check` now verifies it too. (#19)
 - The machine surface: every content route now carries an `index.md` markdown mirror alongside its `index.html` (posts, pages, blog index, tag pages, portfolio timeline, stories, CV), plus a generated `/llms.txt` per the llmstxt.org convention with absolute links to the mirrors; unlisted pages keep their mirrors but stay out of `llms.txt`, and mirrors never leak into the sitemap or feed. (#18)
