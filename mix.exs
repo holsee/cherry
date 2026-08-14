@@ -17,12 +17,20 @@ defmodule Cherry.MixProject do
       deps: deps(),
       aliases: aliases(),
       docs: docs(),
-      dialyzer: dialyzer()
+      dialyzer: dialyzer(),
+      releases: releases()
     ]
   end
 
+  # The `mod:` entry boots the CLI dispatcher — standalone binary only
+  # (CHERRY_RELEASE is set by the release workflow). Sites embedding
+  # cherry as a dependency must never start an application.
   def application do
-    [extra_applications: [:logger]]
+    if System.get_env("CHERRY_RELEASE") do
+      [extra_applications: [:logger], mod: {Cherry.Binary, []}]
+    else
+      [extra_applications: [:logger]]
+    end
   end
 
   def cli do
@@ -40,11 +48,38 @@ defmodule Cherry.MixProject do
       {:mdex, "~> 0.13"},
       {:nimble_options, "~> 1.1"},
       {:yaml_elixir, "~> 2.12"},
+      {:burrito, "~> 1.6", only: [:dev, :prod], runtime: false},
       {:credo, "~> 1.7", only: [:dev, :test], runtime: false},
       {:dialyxir, "~> 1.4", only: [:dev, :test], runtime: false},
       {:ex_doc, "~> 0.34", only: :dev, runtime: false},
       {:usage_rules, "~> 0.1", only: :dev, runtime: false}
     ]
+  end
+
+  # The standalone binary (ADR 0007): Burrito wraps the release into one
+  # self-extracting executable per target. Native-runner matrix — each CI
+  # runner builds only its own BURRITO_TARGET; no cross-compilation, so
+  # the right precompiled Rust NIFs always ship.
+  defp releases do
+    [
+      cherry: [
+        applications: [cherry: :permanent],
+        steps: release_steps(),
+        burrito: [
+          targets: [
+            linux_x86_64: [os: :linux, cpu: :x86_64],
+            linux_aarch64: [os: :linux, cpu: :aarch64],
+            macos_x86_64: [os: :darwin, cpu: :x86_64],
+            macos_aarch64: [os: :darwin, cpu: :aarch64],
+            windows_x86_64: [os: :windows, cpu: :x86_64]
+          ]
+        ]
+      ]
+    ]
+  end
+
+  defp release_steps do
+    if Code.ensure_loaded?(Burrito), do: [:assemble, &Burrito.wrap/1], else: [:assemble]
   end
 
   # The single quality gate. CI runs exactly this and nothing else (AGENTS.md).

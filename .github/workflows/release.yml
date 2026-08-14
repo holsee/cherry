@@ -1,0 +1,145 @@
+# Binary release pipeline (ADR 0007), modeled on holsee/fizzy-cli:
+# tag push v* on main → test gate → native-runner matrix (no
+# cross-compilation: the Rust NIFs must match their host) → GitHub
+# Release with SHA256SUMS + build provenance. Prerelease tags
+# (v1.0.0-rc.1) publish as prereleases and never become "latest".
+#
+# workflow_dispatch is the dry run: builds every binary, publishes
+# nothing.
+name: Release
+
+on:
+  push:
+    tags: ["v*"]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  id-token: write
+  attestations: write
+
+jobs:
+  gate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      # Releases only ever cut from main (fizzy's guard).
+      - name: tag must sit on main
+        if: github.event_name == 'push'
+        run: |
+          git branch -r --contains "$GITHUB_SHA" | grep -qx '  origin/main' \
+            || { echo "::error::tag ${GITHUB_REF_NAME} is not on main"; exit 1; }
+
+      - run: sudo apt-get update && sudo apt-get install -y inotify-tools
+
+      - uses: erlef/setup-beam@v1
+        with:
+          otp-version: "28.x"
+          elixir-version: "1.20.x"
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - run: mix deps.get
+      - run: npm ci
+      - run: mix precommit
+
+  build:
+    needs: gate
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: ubuntu-latest
+            target: linux_x86_64
+            asset: cherry-linux-x86_64
+          - os: ubuntu-24.04-arm
+            target: linux_aarch64
+            asset: cherry-linux-aarch64
+          - os: macos-13
+            target: macos_x86_64
+            asset: cherry-macos-x86_64
+          - os: macos-14
+            target: macos_aarch64
+            asset: cherry-macos-aarch64
+          - os: windows-latest
+            target: windows_x86_64
+            asset: cherry-windows-x86_64.exe
+    runs-on: ${{ matrix.os }}
+    env:
+      MIX_ENV: prod
+      CHERRY_RELEASE: "1"
+      BURRITO_TARGET: ${{ matrix.target }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: erlef/setup-beam@v1
+        with:
+          otp-version: "28.x"
+          elixir-version: "1.20.x"
+
+      - uses: mlugg/setup-zig@v2
+        with:
+          version: "0.14.1"
+
+      - name: xz (macOS)
+        if: runner.os == 'macOS'
+        run: brew install xz
+
+      - name: build the binary
+        shell: bash
+        run: |
+          mix deps.get
+          mix release --overwrite
+
+      - name: stage the asset
+        shell: bash
+        run: |
+          mkdir -p dist
+          src="burrito_out/cherry_${{ matrix.target }}"
+          if [ "${{ runner.os }}" = "Windows" ]; then src="$src.exe"; fi
+          cp "$src" "dist/${{ matrix.asset }}"
+
+      - name: smoke test
+        shell: bash
+        run: ./dist/${{ matrix.asset }} version
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ${{ matrix.asset }}
+          path: dist/${{ matrix.asset }}
+          if-no-files-found: error
+
+  publish:
+    if: github.event_name == 'push'
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          path: dist
+          merge-multiple: true
+
+      - name: checksums
+        working-directory: dist
+        run: sha256sum cherry-* > SHA256SUMS
+
+      - uses: actions/attest-build-provenance@v2
+        with:
+          subject-path: dist/cherry-*
+
+      - name: create the release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          prerelease=""
+          case "$GITHUB_REF_NAME" in *-*) prerelease="--prerelease";; esac
+          gh release create "$GITHUB_REF_NAME" $prerelease \
+            --repo "$GITHUB_REPOSITORY" \
+            --title "cherry $GITHUB_REF_NAME" \
+            --generate-notes \
+            dist/cherry-* dist/SHA256SUMS

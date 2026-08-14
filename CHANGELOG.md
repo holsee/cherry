@@ -8,6 +8,7 @@ Entries are terse one-liners linked to their PR: `- Thing that changed. (#12)`
 ## [Unreleased]
 
 ### Added
+- Standalone binary + release pipeline (ADR 0007): Burrito packaging (`Cherry.Binary` boots the CLI seam only in `CHERRY_RELEASE` builds), tag-gated release workflow with a five-target native-runner matrix, per-binary smoke tests, `SHA256SUMS` + build-provenance attestation, prerelease-aware publishing, and real checksum-verifying `install.sh` / `install.ps1` served from cherrybomb.dev; `workflow_dispatch` runs the whole matrix as a publish-nothing dry run. (#24)
 - Published build action (`holsee/cherry/action`): composite GitHub Action doing toolchain setup, caching, `cherry.build`, and `cherry.check` (strict by default) in one `uses:` step — GH Pages users never touch Elixir locally; `gen.action` workflows now wrap it, and CI exercises the action against a fresh `cherry.new` site on both OSes. (#23)
 - Optional Pagefind search: `search: "pagefind"` in `cherry.exs` — the new Post pipeline stage indexes the emitted site (`npx pagefind`), both official themes grow a token-styled search island only when enabled, and default builds stay byte-identical and dependency-free. (#22)
 - `mix cherry.new PATH` (the `cherry_new` installer, `installer/`): scaffolds an agent-ready site — content dirs, config (including the Lumis NIF selection consumers must carry), first post, `AGENTS.md` documenting the operate loop, and a `.claude/skills/publish` skill; CI dogfoods a generated site with `build` + `check --strict` against every commit. (#21)

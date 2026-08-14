@@ -34,5 +34,15 @@ defmodule Cherry.ExampleTest do
 
     index = File.read!(Path.join(out, "index.html"))
     assert index =~ ~s(<link rel="canonical" href="https://cherrybomb.dev/">)
+
+    # The real installers (ADR 0007): resolve latest stable, verify checksums.
+    install = File.read!(Path.join(out, "install.sh"))
+    assert install =~ "releases/latest/download"
+    assert install =~ "SHA256SUMS"
+    assert install =~ "checksum mismatch"
+
+    ps1 = File.read!(Path.join(out, "install.ps1"))
+    assert ps1 =~ "Get-FileHash"
+    assert ps1 =~ "SHA256SUMS"
   end
 end
