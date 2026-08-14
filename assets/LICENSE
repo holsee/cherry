@@ -1,0 +1,40 @@
+Cherrybomb Brand Assets License
+
+Copyright (c) 2026 Steven Holdsworth (holsee). All rights reserved.
+
+The Cherrybomb brand assets are NOT covered by the MIT or Apache-2.0
+licenses that apply to the rest of this repository. They are:
+
+- assets/cherrybomb_text.png (lockup with wordmark)
+- assets/cherrybomb_notext.png (mascot)
+- assets/cherrybomb_single.png (single-cherry crop)
+- all derivatives of the above elsewhere in this repository, including
+  but not limited to:
+  - example/static/favicon.ico
+  - example/static/apple-touch-icon.png
+  - example/static/og-card.png
+  - example/static/brand/cherrybomb-mark.webp
+  - priv/themes/cherrybomb/assets/cherrybomb-mark.png
+
+You MAY:
+
+- keep and serve unmodified copies of these files as part of building,
+  running, or redistributing Cherry itself (for example, the copy the
+  cherrybomb theme ships);
+- display the assets unmodified when referring to the Cherry project
+  (screenshots, articles, talks, package listings, links to
+  cherrybomb.dev).
+
+You MAY NOT, without prior written permission:
+
+- use these assets, or modified versions of them, as the logo, icon,
+  mascot, or branding of your own project, product, site, or service;
+- sell them or use them on merchandise;
+- use them in a way that suggests your work is affiliated with or
+  endorsed by the Cherry project.
+
+If you build a site with the cherrybomb theme, replace the shipped mark
+and icons with your own artwork; the theme works fine without them.
+
+Everything else in this repository remains dual-licensed under MIT or
+Apache-2.0 (see LICENSE-MIT and LICENSE-APACHE).
