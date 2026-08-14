@@ -118,21 +118,10 @@ defmodule Cherry.Commands.GenAction do
         steps:
           - uses: actions/checkout@v4
 
-          - uses: erlef/setup-beam@v1
-            with:
-              otp-version: "28.x"
-              elixir-version: "1.20.x"
+          # Toolchain setup, caching, build, and cherry.check in one step.
+          # TODO: pin to a release tag once cherry ships one.
+          - uses: holsee/cherry/action@develop
 
-          - uses: actions/cache@v4
-            with:
-              path: |
-                deps
-                _build
-              key: ${{ runner.os }}-mix-${{ hashFiles('mix.lock') }}
-              restore-keys: ${{ runner.os }}-mix-
-
-          - run: mix deps.get
-          - run: mix cherry.build
           - run: touch _site/.nojekyll#{cname_step}
 
           - uses: actions/upload-pages-artifact@v3

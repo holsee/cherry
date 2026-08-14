@@ -1,0 +1,32 @@
+# Cherry Build action
+
+Builds (and verifies) a [Cherry](https://github.com/holsee/cherry) site in
+CI — contributors edit markdown in the web UI, the action does the rest.
+No local Elixir toolchain required.
+
+```yaml
+- uses: actions/checkout@v4
+
+# TODO: pin to a release tag once cherry ships one.
+- uses: holsee/cherry/action@develop
+  with:
+    source: .        # the site's mix project (default ".")
+    check: strict    # strict | warn | off (default "strict")
+
+- uses: actions/upload-pages-artifact@v3
+  with:
+    path: _site
+```
+
+| input | default | meaning |
+|---|---|---|
+| `source` | `.` | directory of the site's mix project |
+| `check` | `strict` | `cherry.check` mode after the build; `warn` fails only on errors, `off` skips |
+| `otp-version` | `28.x` | passed to `erlef/setup-beam` |
+| `elixir-version` | `1.20.x` | passed to `erlef/setup-beam` |
+
+Output `output-path` is the built `_site` directory. Dependency and build
+caches are keyed on the site's `mix.lock`.
+
+`mix cherry.gen.action` generates a complete GitHub Pages workflow around
+this action.

@@ -60,3 +60,34 @@ jobs:
           mix deps.get
           mix cherry.build
           mix cherry.check --strict
+
+  build-action:
+    name: build-action (${{ matrix.os }})
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: erlef/setup-beam@v1
+        with:
+          otp-version: "28.x"
+          elixir-version: "1.20.x"
+
+      # A consumer site generated against this very checkout…
+      - name: scaffold a site
+        working-directory: installer
+        shell: bash
+        run: mix cherry.new "$GITHUB_WORKSPACE/tmp-site" --cherry-path "$GITHUB_WORKSPACE"
+
+      # …built by the published action, exercised from the local tree.
+      - uses: ./action
+        id: cherry
+        with:
+          source: tmp-site
+
+      - name: assert the build landed
+        shell: bash
+        run: test -f tmp-site/_site/index.html && test -f tmp-site/_site/llms.txt
