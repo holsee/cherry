@@ -166,10 +166,19 @@ drifts, and you're maintaining a CV again.
   standard schema (ATS tools and agents consume it; the standard's name stays theirs,
   the route is ours), plus the usual markdown mirror. JSON-LD `Person` derives from
   the same data.
-- **Discretion, the static-site way**: `cv: {visibility: :public | :unlisted | :off}`
-  in site config. Unlisted builds the page but keeps it out of nav, sitemap, feeds,
-  and llms.txt, with `noindex` — share the URL with an employer without announcing a
-  job hunt on your homepage.
+- **Discretion, the static-site way**: visibility is `:public | :unlisted | :off`.
+  Unlisted builds the page but keeps it out of nav, sitemap, feeds, and llms.txt,
+  with `noindex` — share the URL with an employer without announcing a job hunt on
+  your homepage.
+- **Identity routes.** The CV can additionally build under identity-carrying URLs —
+  `/cv/handle/`, `/cv/first.lastname/` — configured as independent routes, each
+  with its own slug, presented identity (`handle` → the page leads with "@handle";
+  `name` → it leads with the real name), and its own visibility. Both can be live at
+  once (public handle for the community, unlisted real name for employers — or any
+  combination). Exactly one route is canonical: all others emit `rel=canonical` to
+  it, and bare `/cv/` serves or redirects to it, so duplicate-content SEO stays
+  clean. No routes configured → plain `/cv/` only; the identity layer is opt-in.
+  Every route directory carries its own `cv.json` and markdown mirror.
 - **Freshness from content, not the clock**: the "Updated August 2026" line derives
   from the newest included entry (or an explicit `updated:` in `portfolio.yaml`) —
   the determinism contract holds.
