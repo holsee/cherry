@@ -35,7 +35,8 @@ defmodule Cherry.Theme.Renderer do
         inner: inner,
         page_title: context.page_title,
         head_extra: context.head_extra,
-        nav: context.nav
+        nav: context.nav,
+        search: context.search?
       )
     end
   end

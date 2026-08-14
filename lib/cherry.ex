@@ -52,7 +52,7 @@ defmodule Cherry do
   def check(opts) do
     source = Keyword.fetch!(opts, :source)
     options = Build.Options.new(opts)
-    stages = Pipeline.default_stages() -- [Pipeline.Stages.Emit]
+    stages = Pipeline.default_stages() -- [Pipeline.Stages.Emit, Pipeline.Stages.Post]
 
     with {:ok, site} <- Site.load(source),
          {:ok, build} <- Pipeline.run(Build.new(site, options), stages) do

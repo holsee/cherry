@@ -35,6 +35,10 @@ defmodule Cherry.Site do
               default: "default",
               doc: "\"default\" for the built-in theme, or a theme directory."
             ],
+            search: [
+              type: {:in, ["pagefind"]},
+              doc: "Optional post-build search: `\"pagefind\"` shells out to Pagefind."
+            ],
             description: [
               type: :string,
               doc: "Site description for meta tags and the feed subtitle."
@@ -55,6 +59,7 @@ defmodule Cherry.Site do
     :url,
     :base_path,
     :theme,
+    :search,
     :description,
     :author,
     :social_image,
@@ -67,6 +72,7 @@ defmodule Cherry.Site do
           url: String.t(),
           base_path: String.t(),
           theme: String.t(),
+          search: String.t() | nil,
           description: String.t() | nil,
           author: String.t(),
           social_image: String.t() | nil,
@@ -122,6 +128,7 @@ defmodule Cherry.Site do
            url: String.trim_trailing(validated[:url], "/"),
            base_path: normalize_base_path(validated[:base_path]),
            theme: validated[:theme],
+           search: validated[:search],
            description: validated[:description],
            author: Keyword.get(validated, :author, validated[:title]),
            social_image: validated[:social_image],

@@ -53,8 +53,16 @@ defmodule Cherry.Check do
 
   defp link_targets(build) do
     paths = Enum.map(build.pages, & &1.path) ++ Enum.map(build.assets, & &1.path)
-    MapSet.new(paths)
+    MapSet.new(paths ++ post_stage_targets(build.site))
   end
+
+  # The Post stage writes these after Emit, so the in-memory build
+  # cannot know them — but the layout legitimately links them.
+  defp post_stage_targets(%{search: "pagefind"}) do
+    ["pagefind/pagefind-ui.css", "pagefind/pagefind-ui.js"]
+  end
+
+  defp post_stage_targets(_site), do: []
 
   defp internal_urls(html, base) do
     @href

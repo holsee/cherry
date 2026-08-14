@@ -13,14 +13,15 @@ defmodule Cherry.Theme.RenderContext do
   alias Cherry.Theme.NavItem
 
   @enforce_keys [:site, :theme]
-  defstruct [:site, :theme, page_title: "", head_extra: "", nav: []]
+  defstruct [:site, :theme, page_title: "", head_extra: "", nav: [], search?: false]
 
   @type t :: %__MODULE__{
           site: Site.t(),
           theme: Theme.t(),
           page_title: String.t(),
           head_extra: String.t(),
-          nav: [NavItem.t()]
+          nav: [NavItem.t()],
+          search?: boolean()
         }
 
   @doc "Derives a page's context from the base: same site/theme/nav."

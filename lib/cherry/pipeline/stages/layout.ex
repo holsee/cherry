@@ -51,7 +51,7 @@ defmodule Cherry.Pipeline.Stages.Layout do
           []
         end
 
-    %RenderContext{site: site, theme: theme, nav: nav}
+    %RenderContext{site: site, theme: theme, nav: nav, search?: site.search == "pagefind"}
   end
 
   defp cv_visibility(%CV{profile: profile}), do: profile.cv.visibility
