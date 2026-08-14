@@ -1,6 +1,9 @@
 # LATER — parked, not lost
 
 - Generated OG card images (vix/libvips or resvg) — static fallback is fine for now.
+- Tag-filtered résumé variants (`/resume/backend/`) for targeted applications — even
+  Careers 2.0 never had this.
+- Build-time PDF résumé (ChromicPDF or similar) — browser print covers it until then.
 - Shortcodes/components in markdown (Zola-style) — transform-stage feature, Phase 2+.
 - Incremental builds beyond serve-mode — full builds are fast enough at blog scale.
 - Burrito binary release channel (ADR 0007, with the Phase 3 binary): tag-triggered

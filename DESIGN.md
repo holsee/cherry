@@ -128,7 +128,40 @@ The Careers 2.0 insight was that a developer's story is a *timeline of typed ent
 - Every portfolio entry carries `tags:` from the **same taxonomy as blog posts**. The story page for "Elixir" shows positions, projects, talks, *and every blog post* tagged Elixir. This cross-linking is the feature; nobody in SSG land does it.
 - Rendered as: timeline view (default), plus per-tag story pages.
 - Emits JSON-LD `Person` (with `worksFor`, `alumniOf`, `knowsAbout`) — the portfolio *is* the structured data.
-- A `portfolio.yaml` at the root holds the profile itself (name, headline, links, avatar).
+- A `portfolio.yaml` at the root holds the profile itself (name, headline, location, links, avatar). Contact email is **off by default** (spam harvesting on public static pages is real); opt-in via config.
+
+### The résumé view (Careers 2.0's best trick)
+
+Careers 2.0's killer use was linking an employer to your profile instead of sending a
+CV. Cherry ships that as `/resume/` — and the design principle is strict: **the résumé
+is a second projection of the same portfolio data, never a second dataset.** The story
+view is exploratory (timeline, cross-links); the résumé view is linear, dense,
+scannable. One source of truth, two lenses — the moment résumé content lives in its
+own file, it drifts, and you're maintaining a CV again.
+
+- **Curation, not duplication.** Entries opt in via frontmatter:
+  `resume: {include: true, weight: 10, highlights: [...]}`. The markdown body stays
+  the long-form story; `highlights` are the résumé's punchy bullets. No `resume:`
+  block → story-only. An `education` collection joins the portfolio built-ins.
+- **Evidence-backed skills** — the differentiator. The skills section is *derived*:
+  tags aggregated across positions/projects, weighted by duration and recency, each
+  one linking to that tag's story page. "Elixir — 6 yrs" is a click away from the
+  actual projects, talks, and posts. A PDF claims; this résumé shows.
+- **Print-first or it fails its one job.** Designed for `@media print` from day one:
+  black-on-white regardless of site theme, page-break discipline (never split an
+  entry), no chrome, A4/Letter-safe. "Download PDF" is the browser's print dialog —
+  zero JS, pixel-perfect because we designed for it. (Build-time PDF: LATER.)
+- **Machine-readable**: `/resume.json` in the [JSON Resume](https://jsonresume.org)
+  standard schema (ATS tools and agents consume it), plus the usual markdown mirror.
+  JSON-LD `Person` derives from the same data.
+- **Discretion, the static-site way**: `resume: {visibility: :public | :unlisted | :off}`.
+  Unlisted builds the page but keeps it out of nav, sitemap, feeds, and llms.txt,
+  with `noindex` — share the URL with an employer without announcing a job hunt.
+- **Freshness from content, not the clock**: the "Updated August 2026" line derives
+  from the newest included entry (or an explicit `updated:` in `portfolio.yaml`) —
+  the determinism contract holds.
+- The `resume` template is part of the **theme contract inventory**, so every theme
+  ships one and swapping never loses your résumé.
 
 ---
 
@@ -195,7 +228,7 @@ Cherry ships one excellent default theme — and a theme *system* designed so th
 A theme is a package — a hex dep in project mode, a plain directory in binary mode (EEx evaluates at runtime, so binary-mode sites get full themes, not a reduced tier). Every theme carries a `theme.exs` manifest declaring:
 
 - **Contract version** (`cherry_contract: "1.x"`) — the framework's theme API is versioned; `cherry.check` fails loudly on mismatch instead of half-rendering.
-- **Template inventory** — the named templates the contract requires (`layout`, `post`, `page`, `post_list`, `tag`, `portfolio_timeline`, `404`, …) and the assigns each receives. Fixed names + fixed assigns are *why* swap works.
+- **Template inventory** — the named templates the contract requires (`layout`, `post`, `page`, `post_list`, `tag`, `portfolio_timeline`, `resume`, `404`, …) and the assigns each receives. Fixed names + fixed assigns are *why* swap works.
 - **Token manifest** — every CSS custom property the theme uses, with default and description. Tokens are the theme's public styling API.
 - Metadata: name, version, screenshot, description.
 
@@ -258,7 +291,7 @@ Elsewhere: Netlify/Cloudflare/Vercel need nothing but "build command + output di
 Pipeline (load→validate→transform→layout→emit), `pages` + `posts` collections, tags, default theme with light/dark, theme contract v1 (manifest, tokens, shadowing via `theme.eject` with provenance, `theme.list`/`theme.which`), `gen.post`/`build`/`serve`/`publish`, Atom feed, sitemap, canonical/OG/JSON-LD basics, GH Pages action + base-path handling. Migrate holsee.github.io content from `original/` (source branch markdown) as the dogfood.
 
 **Phase 2 — Portfolio**
-Portfolio collections + schemas, `portfolio.yaml` profile, timeline theme section, shared-taxonomy story pages, `Person` JSON-LD, `gen.project`/`gen.talk`. Also `mix cherry.gen.theme` + a second official theme — the proof that the swap contract is real, not aspirational.
+Portfolio collections + schemas (incl. `education`), `portfolio.yaml` profile, timeline theme section, shared-taxonomy story pages, **the résumé view** (`/resume/` print-first template, curation frontmatter, derived skills, `/resume.json`, visibility controls), `Person` JSON-LD, `gen.project`/`gen.talk`. Also `mix cherry.gen.theme` + a second official theme — the proof that the swap contract is real, not aspirational.
 
 **Phase 3 — Agent, binary & polish**
 `cherry.check` suite, `--json` everywhere it isn't yet, llms.txt + markdown mirrors, JSON Feed, `cherry.schema`, scaffolded `AGENTS.md` + skill, Pagefind integration, published build-action, `cherry_new` archive on Hex, **`theme.diff` managed-drift upgrades**, **Burrito standalone binary + binary-mode sites** (the `Cherry.CLI.run/1` seam that makes it cheap is built in Phase 1).
