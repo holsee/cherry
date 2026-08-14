@@ -2,7 +2,7 @@ defmodule Cherry.Portfolio.Education do
   @moduledoc "A qualification: degree, certification, or formal course."
 
   alias Cherry.Content.Document
-  alias Cherry.Portfolio.CV
+  alias Cherry.Portfolio.Curation
 
   @enforce_keys [:slug, :title, :institution]
   defstruct [:slug, :title, :institution, :started, :ended, :cv, :html, tags: [], highlights: []]
@@ -15,7 +15,7 @@ defmodule Cherry.Portfolio.Education do
           ended: Date.t() | nil,
           tags: [String.t()],
           highlights: [String.t()],
-          cv: CV.t() | nil,
+          cv: Curation.t() | nil,
           html: String.t() | nil
         }
 

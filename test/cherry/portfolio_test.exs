@@ -2,7 +2,7 @@ defmodule Cherry.PortfolioTest do
   use ExUnit.Case, async: true
 
   alias Cherry.Portfolio
-  alias Cherry.Portfolio.{CV, Link, OpenSource, Position, Profile}
+  alias Cherry.Portfolio.{Curation, Link, OpenSource, Position, Profile}
 
   @today ~D[2026-08-14]
 
@@ -30,7 +30,7 @@ defmodule Cherry.PortfolioTest do
       assert position.org == "Acme"
       assert position.started == ~D[2020-01-01]
       assert Position.current?(position)
-      assert position.cv == %CV{include: true, weight: 10, highlights: ["Led the platform"]}
+      assert position.cv == %Curation{include: true, weight: 10, highlights: ["Led the platform"]}
       assert position.slug == "acme"
       assert position.html =~ "Acme years"
 

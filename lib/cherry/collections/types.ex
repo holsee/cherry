@@ -8,6 +8,8 @@ defmodule Cherry.Collections.Types do
   schema prefixes the source file and field.
   """
 
+  alias Cherry.Portfolio.{Curation, Link}
+
   @doc "Accepts a `Date` or an ISO 8601 string."
   @spec validate_date(term()) :: {:ok, Date.t()} | {:error, String.t()}
   def validate_date(%Date{} = date), do: {:ok, date}
@@ -21,24 +23,22 @@ defmodule Cherry.Collections.Types do
 
   def validate_date(value), do: {:error, "expected an ISO 8601 date, got: #{inspect(value)}"}
 
-  alias Cherry.Portfolio.{CV, Link}
-
   @doc """
   Validates a `cv:` curation block (DESIGN.md §4): `include`, `weight`,
-  `highlights`. Returns a `Cherry.Portfolio.CV` struct with defaults.
+  `highlights`. Returns a `Cherry.Portfolio.Curation` struct with defaults.
   """
-  @spec validate_cv(term()) :: {:ok, CV.t()} | {:error, String.t()}
+  @spec validate_cv(term()) :: {:ok, Curation.t()} | {:error, String.t()}
   def validate_cv(value) when is_map(value) do
-    Enum.reduce_while(value, {:ok, %CV{}}, fn
-      {"include", flag}, {:ok, %CV{} = acc} when is_boolean(flag) ->
-        {:cont, {:ok, %CV{acc | include: flag}}}
+    Enum.reduce_while(value, {:ok, %Curation{}}, fn
+      {"include", flag}, {:ok, %Curation{} = acc} when is_boolean(flag) ->
+        {:cont, {:ok, %Curation{acc | include: flag}}}
 
-      {"weight", weight}, {:ok, %CV{} = acc} when is_integer(weight) ->
-        {:cont, {:ok, %CV{acc | weight: weight}}}
+      {"weight", weight}, {:ok, %Curation{} = acc} when is_integer(weight) ->
+        {:cont, {:ok, %Curation{acc | weight: weight}}}
 
-      {"highlights", highlights}, {:ok, %CV{} = acc} ->
+      {"highlights", highlights}, {:ok, %Curation{} = acc} ->
         if is_list(highlights) and Enum.all?(highlights, &is_binary/1) do
-          {:cont, {:ok, %CV{acc | highlights: highlights}}}
+          {:cont, {:ok, %Curation{acc | highlights: highlights}}}
         else
           {:halt, {:error, "cv.highlights must be a list of strings"}}
         end

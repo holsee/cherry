@@ -2,7 +2,7 @@ defmodule Cherry.Portfolio.Project do
   @moduledoc "A project entry: something built, with links and a status."
 
   alias Cherry.Content.Document
-  alias Cherry.Portfolio.{CV, Link}
+  alias Cherry.Portfolio.{Curation, Link}
 
   @enforce_keys [:slug, :title, :status]
   defstruct [
@@ -27,7 +27,7 @@ defmodule Cherry.Portfolio.Project do
           links: [Link.t()],
           tags: [String.t()],
           highlights: [String.t()],
-          cv: CV.t() | nil,
+          cv: Curation.t() | nil,
           html: String.t() | nil
         }
 

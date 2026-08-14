@@ -2,7 +2,7 @@ defmodule Cherry.Portfolio.Position do
   @moduledoc "An employment position on the timeline; open `ended` means current."
 
   alias Cherry.Content.Document
-  alias Cherry.Portfolio.CV
+  alias Cherry.Portfolio.Curation
 
   @enforce_keys [:slug, :title, :org, :started]
   defstruct [
@@ -27,7 +27,7 @@ defmodule Cherry.Portfolio.Position do
           location: String.t() | nil,
           tags: [String.t()],
           highlights: [String.t()],
-          cv: CV.t() | nil,
+          cv: Curation.t() | nil,
           html: String.t() | nil
         }
 

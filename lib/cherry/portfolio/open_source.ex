@@ -2,7 +2,7 @@ defmodule Cherry.Portfolio.OpenSource do
   @moduledoc "An open-source involvement: repository plus named role."
 
   alias Cherry.Content.Document
-  alias Cherry.Portfolio.CV
+  alias Cherry.Portfolio.Curation
 
   @enforce_keys [:slug, :title, :repo, :role]
   defstruct [:slug, :title, :repo, :role, :cv, :html, tags: [], highlights: []]
@@ -14,7 +14,7 @@ defmodule Cherry.Portfolio.OpenSource do
           role: String.t(),
           tags: [String.t()],
           highlights: [String.t()],
-          cv: CV.t() | nil,
+          cv: Curation.t() | nil,
           html: String.t() | nil
         }
 

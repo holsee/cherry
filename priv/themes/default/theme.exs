@@ -32,6 +32,10 @@
       assigns: [:site, :tag, :portfolio, :posts],
       doc: "One tag across the whole story: portfolio entries plus blog posts."
     ],
+    cv: [
+      assigns: [:site, :cv],
+      doc: "The employer-shaped CV: linear, dense, print-first."
+    ],
     not_found: [
       assigns: [:site],
       doc: "The 404 page."
