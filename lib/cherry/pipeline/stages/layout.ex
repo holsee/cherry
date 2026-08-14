@@ -47,6 +47,8 @@ defmodule Cherry.Pipeline.Stages.Layout do
 
   defp render_documents(documents, site, theme) do
     documents
+    # Data-only documents (nil path) are rendered by views, not as pages.
+    |> Enum.reject(&is_nil(&1.path))
     |> map_while_ok(fn doc -> render_document(doc, site, theme) end)
   end
 

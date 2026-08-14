@@ -14,6 +14,7 @@ defmodule Cherry.Pipeline.Stages.Load do
   alias Cherry.Build
   alias Cherry.Collections
   alias Cherry.Content.{Asset, Document, Frontmatter}
+  alias Cherry.Portfolio.Profile
 
   @impl Cherry.Pipeline.Stage
   @spec run(Build.t()) :: {:ok, Build.t()} | {:error, String.t()}
@@ -25,17 +26,17 @@ defmodule Cherry.Pipeline.Stages.Load do
         |> Enum.map(fn {abs, rel} -> load_file(name, collection, abs, rel) end)
       end)
 
-    case split_errors(results) do
-      {documents, []} ->
-        assets =
-          site.root
-          |> files_under("static")
-          |> Enum.map(fn {abs, rel} -> %Asset{source: abs, path: rel} end)
+    with {documents, []} <- split_errors(results),
+         {:ok, profile} <- Profile.load(site.root) do
+      assets =
+        site.root
+        |> files_under("static")
+        |> Enum.map(fn {abs, rel} -> %Asset{source: abs, path: rel} end)
 
-        {:ok, %Build{build | documents: documents, assets: assets}}
-
-      {_documents, errors} ->
-        {:error, Enum.join(errors, "\n")}
+      {:ok, %Build{build | documents: documents, assets: assets, profile: profile}}
+    else
+      {_documents, errors} when is_list(errors) -> {:error, Enum.join(errors, "\n")}
+      {:error, reason} -> {:error, reason}
     end
   end
 

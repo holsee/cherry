@@ -47,9 +47,15 @@ defmodule Cherry.Pipeline.Stages.Validate do
     case Schema.validate(doc.meta, collection.schema(), doc.source) do
       {:ok, meta} ->
         validated = %Document{doc | meta: meta}
-        path = collection.route(validated)
-        url = Site.href(site, Document.rel_url(path))
-        {:ok, %Document{validated | path: path, url: url}}
+
+        case collection.route(validated) do
+          # Data-only collections: rendered by views, never a page.
+          nil ->
+            {:ok, validated}
+
+          path ->
+            {:ok, %Document{validated | path: path, url: Site.href(site, Document.rel_url(path))}}
+        end
 
       {:error, message} ->
         {:error, message}
