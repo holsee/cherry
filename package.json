@@ -1,0 +1,13 @@
+{
+  "name": "cherry-assets",
+  "private": true,
+  "description": "TypeScript toolchain for Cherry's client-side islands (compiled JS ships with themes; user sites stay node-free).",
+  "scripts": {
+    "check": "tsc --noEmit",
+    "build": "esbuild assets/js/index.ts --bundle --minify --format=esm --target=es2020 --outdir=priv/static/js"
+  },
+  "devDependencies": {
+    "esbuild": "^0.25.0",
+    "typescript": "^5.7.0"
+  }
+}
