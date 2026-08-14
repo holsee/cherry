@@ -19,7 +19,9 @@ defmodule Cherry.PortfolioViewsTest do
 
       # 1 page + 1 post + blog index + 1 tag page + timeline + 2 stories
       # + cv page + cv.json + 404 + feed/sitemap/robots.
-      assert length(build.pages) == 13
+      # Machine surface: 2 document mirrors + blog + 1 tag + timeline
+      # + 2 story + cv mirrors + llms.txt.
+      assert length(build.pages) == 22
       assert_trees_equal(@golden, out)
     end
 
