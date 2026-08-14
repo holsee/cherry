@@ -1,19 +1,17 @@
 ---
 title: About
+description: Why Cherry exists, what it took from Octopress, and how this site is its own proof.
 ---
 # About Cherry
 
-Cherry exists because publishing a site should be one command for a
-human and one tool call for an agent — with the same guarantees either
-way.
+Cherry is a static site generator for hackers — a modern take on Octopress, built in Elixir.
 
-This site is Cherry's own dogfood: it is built by the `example/` site in
-the [cherry repository](https://github.com/holsee/cherry) on every CI
-run, using nothing but the public `mix cherry.*` tasks.
+Octopress got two things right that the years buried: a blog you could reason about as plain files, and a hacker's toolchain you could bend. It got one thing fatally wrong — your site lived *inside* the framework checkout, so every customization froze you in time. Cherry inverts that: your site is a plain directory, the framework is a dependency (or a single binary), themes expose tokens as their styling API, and every template you take ownership of carries provenance so upgrades merge instead of fossilizing.
 
-## Roadmap
+The second thesis: **everything answers in plain text**. Every command has a `--json` twin with stable exit codes, content collections publish their schemas, builds are byte-deterministic so diffs mean something, and every built page ships a markdown mirror plus [/llms.txt](/llms.txt). That makes the whole thing scriptable end to end — and, paired with the shipped skill, easy to hand to a coding agent when one helps run your site. The [scripting guide](/guides/agents/) shows the whole surface.
 
-- Portfolio collections: projects and roles as data, rendered as a
-  timeline and a print-ready CV.
-- A second official theme carrying the Cherrybomb brand.
-- A single-binary `cherry` for people who don't run Elixir.
+## This site is the dogfood
+
+cherrybomb.dev is built by Cherry from the [example/ directory of Cherry's own repo](https://github.com/holsee/cherry/tree/develop/example) on every push — same pipeline, same checks (`cherry check --strict` gates every commit), same theme contract you get. If something here is broken, the build that shipped it failed its own tooling, and that's a bug worth [filing](https://github.com/holsee/cherry/issues).
+
+Cherry ships as a [single binary](/guides/quick-start/) for macOS, Linux, and Windows — checksum-verified installs, provenance-attested releases, [self-updating](/guides/upgrade/). Elixir developers can use it as a library instead; the verbs are identical by construction.
