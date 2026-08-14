@@ -41,6 +41,7 @@ defmodule Cherry.SEO.Head do
     [
       ~s(<link rel="canonical" href="#{canonical}">\n),
       ~s(<link rel="alternate" type="application/atom+xml" title="#{escape(site.title)}" href="#{Site.href(site, "feed.xml")}">\n),
+      ~s(<link rel="alternate" type="application/feed+json" title="#{escape(site.title)}" href="#{Site.href(site, "feed.json")}">\n),
       description_tag(description),
       ~s(<meta property="og:title" content="#{escape(title)}">\n),
       ~s(<meta property="og:url" content="#{canonical}">\n),

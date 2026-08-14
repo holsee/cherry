@@ -1,7 +1,8 @@
 defmodule Cherry.Pipeline.Stages.Feeds do
   @moduledoc """
-  Emits the machine-readable surface: `feed.xml` (Atom), `sitemap.xml`,
-  and `robots.txt` — default-on, zero config (DESIGN.md §7).
+  Emits the machine-readable surface: `feed.xml` (Atom), `feed.json`
+  (JSON Feed), `sitemap.xml`, and `robots.txt` — default-on, zero
+  config (DESIGN.md §7).
 
   Runs after layout so the sitemap can cover every page in the build;
   `404.html` is deliberately excluded from it.
@@ -11,7 +12,7 @@ defmodule Cherry.Pipeline.Stages.Feeds do
 
   alias Cherry.Build
   alias Cherry.Content.{Document, Page}
-  alias Cherry.SEO.Feed
+  alias Cherry.SEO.{Feed, JsonFeed}
   alias Cherry.Site
 
   @impl Cherry.Pipeline.Stage
@@ -20,10 +21,11 @@ defmodule Cherry.Pipeline.Stages.Feeds do
     posts =
       build.documents
       |> Enum.filter(&(&1.collection == "posts" and not &1.raw?))
-      |> Enum.sort_by(&{&1.meta.date, &1.meta.slug}, :desc)
+      |> Enum.sort_by(&{Date.to_erl(&1.meta.date), &1.meta.slug}, :desc)
 
     pages = [
       %Page{source: ":feed", path: "feed.xml", content: Feed.render(site, posts)},
+      %Page{source: ":json_feed", path: "feed.json", content: JsonFeed.render(site, posts)},
       %Page{source: ":sitemap", path: "sitemap.xml", content: sitemap(site, build.pages)},
       %Page{source: ":robots", path: "robots.txt", content: robots(site)}
     ]

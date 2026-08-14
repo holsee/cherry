@@ -38,6 +38,6 @@ defmodule Cherry.Portfolio.Talk do
   end
 
   @doc "Newest-first ordering by date."
-  @spec sort_key(t()) :: Date.t()
-  def sort_key(%__MODULE__{date: date}), do: date
+  @spec sort_key(t()) :: :calendar.date()
+  def sort_key(%__MODULE__{date: date}), do: Date.to_erl(date)
 end

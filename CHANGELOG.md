@@ -8,6 +8,7 @@ Entries are terse one-liners linked to their PR: `- Thing that changed. (#12)`
 ## [Unreleased]
 
 ### Added
+- JSON Feed: `feed.json` (jsonfeed.org 1.1) alongside Atom with a discovery `<link>` on every page; `cherry check` now verifies it too. (#19)
 - The machine surface: every content route now carries an `index.md` markdown mirror alongside its `index.html` (posts, pages, blog index, tag pages, portfolio timeline, stories, CV), plus a generated `/llms.txt` per the llmstxt.org convention with absolute links to the mirrors; unlisted pages keep their mirrors but stay out of `llms.txt`, and mirrors never leak into the sitemap or feed. (#18)
 - `--json` contract audit: error envelopes now carry structured `details` (a failing `check --strict --json` returns its diagnostics machine-readably, not just prose), and a registry-complete contract test proves every verb's success and error envelopes decode — new verbs cannot land without envelope coverage. (#17)
 - `cherry check`: the verifier — builds in memory (writes nothing) and reports structured diagnostics (broken internal links, missing descriptions, images without alt text, duplicate titles, Atom feed sanity); errors exit 1, `--strict` promotes warnings, `--json` feeds the agent's build → check → fix loop. (#16)
@@ -33,3 +34,7 @@ Entries are terse one-liners linked to their PR: `- Thing that changed. (#12)`
 - Minimal 0.0.1 package stub to claim `cherry` on Hex (published).
 - Portfolio dual-view design: Careers-style timeline + `/cv/` web CV, both
   projections of one dataset (DESIGN.md §4).
+
+### Fixed
+- Date ordering everywhere dates entered sort keys: `%Date{}` structs term-compare field-alphabetically (day before year), so feeds, the blog index, tag pages, the timeline, and skills could order Jan 15 above Feb 1; all sort keys now go through `Date.to_erl/1`. (#19)
+- Byte-determinism of emitted JSON: atom-keyed map iteration follows atom-creation order and varies between VM runs, so `JSON.encode!` output was not reproducible; `feed.json` and `cv.json` now encode via `Cherry.StableJSON` with sorted object keys (ADR 0005). (#19)

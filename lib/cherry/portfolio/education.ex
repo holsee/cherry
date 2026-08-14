@@ -36,8 +36,9 @@ defmodule Cherry.Portfolio.Education do
   end
 
   @doc "Newest-first ordering by completion, then start."
-  @spec sort_key(t()) :: {Date.t(), Date.t()}
+  @spec sort_key(t()) :: {:calendar.date(), :calendar.date()}
   def sort_key(%__MODULE__{} = education) do
-    {education.ended || ~D[9999-12-31], education.started || ~D[0001-01-01]}
+    {Date.to_erl(education.ended || ~D[9999-12-31]),
+     Date.to_erl(education.started || ~D[0001-01-01])}
   end
 end

@@ -5,8 +5,8 @@
 ## Blog
 
 - [Blog](https://orchard.example/blog/index.md)
-- [Hello, world](https://orchard.example/hello-world/index.md) — 2026-01-15
 - [Picking cherries](https://orchard.example/picking-cherries/index.md) — 2026-02-01
+- [Hello, world](https://orchard.example/hello-world/index.md) — 2026-01-15
 
 ## Pages
 

@@ -133,6 +133,10 @@ defmodule Cherry.Check do
   # --- feed sanity --------------------------------------------------------
 
   defp feed_sanity(build) do
+    atom_sanity(build) ++ json_feed_sanity(build)
+  end
+
+  defp atom_sanity(build) do
     case Enum.find(build.pages, &(&1.path == "feed.xml")) do
       nil ->
         [
@@ -157,6 +161,36 @@ defmodule Cherry.Check do
             message: "feed.xml lacks #{required}…> — not valid Atom",
             severity: :error
           }
+        end
+    end
+  end
+
+  defp json_feed_sanity(build) do
+    case Enum.find(build.pages, &(&1.path == "feed.json")) do
+      nil ->
+        [
+          %Diagnostic{
+            file: "feed.json",
+            rule: "feed-missing",
+            message: "the build emits no JSON Feed",
+            severity: :error
+          }
+        ]
+
+      feed ->
+        case JSON.decode(feed.content) do
+          {:ok, %{"version" => _version, "items" => items}} when is_list(items) ->
+            []
+
+          _invalid ->
+            [
+              %Diagnostic{
+                file: "feed.json",
+                rule: "feed-invalid",
+                message: "feed.json is not a decodable JSON Feed with version and items",
+                severity: :error
+              }
+            ]
         end
     end
   end

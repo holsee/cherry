@@ -49,9 +49,11 @@ defmodule Cherry.Portfolio.Position do
   end
 
   @doc "Newest-first ordering: current positions rank above ended ones."
-  @spec sort_key(t()) :: {Date.t(), Date.t()}
+  @spec sort_key(t()) :: {:calendar.date(), :calendar.date()}
   def sort_key(%__MODULE__{} = position) do
-    {position.ended || ~D[9999-12-31], position.started}
+    # Date.to_erl: %Date{} structs term-compare field-alphabetically
+    # (day before year), so raw dates in sort keys order wrongly.
+    {Date.to_erl(position.ended || ~D[9999-12-31]), Date.to_erl(position.started)}
   end
 
   @doc "True while the position has no end date."

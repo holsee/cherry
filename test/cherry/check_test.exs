@@ -132,22 +132,45 @@ defmodule Cherry.CheckTest do
   end
 
   describe "feed sanity" do
-    test "a build with no feed.xml is an error" do
-      assert [%Diagnostic{rule: "feed-missing", severity: :error}] =
-               build_token(feed: false) |> Check.run() |> rule("feed-missing")
+    test "a build with no feeds errors for both feed.xml and feed.json" do
+      diagnostics = build_token(feed: false) |> Check.run() |> rule("feed-missing")
+
+      assert Enum.map(diagnostics, & &1.file) == ["feed.json", "feed.xml"]
+      assert Enum.all?(diagnostics, &(&1.severity == :error))
     end
 
     test "a feed missing required Atom elements is an error per element" do
       build =
         build_token(
           feed: false,
-          pages: [%Page{source: "feed", path: "feed.xml", content: "<feed></feed>"}]
+          pages: [
+            %Page{source: "feed", path: "feed.xml", content: "<feed></feed>"},
+            json_feed_page()
+          ]
         )
 
       diagnostics = rule(Check.run(build), "feed-invalid")
 
       assert length(diagnostics) == 2
       assert Enum.all?(diagnostics, &(&1.severity == :error))
+    end
+
+    test "a feed.json that is not a JSON Feed is an error" do
+      build =
+        build_token(
+          feed: false,
+          pages: [
+            %Page{
+              source: "feed",
+              path: "feed.xml",
+              content: "<feed><id>x</id><updated>y</updated></feed>"
+            },
+            %Page{source: "feed", path: "feed.json", content: ~s({"nope": true})}
+          ]
+        )
+
+      assert [%Diagnostic{file: "feed.json", severity: :error}] =
+               rule(Check.run(build), "feed-invalid")
     end
   end
 
@@ -287,7 +310,8 @@ defmodule Cherry.CheckTest do
             source: "feed",
             path: "feed.xml",
             content: "<feed><id>x</id><updated>y</updated></feed>"
-          }
+          },
+          json_feed_page()
         ],
         else: []
 
@@ -302,6 +326,14 @@ defmodule Cherry.CheckTest do
 
   defp html_page(path, content) do
     %Page{source: path, path: path, content: content}
+  end
+
+  defp json_feed_page do
+    %Page{
+      source: "feed",
+      path: "feed.json",
+      content: ~s({"version":"https://jsonfeed.org/version/1.1","items":[]})
+    }
   end
 
   defp document(collection, source, meta, html \\ "<p>body</p>") do

@@ -32,7 +32,7 @@ defmodule Cherry.Portfolio.Timeline do
     |> Enum.group_by(& &1.date.year)
     |> Enum.sort_by(fn {year, _items} -> year end, :desc)
     |> Enum.map(fn {year, items} ->
-      {year, Enum.sort_by(items, &{&1.date, sort_title(&1)}, :desc)}
+      {year, Enum.sort_by(items, &{Date.to_erl(&1.date), sort_title(&1)}, :desc)}
     end)
   end
 
