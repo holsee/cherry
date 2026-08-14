@@ -65,16 +65,29 @@ defmodule Cherry.MixProject do
       cherry: [
         applications: [cherry: :permanent],
         steps: release_steps(),
-        burrito: [
-          targets: [
-            linux_x86_64: [os: :linux, cpu: :x86_64],
-            linux_aarch64: [os: :linux, cpu: :aarch64],
-            macos_x86_64: [os: :darwin, cpu: :x86_64],
-            macos_aarch64: [os: :darwin, cpu: :aarch64],
-            windows_x86_64: [os: :windows, cpu: :x86_64]
-          ]
-        ]
+        burrito: [targets: burrito_targets()]
       ]
+    ]
+  end
+
+  # Burrito's precompiled Linux ERTS is musl-libc, which can't load the
+  # glibc rustler_precompiled NIFs (mdex, lumis) — and the musl NIF
+  # variants still resolve the host's glibc libgcc_s and crash. The
+  # release workflow sets CHERRY_CUSTOM_ERTS to the runner's own glibc
+  # OTP so the Linux binary is built truly natively against glibc.
+  defp burrito_targets do
+    linux_erts =
+      case System.get_env("CHERRY_CUSTOM_ERTS") do
+        nil -> []
+        path -> [custom_erts: path]
+      end
+
+    [
+      linux_x86_64: [os: :linux, cpu: :x86_64] ++ linux_erts,
+      linux_aarch64: [os: :linux, cpu: :aarch64] ++ linux_erts,
+      macos_x86_64: [os: :darwin, cpu: :x86_64],
+      macos_aarch64: [os: :darwin, cpu: :aarch64],
+      windows_x86_64: [os: :windows, cpu: :x86_64]
     ]
   end
 

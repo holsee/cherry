@@ -95,19 +95,17 @@ jobs:
         if: runner.os == 'macOS'
         run: brew install xz
 
-      # Burrito always builds Linux targets against musl, but it only
-      # recompiles elixir_make NIFs — rustler_precompiled ones (mdex,
-      # lumis) would ship as glibc and fail to load. These Nerves-style
-      # vars make rustler_precompiled fetch the musl artifacts instead.
-      - name: force musl NIFs (Linux)
+      # Burrito's precompiled Linux ERTS is musl-libc, which can't load
+      # the glibc rustler_precompiled NIFs (mdex, lumis) — and the musl
+      # NIF variants still pull in the host's glibc libgcc_s and crash.
+      # Hand Burrito the runner's own glibc OTP instead: a fully native
+      # Linux build (ADR 0007's no-cross-compilation, taken literally).
+      - name: native glibc ERTS (Linux)
         if: runner.os == 'Linux'
         run: |
-          {
-            echo "TARGET_OS=linux"
-            echo "TARGET_ABI=musl"
-            echo "TARGET_VENDOR=unknown"
-            echo "TARGET_ARCH=$(uname -m)"
-          } >> "$GITHUB_ENV"
+          mkdir -p /tmp/custom_erts
+          cp -a "$INSTALL_DIR_FOR_OTP" /tmp/custom_erts/otp
+          echo "CHERRY_CUSTOM_ERTS=/tmp/custom_erts" >> "$GITHUB_ENV"
 
       - name: build the binary
         shell: bash
