@@ -19,11 +19,13 @@ defmodule Cherry.Pipeline.Stages.Emit do
     |> Enum.sort_by(& &1.path)
     |> Enum.each(fn page -> write!(site.output, page.path, page.content) end)
 
+    # Byte copy, not File.cp!: the output carries content-derived bytes
+    # only (no source permission bits, ADR 0005), and read!/write! skip
+    # the file-server round-trips cp!'s mode copy serializes on.
     build.assets
     |> Enum.sort_by(& &1.path)
     |> Enum.each(fn asset ->
-      destination = ensure_parent!(site.output, asset.path)
-      File.cp!(asset.source, destination)
+      write!(site.output, asset.path, File.read!(asset.source))
     end)
 
     {:ok, build}

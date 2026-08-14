@@ -1,0 +1,23 @@
+# Folio
+
+> A developer story grown for Cherry's golden harness.
+
+## Blog
+
+- [Blog](https://folio.example/blog/index.md)
+- [Pruning processes](https://folio.example/pruning-processes/index.md) — 2026-01-10
+
+## Pages
+
+- [Home](https://folio.example/index.md)
+
+## Portfolio
+
+- [Portfolio](https://folio.example/portfolio/index.md)
+- [The elixir story](https://folio.example/story/elixir/index.md)
+- [The erlang story](https://folio.example/story/erlang/index.md)
+
+## CV
+
+- [CV](https://folio.example/cv/index.md)
+- [JSON Resume](https://folio.example/cv.json)

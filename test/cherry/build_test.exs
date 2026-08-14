@@ -16,8 +16,9 @@ defmodule Cherry.BuildTest do
 
       assert {:ok, build} = Cherry.build(source: @fixture, output: out)
 
-      # 2 raw pages + the synthetic blog index and 404 + feed/sitemap/robots.
-      assert length(build.pages) == 7
+      # 2 raw pages + the synthetic blog index and 404 + feed/sitemap/robots
+      # + blog index.md mirror + llms.txt (raw pages get no mirrors).
+      assert length(build.pages) == 9
       assert length(build.assets) == 3
 
       assert_trees_equal(@golden, out)

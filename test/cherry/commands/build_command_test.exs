@@ -17,7 +17,7 @@ defmodule Cherry.Commands.BuildCommandTest do
     assert code == 0
 
     assert %{"ok" => true, "command" => "build", "data" => data} = JSON.decode!(output)
-    assert data == %{"output" => out, "pages" => 7, "assets" => 3}
+    assert data == %{"output" => out, "pages" => 9, "assets" => 3}
     assert File.exists?(Path.join(out, "index.html"))
   end
 
@@ -29,7 +29,7 @@ defmodule Cherry.Commands.BuildCommandTest do
       with_io(fn -> Cherry.CLI.run(["build", "--source", @fixture, "--out", out]) end)
 
     assert code == 0
-    assert output =~ "Built 7 page(s), 3 asset(s)"
+    assert output =~ "Built 9 page(s), 3 asset(s)"
     assert output =~ out
   end
 

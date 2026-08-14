@@ -16,7 +16,8 @@ defmodule Cherry.CollectionsTest do
 
       # 2 pages + 2 published posts + blog index + 2 tag pages + 404
       # + feed/sitemap/robots; the draft and the 2099 post are filtered.
-      assert length(build.pages) == 11
+      # Machine surface: 4 document mirrors + blog + 2 tag mirrors + llms.txt.
+      assert length(build.pages) == 19
       assert_trees_equal(@golden, out)
     end
 
