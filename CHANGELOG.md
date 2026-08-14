@@ -11,3 +11,5 @@ Entries are terse one-liners linked to their PR: `- Thing that changed. (#12)`
 - Project constitution (AGENTS.md), design doc (DESIGN.md), ADRs 0001–0006, backlog.
 - Dual MIT / Apache-2.0 license.
 - End-state README with the Cherrybomb identity.
+- Devcontainer reference environment (Elixir 1.20.2 / OTP 28 / Node 22, pinned).
+- Minimal 0.0.1 package stub to claim `cherry` on Hex.
