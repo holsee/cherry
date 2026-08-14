@@ -3,6 +3,7 @@ defmodule Cherry.BuildTest do
 
   import Cherry.GoldenAssertions
 
+  alias Cherry.Build.Options
   alias Cherry.Pipeline.Stages
 
   @fixture Path.expand("../fixtures/sites/minimal", __DIR__)
@@ -49,23 +50,29 @@ defmodule Cherry.BuildTest do
   end
 
   describe "pipeline stages" do
-    test "are pure token-in/token-out between load and emit" do
+    test "are pure: the same token in gives the same token out" do
       {:ok, site} = Cherry.Site.load(@fixture)
-      {:ok, loaded} = Stages.Load.run(Cherry.Build.new(site))
+      token = Cherry.Build.new(site, Options.new())
+
+      {:ok, once} = Stages.Load.run(token)
+      {:ok, twice} = Stages.Load.run(token)
+      assert once == twice
 
       for stage <- [Stages.Validate, Stages.Transform, Stages.Layout] do
-        assert {:ok, ^loaded} = stage.run(loaded)
+        assert {:ok, from_once} = stage.run(once)
+        assert {:ok, from_twice} = stage.run(twice)
+        assert from_once == from_twice
       end
     end
 
     test "load produces sorted, forward-slashed relative paths" do
       {:ok, site} = Cherry.Site.load(@fixture)
-      {:ok, build} = Stages.Load.run(Cherry.Build.new(site))
+      {:ok, build} = Stages.Load.run(Cherry.Build.new(site, Options.new()))
 
-      paths = Enum.map(build.pages, & &1.path)
-      assert paths == Enum.sort(paths)
+      sources = Enum.map(build.documents, & &1.source)
+      assert sources == Enum.sort(sources)
 
-      for path <- paths ++ Enum.map(build.assets, & &1.path) do
+      for path <- sources ++ Enum.map(build.assets, & &1.path) do
         refute path =~ "\\"
       end
     end

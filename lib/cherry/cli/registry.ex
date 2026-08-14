@@ -8,6 +8,7 @@ defmodule Cherry.CLI.Registry do
 
   @commands %{
     "build" => Cherry.Commands.Build,
+    "schema" => Cherry.Commands.Schema,
     "version" => Cherry.Commands.Version
   }
 

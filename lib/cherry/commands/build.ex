@@ -4,10 +4,12 @@ defmodule Cherry.Commands.Build do
 
   ## Usage
 
-      mix cherry.build [--source DIR] [--out DIR] [--json]
+      mix cherry.build [--source DIR] [--out DIR] [--drafts] [--future] [--json]
 
   * `--source` — site root containing `cherry.exs` (default: cwd)
   * `--out` — output directory (default: `SOURCE/_site`)
+  * `--drafts` — include posts marked `draft: true`
+  * `--future` — include posts dated after today
 
   With `--json`, emits the standard envelope with page and asset counts.
   """
@@ -24,7 +26,7 @@ defmodule Cherry.Commands.Build do
 
   @impl Cherry.CLI.Command
   @spec switches() :: keyword()
-  def switches, do: [source: :string, out: :string]
+  def switches, do: [source: :string, out: :string, drafts: :boolean, future: :boolean]
 
   @impl Cherry.CLI.Command
   @spec run(Context.t()) :: {:ok, map()} | {:error, Error.t()}
@@ -32,7 +34,14 @@ defmodule Cherry.Commands.Build do
     source = Keyword.get(opts, :source, File.cwd!())
     output = Keyword.get(opts, :out, Path.join(source, "_site"))
 
-    case Cherry.build(source: source, output: output) do
+    build_opts = [
+      source: source,
+      output: output,
+      drafts: Keyword.get(opts, :drafts, false),
+      future: Keyword.get(opts, :future, false)
+    ]
+
+    case Cherry.build(build_opts) do
       {:ok, build} ->
         {:ok, %{output: output, pages: length(build.pages), assets: length(build.assets)}}
 
