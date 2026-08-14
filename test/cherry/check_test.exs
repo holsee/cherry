@@ -290,6 +290,7 @@ defmodule Cherry.CheckTest do
         url: "https://orchard.example",
         base_path: "/",
         author: "Orchard",
+        theme: "default",
         root: ".",
         output: "_site"
       },

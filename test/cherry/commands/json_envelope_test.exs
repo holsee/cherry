@@ -23,7 +23,7 @@ defmodule Cherry.Commands.JsonEnvelopeTest do
 
   # Verbs proven below; the completeness gate keeps this list honest.
   @covered ~w(build check gen.action gen.post gen.project gen.talk gen.theme
-              publish schema theme.eject theme.list theme.which version)
+              publish schema theme.diff theme.eject theme.list theme.which version)
 
   # serve runs until interrupted — its envelope cannot round-trip in a test.
   @excluded ~w(serve)
@@ -106,6 +106,11 @@ defmodule Cherry.Commands.JsonEnvelopeTest do
     test "theme.which", %{tmp_dir: tmp} do
       assert %{"template" => "post", "winner" => _, "chain" => _} =
                data(["theme.which", "post", "--source", fixture(tmp)])
+    end
+
+    test "theme.diff", %{tmp_dir: tmp} do
+      assert %{"theme" => _, "version" => _, "entries" => [], "applied" => []} =
+               data(["theme.diff", "--source", fixture(tmp)])
     end
 
     test "theme.eject", %{tmp_dir: tmp} do

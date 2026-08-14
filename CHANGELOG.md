@@ -8,6 +8,7 @@ Entries are terse one-liners linked to their PR: `- Thing that changed. (#12)`
 ## [Unreleased]
 
 ### Added
+- `cherry theme.diff`: managed drift — every overlay's three-way status against the installed theme (`current` / `auto_updatable` / `conflict` / `untracked`), `--apply` re-ejects auto-updatable ones with fresh provenance, and `cherry check` warns on stale or untracked overlays. Frozen theme copies, answered. (#20)
 - JSON Feed: `feed.json` (jsonfeed.org 1.1) alongside Atom with a discovery `<link>` on every page; `cherry check` now verifies it too. (#19)
 - The machine surface: every content route now carries an `index.md` markdown mirror alongside its `index.html` (posts, pages, blog index, tag pages, portfolio timeline, stories, CV), plus a generated `/llms.txt` per the llmstxt.org convention with absolute links to the mirrors; unlisted pages keep their mirrors but stay out of `llms.txt`, and mirrors never leak into the sitemap or feed. (#18)
 - `--json` contract audit: error envelopes now carry structured `details` (a failing `check --strict --json` returns its diagnostics machine-readably, not just prose), and a registry-complete contract test proves every verb's success and error envelopes decode — new verbs cannot land without envelope coverage. (#17)

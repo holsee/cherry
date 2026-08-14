@@ -17,6 +17,7 @@ defmodule Cherry.CLI.Registry do
     "publish" => Cherry.Commands.Publish,
     "schema" => Cherry.Commands.Schema,
     "serve" => Cherry.Commands.Serve,
+    "theme.diff" => Cherry.Commands.ThemeDiff,
     "theme.eject" => Cherry.Commands.ThemeEject,
     "theme.list" => Cherry.Commands.ThemeList,
     "theme.which" => Cherry.Commands.ThemeWhich,
