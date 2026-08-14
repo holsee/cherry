@@ -95,23 +95,29 @@ jobs:
         if: runner.os == 'macOS'
         run: brew install xz
 
+      - name: fetch deps
+        shell: bash
+        run: mix deps.get
+
       # Burrito's precompiled Linux ERTS is musl-libc, which can't load
       # the glibc rustler_precompiled NIFs (mdex, lumis) — and the musl
       # NIF variants still pull in the host's glibc libgcc_s and crash.
       # Hand Burrito the runner's own glibc OTP instead: a fully native
       # Linux build (ADR 0007's no-cross-compilation, taken literally).
+      # With custom_erts Burrito skips its musl runtime download, but the
+      # zig wrapper still @embedFile's it on Linux — an empty placeholder
+      # satisfies the compiler and is never written at runtime.
       - name: native glibc ERTS (Linux)
         if: runner.os == 'Linux'
         run: |
           mkdir -p /tmp/custom_erts
           cp -a "$INSTALL_DIR_FOR_OTP" /tmp/custom_erts/otp
           echo "CHERRY_CUSTOM_ERTS=/tmp/custom_erts" >> "$GITHUB_ENV"
+          touch deps/burrito/src/musl-runtime.so
 
       - name: build the binary
         shell: bash
-        run: |
-          mix deps.get
-          mix release --overwrite
+        run: mix release --overwrite
 
       - name: stage the asset
         shell: bash
