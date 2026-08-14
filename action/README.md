@@ -7,8 +7,8 @@ No local Elixir toolchain required.
 ```yaml
 - uses: actions/checkout@v7
 
-# TODO: pin to a release tag once cherry ships one.
-- uses: holsee/cherry/action@develop
+# Pin to a cherry release tag; @develop also works if you want the edge.
+- uses: holsee/cherry/action@v0.1.0-rc.1
   with:
     source: .        # the site's mix project (default ".")
     check: strict    # strict | warn | off (default "strict")
@@ -29,4 +29,4 @@ Output `output-path` is the built `_site` directory. Dependency and build
 caches are keyed on the site's `mix.lock`.
 
 `mix cherry.gen.action` generates a complete GitHub Pages workflow around
-this action.
+this action, pinned to the release tag of the cherry that generated it.

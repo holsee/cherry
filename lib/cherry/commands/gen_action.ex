@@ -119,8 +119,7 @@ defmodule Cherry.Commands.GenAction do
           - uses: actions/checkout@v7
 
           # Toolchain setup, caching, build, and cherry.check in one step.
-          # TODO: pin to a release tag once cherry ships one.
-          - uses: holsee/cherry/action@develop
+          - uses: holsee/cherry/action@#{action_ref()}
 
           - run: touch _site/.nojekyll#{cname_step}
 
@@ -138,5 +137,13 @@ defmodule Cherry.Commands.GenAction do
           - id: deployment
             uses: actions/deploy-pages@v5
     """
+  end
+
+  # The action ref tracks the running cherry version: every release tags
+  # the repo and action/ ships inside it, so v<version> always resolves
+  # for a released cherry. Sites get the action revision that shipped
+  # with the cherry that generated their workflow.
+  defp action_ref do
+    "v" <> to_string(Application.spec(:cherry, :vsn))
   end
 end
