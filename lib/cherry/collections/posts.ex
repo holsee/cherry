@@ -11,6 +11,7 @@ defmodule Cherry.Collections.Posts do
 
   @behaviour Cherry.Collections.Collection
 
+  alias Cherry.Collections.Types
   alias Cherry.Content.Document
 
   @filename ~r/\A(\d{4}-\d{2}-\d{2})-(.+)\.md\z/
@@ -25,7 +26,7 @@ defmodule Cherry.Collections.Posts do
     [
       title: [type: :string, required: true, doc: "Post title."],
       date: [
-        type: {:custom, __MODULE__, :validate_date, []},
+        type: {:custom, Types, :validate_date, []},
         doc: "ISO 8601 date; defaults to the date in the filename."
       ],
       slug: [
@@ -58,17 +59,4 @@ defmodule Cherry.Collections.Posts do
   @impl Cherry.Collections.Collection
   @spec route(Document.t()) :: String.t()
   def route(%Document{meta: %{slug: slug}}), do: Path.join(slug, "index.html")
-
-  @doc "NimbleOptions custom validator: accepts a `Date` or an ISO 8601 string."
-  @spec validate_date(term()) :: {:ok, Date.t()} | {:error, String.t()}
-  def validate_date(%Date{} = date), do: {:ok, date}
-
-  def validate_date(value) when is_binary(value) do
-    case Date.from_iso8601(value) do
-      {:ok, date} -> {:ok, date}
-      {:error, _} -> {:error, "expected an ISO 8601 date, got: #{inspect(value)}"}
-    end
-  end
-
-  def validate_date(value), do: {:error, "expected an ISO 8601 date, got: #{inspect(value)}"}
 end

@@ -56,7 +56,10 @@ defmodule Cherry.Collections.Schema do
   end
 
   defp type_to_string({:list, inner}), do: "list of #{type_to_string(inner)}"
-  defp type_to_string({:custom, Cherry.Collections.Posts, :validate_date, []}), do: "date"
+  defp type_to_string({:in, choices}), do: Enum.join(choices, " | ")
+  defp type_to_string({:custom, Cherry.Collections.Types, :validate_date, []}), do: "date"
+  defp type_to_string({:custom, Cherry.Collections.Types, :validate_cv, []}), do: "cv block"
+  defp type_to_string({:custom, Cherry.Collections.Types, :validate_links, []}), do: "links"
   defp type_to_string(type) when is_atom(type), do: Atom.to_string(type)
   defp type_to_string(other), do: inspect(other)
 end

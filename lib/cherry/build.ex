@@ -10,14 +10,16 @@ defmodule Cherry.Build do
 
   alias Cherry.Build.Options
   alias Cherry.Content.{Asset, Document, Page}
+  alias Cherry.Portfolio.Profile
   alias Cherry.Site
 
   @enforce_keys [:site, :options]
-  defstruct site: nil, options: nil, documents: [], pages: [], assets: []
+  defstruct site: nil, options: nil, profile: nil, documents: [], pages: [], assets: []
 
   @type t :: %__MODULE__{
           site: Site.t(),
           options: Options.t(),
+          profile: Profile.t() | nil,
           documents: [Document.t()],
           pages: [Page.t()],
           assets: [Asset.t()]

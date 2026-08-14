@@ -36,6 +36,9 @@ defmodule Cherry.Commands.SchemaCommandTest do
       end)
 
     assert_receive {:code, 2}
-    assert stderr =~ "pages, posts"
+
+    assert stderr =~
+             "pages, portfolio/education, portfolio/oss, portfolio/positions, " <>
+               "portfolio/projects, portfolio/talks, posts"
   end
 end

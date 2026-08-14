@@ -19,6 +19,10 @@ defmodule Cherry.Collections.Collection do
   @doc "Derives metadata from the source path, merged under the frontmatter."
   @callback parse_source(String.t(), map()) :: {:ok, map()} | {:error, String.t()}
 
-  @doc "Output-relative destination for a validated document."
-  @callback route(Document.t()) :: String.t()
+  @doc """
+  Output-relative destination for a validated document, or `nil` for
+  data-only collections (portfolio entries have no page of their own —
+  the timeline, story, and CV views render them).
+  """
+  @callback route(Document.t()) :: String.t() | nil
 end
