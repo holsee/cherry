@@ -49,8 +49,8 @@ defmodule Cherry.Portfolio.Project do
   end
 
   @doc "Newest-first ordering: active projects rank above finished ones."
-  @spec sort_key(t()) :: {Date.t(), Date.t()}
+  @spec sort_key(t()) :: {:calendar.date(), :calendar.date()}
   def sort_key(%__MODULE__{} = project) do
-    {project.ended || ~D[9999-12-31], project.started || ~D[0001-01-01]}
+    {Date.to_erl(project.ended || ~D[9999-12-31]), Date.to_erl(project.started || ~D[0001-01-01])}
   end
 end

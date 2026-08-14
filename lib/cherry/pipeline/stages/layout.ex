@@ -238,7 +238,7 @@ defmodule Cherry.Pipeline.Stages.Layout do
   defp posts_newest_first(documents) do
     documents
     |> Enum.filter(&(&1.collection == "posts" and not &1.raw?))
-    |> Enum.sort_by(&{&1.meta.date, &1.meta.slug}, :desc)
+    |> Enum.sort_by(&{Date.to_erl(&1.meta.date), &1.meta.slug}, :desc)
   end
 
   defp template_for("posts"), do: :post

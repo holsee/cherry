@@ -24,7 +24,7 @@ defmodule Cherry.CV.JsonResume do
       }
     }
     |> prune()
-    |> JSON.encode!()
+    |> Cherry.StableJSON.encode!()
   end
 
   defp basics(cv, site) do

@@ -29,7 +29,7 @@ defmodule Cherry.CV.Skill do
     |> Enum.flat_map(fn entry -> Enum.map(entry.tags, &{&1, entry}) end)
     |> Enum.group_by(fn {tag, _entry} -> tag end, fn {_tag, entry} -> entry end)
     |> Enum.map(fn {tag, tagged} -> skill(tag, tagged, today) end)
-    |> Enum.sort_by(&{&1.last_used, &1.years}, :desc)
+    |> Enum.sort_by(&{Date.to_erl(&1.last_used), &1.years}, :desc)
   end
 
   defp skill(tag, entries, today) do
@@ -37,7 +37,7 @@ defmodule Cherry.CV.Skill do
       entries
       |> Enum.reject(&is_nil(&1.started))
       |> Enum.map(&{&1.started, &1.ended || today})
-      |> Enum.sort()
+      |> Enum.sort_by(fn {from, to} -> {Date.to_erl(from), Date.to_erl(to)} end)
 
     days =
       spans |> merge_spans([]) |> Enum.map(fn {from, to} -> Date.diff(to, from) end) |> Enum.sum()
