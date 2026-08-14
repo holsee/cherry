@@ -78,8 +78,12 @@ defmodule Cherry.MixProject do
     ]
   end
 
+  # Gate on the env var, not Code.ensure_loaded?(Burrito): project config
+  # is evaluated before deps compile on a fresh runner, so the module
+  # check silently dropped the wrap step. The capture is only invoked
+  # after compilation, when Burrito is loadable.
   defp release_steps do
-    if Code.ensure_loaded?(Burrito), do: [:assemble, &Burrito.wrap/1], else: [:assemble]
+    if System.get_env("CHERRY_RELEASE"), do: [:assemble, &Burrito.wrap/1], else: [:assemble]
   end
 
   # The single quality gate. CI runs exactly this and nothing else (AGENTS.md).
