@@ -1,0 +1,9 @@
+name: grower
+headline: Grows orchards and software.
+location: Belfast
+links:
+  - label: GitHub
+    url: https://github.com/grower
+  - label: Fediverse
+    url: https://fedi.example/@grower
+updated: 2026-08-01

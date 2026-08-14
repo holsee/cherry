@@ -1,0 +1,44 @@
+defmodule Cherry.Pipeline.Stages.Emit do
+  @moduledoc """
+  Writes the token to disk: pages as files, assets copied verbatim.
+
+  Writes happen in sorted path order and contain only content-derived bytes,
+  so the same token always produces a byte-identical `_site/` (ADR 0005).
+  """
+
+  @behaviour Cherry.Pipeline.Stage
+
+  alias Cherry.Build
+
+  @impl Cherry.Pipeline.Stage
+  @spec run(Build.t()) :: {:ok, Build.t()}
+  def run(%Build{site: site} = build) do
+    File.mkdir_p!(site.output)
+
+    build.pages
+    |> Enum.sort_by(& &1.path)
+    |> Enum.each(fn page -> write!(site.output, page.path, page.content) end)
+
+    # Byte copy, not File.cp!: the output carries content-derived bytes
+    # only (no source permission bits, ADR 0005), and read!/write! skip
+    # the file-server round-trips cp!'s mode copy serializes on.
+    build.assets
+    |> Enum.sort_by(& &1.path)
+    |> Enum.each(fn asset ->
+      write!(site.output, asset.path, File.read!(asset.source))
+    end)
+
+    {:ok, build}
+  end
+
+  defp write!(output, rel_path, content) do
+    destination = ensure_parent!(output, rel_path)
+    File.write!(destination, content)
+  end
+
+  defp ensure_parent!(output, rel_path) do
+    destination = Path.join(output, rel_path)
+    File.mkdir_p!(Path.dirname(destination))
+    destination
+  end
+end

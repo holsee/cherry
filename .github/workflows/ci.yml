@@ -1,0 +1,93 @@
+name: CI
+
+on:
+  push:
+    branches: [develop, main]
+  pull_request:
+    branches: [develop, main]
+
+jobs:
+  precommit:
+    name: mix precommit (${{ matrix.os }})
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v7
+
+      # file_system needs inotify-tools for the serve tests.
+      - if: runner.os == 'Linux'
+        run: sudo apt-get update && sudo apt-get install -y inotify-tools
+
+      - uses: erlef/setup-beam@v1
+        with:
+          otp-version: "28.x"
+          elixir-version: "1.20.x"
+
+      - uses: actions/setup-node@v7
+        with:
+          node-version: "22"
+
+      - uses: actions/cache@v6
+        with:
+          path: |
+            deps
+            _build
+          key: ${{ runner.os }}-mix-${{ hashFiles('mix.lock') }}
+          restore-keys: ${{ runner.os }}-mix-
+
+      - uses: actions/cache@v6
+        with:
+          path: priv/plts
+          key: ${{ runner.os }}-plts-${{ hashFiles('mix.lock') }}
+          restore-keys: ${{ runner.os }}-plts-
+
+      # Setup only below; the one and only quality gate is `mix precommit`.
+      - run: mix deps.get
+      - run: npm ci
+      - run: mix precommit
+
+      # Dogfood the generator: a fresh `cherry.new` site must build and
+      # check clean against this very checkout.
+      - name: cherry.new dogfood
+        if: runner.os == 'Linux'
+        working-directory: installer
+        run: |
+          mix cherry.new /tmp/orchard --cherry-path "$GITHUB_WORKSPACE"
+          cd /tmp/orchard
+          mix deps.get
+          mix cherry.build
+          mix cherry.check --strict
+
+  build-action:
+    name: build-action (${{ matrix.os }})
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: erlef/setup-beam@v1
+        with:
+          otp-version: "28.x"
+          elixir-version: "1.20.x"
+
+      # A consumer site generated against this very checkout…
+      - name: scaffold a site
+        working-directory: installer
+        shell: bash
+        run: mix cherry.new "$GITHUB_WORKSPACE/tmp-site" --cherry-path "$GITHUB_WORKSPACE"
+
+      # …built by the published action, exercised from the local tree.
+      - uses: ./action
+        id: cherry
+        with:
+          source: tmp-site
+
+      - name: assert the build landed
+        shell: bash
+        run: test -f tmp-site/_site/index.html && test -f tmp-site/_site/llms.txt

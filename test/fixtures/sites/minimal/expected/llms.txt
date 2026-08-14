@@ -1,0 +1,5 @@
+# Minimal
+
+## Blog
+
+- [Blog](https://example.com/blog/index.md)

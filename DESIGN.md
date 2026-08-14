@@ -128,7 +128,62 @@ The Careers 2.0 insight was that a developer's story is a *timeline of typed ent
 - Every portfolio entry carries `tags:` from the **same taxonomy as blog posts**. The story page for "Elixir" shows positions, projects, talks, *and every blog post* tagged Elixir. This cross-linking is the feature; nobody in SSG land does it.
 - Rendered as: timeline view (default), plus per-tag story pages.
 - Emits JSON-LD `Person` (with `worksFor`, `alumniOf`, `knowsAbout`) — the portfolio *is* the structured data.
-- A `portfolio.yaml` at the root holds the profile itself (name, headline, links, avatar).
+- A `portfolio.yaml` at the root holds the profile itself (name, headline, location, links, avatar). Contact email is **off by default** (spam harvesting on public static pages is real); opt-in via config.
+
+### Two views of the story: the timeline and the CV
+
+Careers 2.0's killer use was linking an employer to your profile instead of sending a
+CV. Cherry ships **both of its faces as first-class web views of the same portfolio
+data**:
+
+1. **The timeline** (`/portfolio/`, template `portfolio_timeline`) — the Careers-style
+   exploratory view: chronological, rich, cross-linked into the blog through the
+   shared tag taxonomy. This is the *story*.
+2. **The CV** (`/cv/`, template `cv`) — a web page that *reads like a CV*: linear,
+   dense, scannable, employer-shaped. Not a print stylesheet bolted onto the
+   timeline — its own designed view. Print and PDF are output forms of this view,
+   not its reason for existing.
+
+The design principle is strict: **both views are projections of the same portfolio
+data — never a second dataset.** The moment CV content lives in its own file, it
+drifts, and you're maintaining a CV again.
+
+- **Curation, not duplication.** Entries opt in via frontmatter:
+  `cv: {include: true, weight: 10, highlights: [...]}`. The markdown body stays the
+  long-form story; `highlights` are the CV's punchy bullets. No `cv:` block →
+  timeline-only. An `education` collection joins the portfolio built-ins.
+- **Evidence-backed skills** — the differentiator. The CV's skills section is
+  *derived*: tags aggregated across positions/projects, weighted by duration and
+  recency, each one linking to that tag's story page. "Elixir — 6 yrs" is a click
+  away from the actual projects, talks, and posts. A paper CV claims; this one shows.
+- **Print and PDF are first-class outputs.** The `cv` template is designed for
+  `@media print` from day one: black-on-white regardless of site theme, page-break
+  discipline (never split an entry), no chrome, A4/Letter-safe. Baseline "Download
+  PDF" is the browser's print dialog (zero JS, pixel-perfect because we designed for
+  it); a build-time rendered PDF artifact (`/cv.pdf`) is a planned enhancement once
+  the toolchain cost is justified (see LATER).
+- **Machine-readable**: `/cv.json` in the [JSON Resume](https://jsonresume.org)
+  standard schema (ATS tools and agents consume it; the standard's name stays theirs,
+  the route is ours), plus the usual markdown mirror. JSON-LD `Person` derives from
+  the same data.
+- **Discretion, the static-site way**: visibility is `:public | :unlisted | :off`.
+  Unlisted builds the page but keeps it out of nav, sitemap, feeds, and llms.txt,
+  with `noindex` — share the URL with an employer without announcing a job hunt on
+  your homepage.
+- **Identity routes.** The CV can additionally build under identity-carrying URLs —
+  `/cv/handle/`, `/cv/first.lastname/` — configured as independent routes, each
+  with its own slug, presented identity (`handle` → the page leads with "@handle";
+  `name` → it leads with the real name), and its own visibility. Both can be live at
+  once (public handle for the community, unlisted real name for employers — or any
+  combination). Exactly one route is canonical: all others emit `rel=canonical` to
+  it, and bare `/cv/` serves or redirects to it, so duplicate-content SEO stays
+  clean. No routes configured → plain `/cv/` only; the identity layer is opt-in.
+  Every route directory carries its own `cv.json` and markdown mirror.
+- **Freshness from content, not the clock**: the "Updated August 2026" line derives
+  from the newest included entry (or an explicit `updated:` in `portfolio.yaml`) —
+  the determinism contract holds.
+- Both `portfolio_timeline` and `cv` are part of the **theme contract inventory**, so
+  every theme ships both and swapping never loses either view.
 
 ---
 
@@ -195,7 +250,7 @@ Cherry ships one excellent default theme — and a theme *system* designed so th
 A theme is a package — a hex dep in project mode, a plain directory in binary mode (EEx evaluates at runtime, so binary-mode sites get full themes, not a reduced tier). Every theme carries a `theme.exs` manifest declaring:
 
 - **Contract version** (`cherry_contract: "1.x"`) — the framework's theme API is versioned; `cherry.check` fails loudly on mismatch instead of half-rendering.
-- **Template inventory** — the named templates the contract requires (`layout`, `post`, `page`, `post_list`, `tag`, `portfolio_timeline`, `404`, …) and the assigns each receives. Fixed names + fixed assigns are *why* swap works.
+- **Template inventory** — the named templates the contract requires (`layout`, `post`, `page`, `post_list`, `tag`, `portfolio_timeline`, `cv`, `404`, …) and the assigns each receives. Fixed names + fixed assigns are *why* swap works.
 - **Token manifest** — every CSS custom property the theme uses, with default and description. Tokens are the theme's public styling API.
 - Metadata: name, version, screenshot, description.
 
@@ -227,7 +282,7 @@ This directly answers Jekyll's frozen-copies problem and shadcn's unanswered FAQ
 ### The default theme itself
 
 - **Design tokens on `:root`** (full light palette), redefined under `prefers-color-scheme: dark` and under an explicit `data-theme` attribute so a manual toggle beats system preference. No-flash inline script reads `localStorage` before first paint.
-- **Code blocks follow the theme for free:** MDEx's `html_multi_themes` formatter emits both highlight palettes (e.g. `github_light`/`github_dark`) switched by CSS — no JS re-highlighting.
+- **Code blocks follow the theme for free:** MDEx's `html_linked` formatter (Lumis engine — it superseded the old `html_multi_themes` API) emits class-based tokens with no baked colors; the theme's own `--syn-*` custom properties color them in both renditions, so the toggle swaps code and prose as one world — no JS re-highlighting.
 - Hand-rolled tokens CSS, no Tailwind: design is a feature of this product, the CSS should be readable, and zero node/binary build deps keeps the pipeline pure. (Sites that want Tailwind add it as a watcher; we don't ship it.)
 - Zero JS by default; enhancements (theme toggle, search UI) are `<script>` islands that fail soft — authored in TypeScript in the cherry repo, shipped as compiled JS assets (user site builds stay node-free).
 - Design pass will be done with the impeccable skill when we build it. Typography-first; the old site's "code and stuff" personality, modernized.
@@ -258,7 +313,7 @@ Elsewhere: Netlify/Cloudflare/Vercel need nothing but "build command + output di
 Pipeline (load→validate→transform→layout→emit), `pages` + `posts` collections, tags, default theme with light/dark, theme contract v1 (manifest, tokens, shadowing via `theme.eject` with provenance, `theme.list`/`theme.which`), `gen.post`/`build`/`serve`/`publish`, Atom feed, sitemap, canonical/OG/JSON-LD basics, GH Pages action + base-path handling. Migrate holsee.github.io content from `original/` (source branch markdown) as the dogfood.
 
 **Phase 2 — Portfolio**
-Portfolio collections + schemas, `portfolio.yaml` profile, timeline theme section, shared-taxonomy story pages, `Person` JSON-LD, `gen.project`/`gen.talk`. Also `mix cherry.gen.theme` + a second official theme — the proof that the swap contract is real, not aspirational.
+Portfolio collections + schemas (incl. `education`), `portfolio.yaml` profile, timeline theme section, shared-taxonomy story pages, **the CV view** (`/cv/` — a web page that reads like a CV, print-ready, curation frontmatter, derived skills, `/cv.json`, visibility controls), `Person` JSON-LD, `gen.project`/`gen.talk`. Also `mix cherry.gen.theme` + a second official theme — the proof that the swap contract is real, not aspirational. Decided (2026-08-14): the second theme is **`cherrybomb`**, carrying the brand's graffiti/retrowave energy (logo art in `assets/`); the default theme stays clean and brand-free.
 
 **Phase 3 — Agent, binary & polish**
 `cherry.check` suite, `--json` everywhere it isn't yet, llms.txt + markdown mirrors, JSON Feed, `cherry.schema`, scaffolded `AGENTS.md` + skill, Pagefind integration, published build-action, `cherry_new` archive on Hex, **`theme.diff` managed-drift upgrades**, **Burrito standalone binary + binary-mode sites** (the `Cherry.CLI.run/1` seam that makes it cheap is built in Phase 1).

@@ -1,0 +1,14 @@
+{
+  "name": "cherry-assets",
+  "private": true,
+  "description": "TypeScript toolchain for Cherry's client-side islands (compiled JS ships with themes; user sites stay node-free).",
+  "scripts": {
+    "check": "tsc --noEmit",
+    "build": "esbuild assets/js/theme-toggle.ts --bundle --minify --format=iife --target=es2020 --outfile=priv/themes/default/assets/theme-toggle.js && esbuild assets/js/livereload.ts --bundle --minify --format=iife --target=es2020 --outfile=priv/serve/livereload.js"
+  },
+  "devDependencies": {
+    "esbuild": "^0.25.0",
+    "pagefind": "^1.3.0",
+    "typescript": "^5.7.0"
+  }
+}

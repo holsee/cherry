@@ -1,0 +1,14 @@
+# Orchard
+
+> Notes from the orchard.
+
+## Blog
+
+- [Blog](https://orchard.example/blog/index.md)
+- [Picking cherries](https://orchard.example/picking-cherries/index.md) — 2026-02-01
+- [Hello, world](https://orchard.example/hello-world/index.md) — 2026-01-15
+
+## Pages
+
+- [About](https://orchard.example/about/index.md)
+- [Home](https://orchard.example/index.md)

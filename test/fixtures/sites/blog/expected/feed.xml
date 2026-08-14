@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+<title>Orchard</title>
+<subtitle>Notes from the orchard.</subtitle>
+<link href="https://orchard.example/"/>
+<link rel="self" href="https://orchard.example/feed.xml"/>
+<id>https://orchard.example/</id>
+<updated>2026-02-01T00:00:00Z</updated>
+<author><name>Orchard</name></author>
+<entry>
+<title>Picking cherries</title>
+<link href="https://orchard.example/picking-cherries/"/>
+<id>https://orchard.example/picking-cherries/</id>
+<published>2026-02-01T00:00:00Z</published>
+<updated>2026-02-01T00:00:00Z</updated>
+<content type="html">&lt;p&gt;A second post so ordering and tag grouping have something to chew on.&lt;/p&gt;
+&lt;pre class="lumis"&gt;&lt;code class="language-elixir" translate="no" tabindex="0"&gt;&lt;div class="l-line" data-line="1"&gt;&lt;span class="l-keyword-function"&gt;defmodule&lt;/span&gt; &lt;span class="l-module"&gt;Basket&lt;/span&gt; &lt;span class="l-keyword"&gt;do&lt;/span&gt;
+&lt;/div&gt;&lt;div class="l-line" data-line="2"&gt;  &lt;span class="l-keyword-function"&gt;def&lt;/span&gt; &lt;span class="l-function"&gt;pick&lt;/span&gt;&lt;span class="l-punctuation-bracket"&gt;(&lt;/span&gt;&lt;span class="l-variable"&gt;tree&lt;/span&gt;&lt;span class="l-punctuation-bracket"&gt;)&lt;/span&gt;&lt;span class="l-punctuation-delimiter"&gt;,&lt;/span&gt; &lt;span class="l-string-special-symbol"&gt;do: &lt;/span&gt;&lt;span class="l-punctuation-bracket"&gt;{&lt;/span&gt;&lt;span class="l-string-special-symbol"&gt;:ok&lt;/span&gt;&lt;span class="l-punctuation-delimiter"&gt;,&lt;/span&gt; &lt;span class="l-variable"&gt;tree&lt;/span&gt;&lt;span class="l-punctuation-bracket"&gt;}&lt;/span&gt;
+&lt;/div&gt;&lt;div class="l-line" data-line="3"&gt;&lt;span class="l-keyword"&gt;end&lt;/span&gt;
+&lt;/div&gt;&lt;/code&gt;&lt;/pre&gt;</content>
+</entry>
+<entry>
+<title>Hello, world</title>
+<link href="https://orchard.example/hello-world/"/>
+<id>https://orchard.example/hello-world/</id>
+<published>2026-01-15T00:00:00Z</published>
+<updated>2026-01-15T00:00:00Z</updated>
+<summary>The first post in the orchard.</summary>
+<content type="html">&lt;p&gt;The date and slug come from the &lt;strong&gt;filename&lt;/strong&gt;; tags ride the shared taxonomy.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;GFM lists work&lt;/li&gt;
+&lt;li&gt;so does &lt;del&gt;strikethrough&lt;/del&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class="table-scroll"&gt;&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;feature&lt;/th&gt;
+&lt;th&gt;status&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;tables&lt;/td&gt;
+&lt;td&gt;yes&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;&lt;/div&gt;</content>
+</entry>
+</feed>

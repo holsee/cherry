@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>CV · Folio</title>
+<link rel="canonical" href="https://folio.example/cv/">
+<link rel="alternate" type="application/atom+xml" title="Folio" href="/feed.xml">
+<link rel="alternate" type="application/feed+json" title="Folio" href="/feed.json">
+<meta name="description" content="A developer story grown for Cherry's golden harness.">
+<meta property="og:description" content="A developer story grown for Cherry's golden harness.">
+<meta property="og:title" content="CV">
+<meta property="og:url" content="https://folio.example/cv/">
+<meta property="og:site_name" content="Folio">
+<meta name="twitter:card" content="summary">
+<meta property="og:type" content="website">
+<link rel="stylesheet" href="/assets/site.css">
+<script>
+/* No-flash: apply the stored theme before first paint. */
+(function () {
+  try {
+    var t = localStorage.getItem("cherry-theme");
+    if (t === "light" || t === "dark") document.documentElement.dataset.theme = t;
+  } catch (e) {}
+})();
+</script>
+</head>
+<body>
+<header class="site-header">
+<div class="wrap">
+<a class="site-title" href="/">Folio</a>
+<nav class="site-nav"><a href="/blog/">Blog</a>
+<a href="/portfolio/">Portfolio</a>
+<a href="/cv/">CV</a>
+
+<button class="theme-toggle" type="button" aria-label="Theme">
+<svg data-theme-icon="auto" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><circle cx="8" cy="8" r="6"/><path d="M8 2 A6 6 0 0 1 8 14 Z" fill="currentColor" stroke="none"/></svg>
+<svg data-theme-icon="light" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true" style="display:none"><circle cx="8" cy="8" r="3.5"/><path d="M8 1v2M8 13v2M1 8h2M13 8h2M3 3l1.4 1.4M11.6 11.6L13 13M13 3l-1.4 1.4M4.4 11.6L3 13"/></svg>
+<svg data-theme-icon="dark" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true" style="display:none"><path d="M13.5 9.5A6 6 0 1 1 6.5 2.5a5 5 0 0 0 7 7Z"/></svg>
+<span data-theme-label>auto</span>
+</button>
+</nav>
+</div>
+</header>
+<main>
+<div class="wrap">
+<article class="cv">
+<header class="cv-header">
+<h1>grower</h1>
+<p class="cv-headline">Grows orchards and software.</p>
+<p class="cv-contact"><span>Belfast</span><a href="https://github.com/grower">GitHub</a><a href="https://fedi.example/@grower">Fediverse</a></p>
+<p class="cv-updated">Updated August 2026<span class="cv-json-link"> · <a href="/cv.json">cv.json</a></span></p>
+</header>
+<section class="cv-section">
+<h2>Skills</h2>
+<ul class="cv-skills">
+<li><a href="/story/elixir/">elixir</a> <span class="cv-skill-years">7 yrs</span></li>
+</ul>
+</section>
+<section class="cv-section">
+<h2>Experience</h2>
+<article class="cv-entry">
+<h3>Staff Engineer · Orchard Systems</h3>
+<p class="entry-meta">Feb 2020 — present · Remote</p>
+<ul class="entry-highlights">
+<li>Grew the platform from seed to fruit</li>
+</ul>
+</article>
+</section>
+<section class="cv-section">
+<h2>Projects</h2>
+<article class="cv-entry">
+<h3>Cider Press</h3>
+<p class="entry-meta">Jun 2023 — present · <a href="https://github.com/grower/cider-press">Source</a></p>
+<ul class="entry-highlights">
+<li>Presses apples at 10k pods/sec</li>
+</ul>
+</article>
+</section>
+<section class="cv-section">
+<h2>Education</h2>
+<article class="cv-entry">
+<h3>BSc Pomology · Orchard University</h3>
+<p class="entry-meta">Sep 2012 — Jun 2016</p>
+</article>
+</section>
+</article>
+
+</div>
+</main>
+<footer class="site-footer">
+<div class="wrap">
+<span>© Folio</span>
+<a href="/feed.xml">RSS</a>
+</div>
+</footer>
+<script src="/assets/theme-toggle.js" defer></script>
+</body>
+</html>

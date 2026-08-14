@@ -1,0 +1,67 @@
+name: "Cherry Build"
+description: "Build and verify a Cherry static site — no local Elixir toolchain needed."
+author: "holsee"
+
+branding:
+  icon: "book-open"
+  color: "red"
+
+inputs:
+  source:
+    description: "Directory of the site's mix project."
+    required: false
+    default: "."
+  check:
+    description: "Run cherry.check after the build: strict (warnings fail), warn (errors fail), or off."
+    required: false
+    default: "strict"
+  otp-version:
+    description: "Erlang/OTP version for erlef/setup-beam."
+    required: false
+    default: "28.x"
+  elixir-version:
+    description: "Elixir version for erlef/setup-beam."
+    required: false
+    default: "1.20.x"
+
+outputs:
+  output-path:
+    description: "Path of the built site (the _site directory)."
+    value: ${{ steps.build.outputs.output-path }}
+
+runs:
+  using: "composite"
+  steps:
+    - uses: erlef/setup-beam@v1
+      with:
+        otp-version: ${{ inputs.otp-version }}
+        elixir-version: ${{ inputs.elixir-version }}
+
+    - uses: actions/cache@v6
+      with:
+        path: |
+          ${{ inputs.source }}/deps
+          ${{ inputs.source }}/_build
+        key: cherry-${{ runner.os }}-${{ hashFiles(format('{0}/mix.lock', inputs.source)) }}
+        restore-keys: cherry-${{ runner.os }}-
+
+    - run: mix deps.get
+      shell: bash
+      working-directory: ${{ inputs.source }}
+
+    - id: build
+      run: |
+        mix cherry.build
+        echo "output-path=$(pwd)/_site" >> "$GITHUB_OUTPUT"
+      shell: bash
+      working-directory: ${{ inputs.source }}
+
+    - if: ${{ inputs.check == 'strict' }}
+      run: mix cherry.check --strict
+      shell: bash
+      working-directory: ${{ inputs.source }}
+
+    - if: ${{ inputs.check == 'warn' }}
+      run: mix cherry.check
+      shell: bash
+      working-directory: ${{ inputs.source }}

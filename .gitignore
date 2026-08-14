@@ -2,3 +2,11 @@
 /_site/
 /deps/
 /_build/
+/.elixir_ls/
+/cover/
+/doc/
+/node_modules/
+/priv/plts/
+erl_crash.dump
+cherry-*.tar
+/tmp/

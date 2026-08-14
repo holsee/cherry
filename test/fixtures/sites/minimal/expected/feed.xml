@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+<title>Minimal</title>
+<link href="https://example.com/"/>
+<link rel="self" href="https://example.com/feed.xml"/>
+<id>https://example.com/</id>
+<updated>1970-01-01T00:00:00Z</updated>
+<author><name>Minimal</name></author>
+</feed>
