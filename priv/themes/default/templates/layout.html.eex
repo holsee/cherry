@@ -16,7 +16,7 @@
 })();
 </script>
 </head>
-<body>
+<body class="<%= @page_class %>">
 <header class="site-header">
 <div class="wrap">
 <a class="site-title" href="<%= href(@site, "") %>"><%= h(@site.title) %></a>

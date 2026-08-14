@@ -5,6 +5,10 @@ defmodule Cherry.Pipeline.Stages.Transform do
   Raw HTML inside markdown is allowed — this is the author's own site, and
   Octopress-era posts lean on embedded HTML. Non-markdown documents pass
   their body through unchanged.
+
+  Headings carry ids plus a trailing `a.anchor` deep link
+  (`header_id_prefix`), and GitHub-style alerts (`> [!NOTE]` …) render as
+  `div.markdown-alert-*` blocks — both styled by the official themes.
   """
 
   @behaviour Cherry.Pipeline.Stage
@@ -18,7 +22,10 @@ defmodule Cherry.Pipeline.Stages.Transform do
       strikethrough: true,
       autolink: true,
       tasklist: true,
-      footnotes: true
+      footnotes: true,
+      # Not the deprecated `header_ids` shim — that one IO.warns.
+      header_id_prefix: "",
+      alerts: true
     ],
     render: [unsafe: true],
     # html_linked emits class-based tokens with no baked colors; the theme's

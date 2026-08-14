@@ -7,6 +7,8 @@
 <link rel="canonical" href="https://orchard.example/about/">
 <link rel="alternate" type="application/atom+xml" title="Orchard" href="/feed.xml">
 <link rel="alternate" type="application/feed+json" title="Orchard" href="/feed.json">
+<link rel="icon" href="/favicon.ico" sizes="32x32">
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
 <meta name="description" content="What this orchard is for.">
 <meta property="og:description" content="What this orchard is for.">
 <meta property="og:title" content="About">
@@ -25,7 +27,7 @@
 })();
 </script>
 </head>
-<body>
+<body class="page-about">
 <header class="site-header">
 <div class="wrap">
 <a class="site-title" href="/">Orchard</a>
@@ -43,7 +45,7 @@
 <main>
 <div class="wrap">
 <article>
-<h2>About</h2>
+<h2 id="about">About<a href="#about" aria-label="Link to heading 'About'" data-heading-content="About" class="anchor"></a></h2>
 <p>Pages are freeform; this one proves pretty URLs (<code>about.md</code> becomes <code>/about/</code>).</p>
 </article>
 
