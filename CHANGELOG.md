@@ -8,6 +8,7 @@ Entries are terse one-liners linked to their PR: `- Thing that changed. (#12)`
 ## [Unreleased]
 
 ### Added
+- `Cherry.CLI.run/1` seam with verb registry, `--json` envelopes, stable exit codes; `mix cherry.version` tracer. (#2)
 - Library skeleton with `mix precommit` gate, TS toolchain, and CI on ubuntu + windows. (#1)
 - Project constitution (AGENTS.md), design doc (DESIGN.md), ADRs 0001–0006, backlog.
 - Dual MIT / Apache-2.0 license.
