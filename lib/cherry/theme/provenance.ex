@@ -38,6 +38,10 @@ defmodule Cherry.Theme.Provenance do
     end
   end
 
+  @doc "Removes the provenance header, leaving the template body."
+  @spec strip(String.t()) :: String.t()
+  def strip(content), do: Regex.replace(@header, content, "", global: false)
+
   @doc "Content hash used in headers (lowercase hex SHA-256)."
   @spec hash(String.t()) :: String.t()
   def hash(content) do

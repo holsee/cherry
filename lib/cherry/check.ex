@@ -11,6 +11,8 @@ defmodule Cherry.Check do
   alias Cherry.Build
   alias Cherry.Check.Diagnostic
   alias Cherry.Content.{Document, Page}
+  alias Cherry.Theme
+  alias Cherry.Theme.Drift
 
   @doc "Runs every rule; diagnostics come back errors-first."
   @spec run(Build.t()) :: [Diagnostic.t()]
@@ -20,7 +22,8 @@ defmodule Cherry.Check do
         missing_descriptions(build) ++
         missing_alt(build) ++
         duplicate_titles(build) ++
-        feed_sanity(build)
+        feed_sanity(build) ++
+        overlay_drift(build)
     )
   end
 
@@ -163,6 +166,41 @@ defmodule Cherry.Check do
           }
         end
     end
+  end
+
+  # --- overlay drift (managed theme upgrades) -----------------------------
+
+  defp overlay_drift(build) do
+    case Theme.load_active(build.site) do
+      {:ok, theme} ->
+        for entry <- Drift.entries(build.site, theme), entry.status != :current do
+          %Diagnostic{
+            file: entry.overlay |> Path.relative_to(build.site.root) |> String.replace("\\", "/"),
+            rule: drift_rule(entry.status),
+            message: drift_message(entry),
+            severity: :warning
+          }
+        end
+
+      # An unloadable theme fails the build long before checking.
+      {:error, _reason} ->
+        []
+    end
+  end
+
+  defp drift_rule(:untracked), do: "untracked-overlay"
+  defp drift_rule(_status), do: "stale-overlay"
+
+  defp drift_message(%Drift.Entry{status: :auto_updatable, template: template}) do
+    "#{template} drifted upstream but is untouched here — cherry theme.diff --apply re-ejects it"
+  end
+
+  defp drift_message(%Drift.Entry{status: :conflict, template: template}) do
+    "#{template} changed both upstream and here — resolve via cherry theme.diff"
+  end
+
+  defp drift_message(%Drift.Entry{status: :untracked, template: template}) do
+    "#{template} has no provenance header — re-eject to enable managed upgrades"
   end
 
   defp json_feed_sanity(build) do
