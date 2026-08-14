@@ -15,6 +15,7 @@ defmodule Cherry.Commands.JsonEnvelopeTest do
 
   alias Cherry.CLI
   alias Cherry.CLI.Registry
+  alias Cherry.Test.FakeReleaseServer
 
   @moduletag :tmp_dir
 
@@ -23,7 +24,7 @@ defmodule Cherry.Commands.JsonEnvelopeTest do
 
   # Verbs proven below; the completeness gate keeps this list honest.
   @covered ~w(build check gen.action gen.post gen.project gen.talk gen.theme
-              publish schema theme.diff theme.eject theme.list theme.which version)
+              publish schema theme.diff theme.eject theme.list theme.which upgrade version)
 
   # serve runs until interrupted — its envelope cannot round-trip in a test.
   @excluded ~w(serve)
@@ -117,6 +118,14 @@ defmodule Cherry.Commands.JsonEnvelopeTest do
       assert %{"ejected" => [%{"template" => "post", "path" => _}]} =
                data(["theme.eject", "post", "--source", fixture(tmp)])
     end
+
+    test "upgrade --check against a local release API" do
+      {:ok, _pid, port} =
+        FakeReleaseServer.start(%{tag: "v9.9.9", prerelease: false, assets: %{}})
+
+      assert %{"current" => _, "target" => "v9.9.9", "asset" => _, "status" => "outdated"} =
+               data(["upgrade", "--check", "--api-base", "http://127.0.0.1:#{port}"])
+    end
   end
 
   describe "error envelopes decode with code, message, and details" do
@@ -139,6 +148,18 @@ defmodule Cherry.Commands.JsonEnvelopeTest do
       assert %{"ok" => false, "error" => error} = JSON.decode!(output)
       assert error["code"] == "usage"
       assert error["details"] == %{}
+    end
+
+    test "upgrade outside the binary refuses with guidance" do
+      {:ok, _pid, port} =
+        FakeReleaseServer.start(%{tag: "v9.9.9", prerelease: false, assets: %{}})
+
+      {output, code} = run(["upgrade", "--api-base", "http://127.0.0.1:#{port}", "--json"])
+
+      assert code == 1
+      assert %{"ok" => false, "command" => "upgrade", "error" => error} = JSON.decode!(output)
+      assert error["code"] == "not_binary"
+      assert error["message"] =~ "mix deps.update cherry"
     end
 
     test "a command failure keeps the envelope shape", %{tmp_dir: tmp} do

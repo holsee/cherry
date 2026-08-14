@@ -7,6 +7,9 @@ Entries are terse one-liners linked to their PR: `- Thing that changed. (#12)`
 
 ## [Unreleased]
 
+### Added
+- `cherry upgrade`: first-class self-update for the standalone binary (ADR 0007) — resolves the latest stable GitHub release (or `--version` for any tag, prereleases included), verifies this platform's asset against `SHA256SUMS`, and swaps the running executable rustup-style; `--check` reports without touching anything and works under mix too. Zero new deps (`:httpc` + OS trust store). (#26)
+
 ## [0.1.0-rc.1] — 2026-08-14
 
 ### Added
