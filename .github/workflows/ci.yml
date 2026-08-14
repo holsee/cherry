@@ -1,0 +1,40 @@
+name: CI
+
+on:
+  push:
+    branches: [develop, main]
+  pull_request:
+    branches: [develop, main]
+
+jobs:
+  precommit:
+    name: mix precommit (${{ matrix.os }})
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: erlef/setup-beam@v1
+        with:
+          otp-version: "28.x"
+          elixir-version: "1.20.x"
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - uses: actions/cache@v4
+        with:
+          path: |
+            deps
+            _build
+          key: ${{ runner.os }}-mix-${{ hashFiles('mix.lock') }}
+          restore-keys: ${{ runner.os }}-mix-
+
+      # Setup only below; the one and only quality gate is `mix precommit`.
+      - run: mix deps.get
+      - run: npm ci
+      - run: mix precommit
