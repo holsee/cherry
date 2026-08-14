@@ -8,6 +8,10 @@ defmodule Cherry do
   [GitHub repo](https://github.com/holsee/cherry).
   """
 
+  alias Cherry.Build
+  alias Cherry.Pipeline
+  alias Cherry.Site
+
   @doc """
   The Cherry version string, as compiled into the application spec.
 
@@ -26,15 +30,17 @@ defmodule Cherry do
   Builds a site: loads `cherry.exs` from `:source` and runs the pipeline.
 
   Options: `:source` (site root, required), `:output` (defaults to
-  `source/_site`).
+  `source/_site`), plus the selection options of `Cherry.Build.Options`
+  (`:drafts`, `:future`, `:today`).
   """
-  @spec build(keyword()) :: {:ok, Cherry.Build.t()} | {:error, String.t()}
+  @spec build(keyword()) :: {:ok, Build.t()} | {:error, String.t()}
   def build(opts) do
     source = Keyword.fetch!(opts, :source)
     output = Keyword.get(opts, :output, Path.join(source, "_site"))
+    options = Build.Options.new(opts)
 
-    with {:ok, site} <- Cherry.Site.load(source, output: output) do
-      Cherry.Pipeline.run(Cherry.Build.new(site), Cherry.Pipeline.default_stages())
+    with {:ok, site} <- Site.load(source, output: output) do
+      Pipeline.run(Build.new(site, options), Pipeline.default_stages())
     end
   end
 end
