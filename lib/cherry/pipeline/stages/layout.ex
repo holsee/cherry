@@ -38,8 +38,11 @@ defmodule Cherry.Pipeline.Stages.Layout do
   end
 
   defp base_context(site, theme, portfolio, cv) do
+    {leading, trailing} = Enum.split_with(site.nav, &(&1.position == :start))
+
     nav =
-      [%NavItem{label: "Blog", href: Site.href(site, "blog/")}] ++
+      Enum.map(leading, &custom_nav_item(site, &1)) ++
+        [%NavItem{label: "Blog", href: Site.href(site, "blog/")}] ++
         if Portfolio.present?(portfolio) do
           [%NavItem{label: "Portfolio", href: Site.href(site, "portfolio/")}]
         else
@@ -49,13 +52,14 @@ defmodule Cherry.Pipeline.Stages.Layout do
           [%NavItem{label: "CV", href: Site.href(site, "cv/")}]
         else
           []
-        end ++ Enum.map(site.nav, &custom_nav_item(site, &1))
+        end ++ Enum.map(trailing, &custom_nav_item(site, &1))
 
     %RenderContext{site: site, theme: theme, nav: nav, search?: site.search == "pagefind"}
   end
 
-  # Configured entries follow the built-ins, in declared order. Absolute
-  # URLs pass verbatim; anything else is site-relative and base_path-aware.
+  # Configured entries keep their declared order within their position
+  # group (:start before the built-ins, :end after). Absolute URLs pass
+  # verbatim; anything else is site-relative and base_path-aware.
   defp custom_nav_item(site, %{label: label, href: href}) do
     if String.starts_with?(href, ["http://", "https://"]) do
       %NavItem{label: label, href: href}

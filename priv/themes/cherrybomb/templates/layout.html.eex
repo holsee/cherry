@@ -44,7 +44,23 @@
 </div>
 </footer>
 <%= if @search do %><script src="<%= href(@site, "pagefind/pagefind-ui.js") %>"></script>
-<script>window.addEventListener("DOMContentLoaded", function () { new PagefindUI({ element: "#search", showImages: false }); });</script>
+<script>
+window.addEventListener("DOMContentLoaded", function () {
+  new PagefindUI({ element: "#search", showImages: false });
+  var input = document.querySelector("#search input");
+  if (!input) return;
+  var mac = /Mac|iP/.test(navigator.platform || "");
+  input.setAttribute("placeholder", "Search (" + (mac ? "⌘" : "Ctrl+") + "K)");
+  window.addEventListener("keydown", function (e) {
+    if ((e.metaKey || e.ctrlKey) && (e.key === "k" || e.key === "K")) {
+      e.preventDefault();
+      input.focus();
+      input.select();
+    }
+  });
+});
+</script>
 <% end %><script src="<%= href(@site, "assets/theme-toggle.js") %>" defer></script>
+<script src="<%= href(@site, "assets/copy-code.js") %>" defer></script>
 </body>
 </html>

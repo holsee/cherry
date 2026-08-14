@@ -7,8 +7,8 @@ description: Cherry is a static site generator for hackers. Typed content, deter
 <h1>A static site generator<br>for <em>hackers</em></h1>
 <p class="hero-tagline">A modern take on Octopress: typed content, deterministic builds, themes that survive upgrades. One binary, fuse lit.</p>
 <p class="hero-actions"><a class="button" href="/guides/quick-start/">Quick-start</a> <a class="button button-ghost" href="https://github.com/holsee/cherry">GitHub</a></p>
-<div class="cmd"><span class="cmd-os">macOS / Linux</span><code>curl -fsSL https://cherrybomb.dev/install.sh | sh</code></div>
-<div class="cmd"><span class="cmd-os">Windows</span><code>irm https://cherrybomb.dev/install.ps1 | iex</code></div>
+<div class="cmd" data-copy><span class="cmd-os">macOS / Linux</span><code>curl -fsSL https://cherrybomb.dev/install.sh | sh</code></div>
+<div class="cmd" data-copy><span class="cmd-os">Windows</span><code>irm https://cherrybomb.dev/install.ps1 | iex</code></div>
 </section>
 
 <section class="loop">
@@ -83,13 +83,31 @@ Same tree in, same bytes out: builds are deterministic, so your CI can prove not
 
 </section>
 
-<section class="wall">
-<p class="wall-line"><strong>Typed content.</strong> Collections carry introspectable schemas (<code>cherry schema posts</code>), so frontmatter is a contract, not folklore.</p>
-<p class="wall-line"><strong>Deterministic builds.</strong> Byte-identical output for identical input, gated in CI. Diffs mean something.</p>
-<p class="wall-line"><strong>SEO you can't forget.</strong> Canonical, Open Graph, JSON-LD, Atom + JSON feeds, sitemap: default-on, framework-owned, in every theme.</p>
-<p class="wall-line"><strong>Themes with a contract.</strong> Tokens are the styling API; ejected templates carry provenance, so upgrades merge instead of freezing.</p>
-<p class="wall-line"><strong>Markdown all the way out.</strong> Every route ships its markdown beside the HTML, plus <a href="/llms.txt">/llms.txt</a>. Curl it, grep it.</p>
-<p class="wall-line"><strong>One binary.</strong> No runtime to install. <code>cherry upgrade</code> swaps itself, checksum-verified, straight from the release.</p>
+<section class="beyond">
+
+## Not just a blog
+
+The same content tree that builds your posts can carry your whole developer story. Portfolio collections (positions, projects, talks, open source, education) render a **timeline** at `/portfolio/`, **story pages** that cross-link everything sharing a tag, and a **`/cv`** shaped for employers: curated bullets, evidence-backed skills, a print stylesheet that produces a clean one-pager, and a machine-readable `cv.json` in JSON Resume format. All of it static, all of it typed, all of it checked by the same verifier as the blog.
+
+</section>
+
+<section class="checklist">
+
+## The top ten
+
+<ul class="checks">
+<li><strong>One binary.</strong> No runtime to install; <code>cherry upgrade</code> swaps itself, checksum-verified.</li>
+<li><strong>Typed content.</strong> Collections publish schemas; unknown frontmatter is a build error, not a mystery.</li>
+<li><strong>Deterministic builds.</strong> Same tree in, same bytes out, gated in CI. Diffs mean something.</li>
+<li><strong>A real verifier.</strong> <code>cherry check --strict</code> returns structured diagnostics, not vibes.</li>
+<li><strong>Themes that survive upgrades.</strong> Tokens are the styling API; ejected templates carry provenance, so upgrades merge instead of freezing.</li>
+<li><strong>Developer timeline + CV.</strong> Portfolio collections render a timeline, story pages, and a print-ready CV with JSON Resume output.</li>
+<li><strong>SEO you can't forget.</strong> Canonical, Open Graph, JSON-LD, Atom + JSON feeds, sitemap: default-on in every theme.</li>
+<li><strong>Markdown all the way out.</strong> Every route ships its markdown twin, plus <a href="/llms.txt">/llms.txt</a>. Curl it, grep it.</li>
+<li><strong>AI-agent-friendly CLI.</strong> Every verb has a <code>--json</code> envelope, and the <a href="/guides/agents/">shipped skill</a> teaches an agent the whole loop.</li>
+<li><strong>Batteries for shipping.</strong> Live-reload serve, opt-in Pagefind search, and a generated GitHub Pages workflow.</li>
+</ul>
+
 </section>
 
 <section class="closing">

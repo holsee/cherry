@@ -970,6 +970,65 @@ pre.lumis {
   }
 }
 
+/* --- Copy buttons on code blocks (copy-code.js island) ---------------- */
+/* The island wraps each pre in .code-copy so the button anchors to the
+   block while the code scrolls beneath it. */
+
+.code-copy {
+  position: relative;
+}
+
+.copy-code {
+  position: absolute;
+  top: 0.5rem;
+  right: 0.5rem;
+  z-index: 2;
+  padding: 0.15rem 0.55rem;
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  line-height: 1.6;
+  color: var(--color-muted);
+  background: color-mix(in srgb, var(--color-surface) 85%, var(--color-bg));
+  border: 1px solid var(--color-border);
+  border-radius: 6px;
+  cursor: pointer;
+  /* Visible at rest so blocks read as copyable; full strength on hover. */
+  opacity: 0.55;
+  transition: opacity 120ms ease, color 120ms ease, border-color 120ms ease;
+}
+
+.code-copy:hover .copy-code,
+[data-copy]:hover .copy-code,
+.copy-code:focus-visible {
+  opacity: 1;
+}
+
+.copy-code:hover,
+.copy-code-done {
+  color: var(--color-accent);
+  border-color: color-mix(in srgb, var(--color-accent) 55%, var(--color-border));
+  opacity: 1;
+}
+
+/* The install one-liners are flex rows; the button rides the row. */
+.cmd .copy-code {
+  position: static;
+  margin-left: auto;
+  flex-shrink: 0;
+}
+
+@media (hover: none) {
+  .copy-code {
+    opacity: 1;
+  }
+}
+
+@media print {
+  .copy-code {
+    display: none;
+  }
+}
+
 /* --- The dogfood surfaces: landing (page-home) and guides ------------- */
 /* The nav mark ships with the theme; any cherrybomb site gets it. */
 
@@ -1114,39 +1173,96 @@ pre.lumis {
   .hero-actions {
     animation: none;
   }
+
+  .copy-code {
+    transition: none;
+  }
 }
 
-/* The poster wall: statements pinned at alternating depth, not cards. */
-.wall {
+/* Beyond the blog: the portfolio/CV pitch, one wide poster paragraph. */
+.beyond {
   max-width: 52rem;
-  margin: 4rem auto;
-  display: grid;
-  gap: 1.4rem;
+  margin: 4rem auto 0;
 }
 
-.wall-line {
-  margin: 0;
-  font-size: 1.1875rem;
-  line-height: 1.55;
+.beyond p {
+  font-size: 1.125rem;
+  line-height: 1.6;
   padding-left: 1.1rem;
   border-left: 1px solid color-mix(in srgb, var(--color-accent) 45%, var(--color-border));
-  transform: rotate(-0.3deg);
 }
 
-.wall-line:nth-child(even) {
-  margin-left: clamp(0rem, 6vw, 3.5rem);
-  transform: rotate(0.25deg);
+/* The top ten: a brush-checked list, two ragged columns on desktop. */
+.checklist {
+  max-width: 56rem;
+  margin: 4rem auto 0;
 }
 
-.wall-line strong {
+.checks {
+  list-style: none;
+  margin: 2rem 0 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.2rem 2.75rem;
+}
+
+.checks li {
+  position: relative;
+  padding-left: 2.15rem;
+  line-height: 1.55;
+}
+
+.checks li:nth-child(even) {
+  transform: rotate(0.2deg);
+}
+
+.checks li:nth-child(odd) {
+  transform: rotate(-0.2deg);
+}
+
+.checks li strong {
   font-weight: 800;
   letter-spacing: -0.01em;
 }
 
+/* The checkbox: a brush-skewed accent tile with a painted tick. */
+.checks li::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0.14em;
+  width: 1.2em;
+  height: 1.2em;
+  border: 1px solid color-mix(in srgb, var(--color-accent) 60%, var(--color-border));
+  border-radius: 0.25em;
+  transform: skewX(-6deg) rotate(-2deg);
+  background: linear-gradient(
+    100deg,
+    color-mix(in srgb, var(--color-accent) 26%, transparent),
+    color-mix(in srgb, var(--color-accent-strong) 16%, transparent)
+  );
+}
+
+.checks li::after {
+  content: "";
+  position: absolute;
+  left: 0.26em;
+  top: 0.4em;
+  width: 0.68em;
+  height: 0.36em;
+  border-left: 2px solid var(--color-accent);
+  border-bottom: 2px solid var(--color-accent);
+  transform: rotate(-48deg);
+}
+
 @media (max-width: 40rem) {
-  .wall-line,
-  .wall-line:nth-child(even) {
-    margin-left: 0;
+  .checks {
+    grid-template-columns: 1fr;
+  }
+
+  .checks li:nth-child(odd),
+  .checks li:nth-child(even) {
     transform: none;
   }
 
