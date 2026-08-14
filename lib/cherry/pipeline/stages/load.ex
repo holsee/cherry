@@ -71,7 +71,9 @@ defmodule Cherry.Pipeline.Stages.Load do
   end
 
   defp files_under(root, subdir) do
-    base = Path.join(root, subdir)
+    # Path.wildcard/1 treats backslashes as escape characters, so a Windows
+    # root (e.g. from System.tmp_dir!/0) silently matches nothing.
+    base = root |> Path.join(subdir) |> to_url_path()
 
     base
     |> Path.join("**")
