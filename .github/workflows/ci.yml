@@ -55,6 +55,7 @@ jobs:
         if: runner.os == 'Linux'
         working-directory: installer
         run: |
+          mix deps.get
           mix cherry.new /tmp/orchard --cherry-path "$GITHUB_WORKSPACE"
           cd /tmp/orchard
           mix deps.get
@@ -80,7 +81,9 @@ jobs:
       - name: scaffold a site
         working-directory: installer
         shell: bash
-        run: mix cherry.new "$GITHUB_WORKSPACE/tmp-site" --cherry-path "$GITHUB_WORKSPACE"
+        run: |
+          mix deps.get
+          mix cherry.new "$GITHUB_WORKSPACE/tmp-site" --cherry-path "$GITHUB_WORKSPACE"
 
       # …built by the published action, exercised from the local tree.
       - uses: ./action
