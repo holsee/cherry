@@ -11,7 +11,17 @@ defmodule Cherry.ServeTest do
 
   # Not ExUnit's :tmp_dir — that lives on the project mount, where inotify
   # events do not fire inside the devcontainer. The OS tmp dir is native.
-  setup do
+  setup context do
+    if context[:no_server] do
+      # The degraded-mode test starts its own serve tree; a second one in
+      # the same process would collide on the named reloader registry.
+      :ok
+    else
+      start_shared_server()
+    end
+  end
+
+  defp start_shared_server do
     tmp = Path.join(System.tmp_dir!(), "cherry-serve-#{System.unique_integer([:positive])}")
     File.mkdir_p!(tmp)
     on_exit(fn -> File.rm_rf!(tmp) end)
@@ -85,6 +95,38 @@ defmodule Cherry.ServeTest do
     refute_receive :cherry_reload, 2_000
     {200, body} = get(port, "/about/")
     assert body =~ "About"
+  end
+
+  describe "without a watcher backend" do
+    @tag :no_server
+    test "serve degrades to no live reload and still serves" do
+      tmp = Path.join(System.tmp_dir!(), "cherry-nowatch-#{System.unique_integer([:positive])}")
+      site = Path.join(tmp, "site")
+      File.mkdir_p!(site)
+      on_exit(fn -> File.rm_rf!(tmp) end)
+      File.cp_r!(@fixture, site)
+      File.rm_rf!(Path.join(site, "expected"))
+
+      # Simulate the backend-unavailable branch (inotify-tools missing);
+      # file_system's real check cannot be forced portably from a test.
+      Application.put_env(:cherry, :fs_watcher_start, fn _opts -> :ignore end)
+      on_exit(fn -> Application.delete_env(:cherry, :fs_watcher_start) end)
+
+      {result, stderr} =
+        ExUnit.CaptureIO.with_io(:stderr, fn ->
+          Cherry.Serve.start(source: site, output: Path.join(site, "_site"), port: 0)
+        end)
+
+      assert {:ok, pid, port} = result
+      refute Cherry.Serve.live_reload?(pid)
+      assert stderr =~ "live reload disabled"
+
+      # The server itself is untouched by the missing watcher.
+      {200, body} = get(port, "/hello-world/")
+      assert body =~ "Hello, world"
+
+      Supervisor.stop(pid)
+    end
   end
 
   defp get(port, path) do

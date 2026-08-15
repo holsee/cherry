@@ -23,10 +23,39 @@ defmodule Cherry.Serve.Watcher do
     source = Keyword.fetch!(opts, :source)
     output = Keyword.fetch!(opts, :output)
 
-    {:ok, watcher} = FileSystem.start_link(dirs: [source])
-    FileSystem.subscribe(watcher)
+    case fs_start().(dirs: [source]) do
+      {:ok, watcher} ->
+        FileSystem.subscribe(watcher)
+        {:ok, %{source: source, output: Path.expand(output), pending?: false}}
 
-    {:ok, %{source: source, output: Path.expand(output), pending?: false}}
+      # No watcher backend (e.g. inotify-tools missing on Linux): serve
+      # must still serve. `:ignore` leaves this child unstarted and the
+      # rest of the tree — server and reloader — running normally.
+      _unavailable ->
+        IO.puts(:stderr, "warning: #{unavailable_message()}")
+        :ignore
+    end
+  end
+
+  # The seam tests use to simulate a missing watcher backend —
+  # file_system cannot be forced into its unavailable branch portably.
+  defp fs_start do
+    Application.get_env(:cherry, :fs_watcher_start, &FileSystem.start_link/1)
+  end
+
+  @doc "Why live reload is off, with the platform's remedy."
+  @spec unavailable_message() :: String.t()
+  def unavailable_message do
+    hint =
+      case :os.type() do
+        {:unix, :linux} -> "install inotify-tools and restart serve"
+        {:unix, :darwin} -> "the bundled mac_listener failed to start; reinstall cherry"
+        {:win32, _} -> "the bundled inotifywait.exe failed to start; reinstall cherry"
+        _ -> "no file-watcher backend exists for this platform"
+      end
+
+    "live reload disabled — the file watcher could not start (#{hint}); " <>
+      "serving without rebuild-on-change"
   end
 
   @impl GenServer
