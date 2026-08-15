@@ -36,6 +36,20 @@ defmodule Cherry.Serve do
     end
   end
 
+  @doc """
+  Whether the file watcher is actually running under this serve tree.
+
+  False when the watcher backend was unavailable and `Watcher.init/1`
+  degraded to `:ignore` — the site serves, but without rebuild-on-change.
+  """
+  @spec live_reload?(pid()) :: boolean()
+  def live_reload?(supervisor) do
+    Enum.any?(Supervisor.which_children(supervisor), fn
+      {Watcher, pid, _type, _mods} -> is_pid(pid)
+      _child -> false
+    end)
+  end
+
   defp bound_port(supervisor) do
     {_, bandit_pid, _, _} =
       supervisor

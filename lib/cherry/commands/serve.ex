@@ -14,6 +14,11 @@ defmodule Cherry.Commands.Serve do
   `--port` defaults to 4000. `--port 0` binds an ephemeral free port —
   handy for agents and CI, where a fixed port may already be taken; the
   port actually bound is in the banner and the `--json` envelope.
+
+  When no file-watcher backend is available (on Linux this means
+  inotify-tools is not installed), the site still serves — just without
+  live reload. The banner says so and the envelope carries
+  `live_reload: false`.
   """
 
   @moduledoc @doc_text
@@ -38,8 +43,14 @@ defmodule Cherry.Commands.Serve do
     port = Keyword.get(opts, :port, 4000)
 
     case Cherry.Serve.start(source: source, output: output, port: port) do
-      {:ok, _pid, bound_port} ->
-        {:ok, %{url: "http://localhost:#{bound_port}", port: bound_port, output: output}}
+      {:ok, pid, bound_port} ->
+        {:ok,
+         %{
+           url: "http://localhost:#{bound_port}",
+           port: bound_port,
+           output: output,
+           live_reload: Cherry.Serve.live_reload?(pid)
+         }}
 
       {:error, message} ->
         {:error, %Error{code: :serve_failed, message: message}}
@@ -48,6 +59,10 @@ defmodule Cherry.Commands.Serve do
 
   @impl Cherry.CLI.Command
   @spec human(map()) :: iodata()
+  def human(%{url: url, live_reload: false}) do
+    "Serving at #{url} (live reload unavailable, see the warning above) — Ctrl-C to stop."
+  end
+
   def human(%{url: url}) do
     "Serving with live reload at #{url} — Ctrl-C to stop."
   end

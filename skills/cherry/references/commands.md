@@ -170,6 +170,11 @@ and prints its diagnostics.
 handy for agents and CI, where a fixed port may already be taken; the
 port actually bound is in the banner and the `--json` envelope.
 
+When no file-watcher backend is available (on Linux this means
+inotify-tools is not installed), the site still serves — just without
+live reload. The banner says so and the envelope carries
+`live_reload: false`.
+
 ## cherry theme.diff
 
 Flags: `--source VALUE`, `--apply` — plus the global flags.

@@ -1,0 +1,8 @@
+## VM flags for the standalone binary (mix tasks are unaffected).
+##
+## Minimal containers often run a latin1 locale; without these the BEAM
+## warns on boot and escapes non-ASCII output (the banner's em dash
+## prints as \x{2014}). Cherry's input and output are UTF-8 by contract,
+## whatever the host locale says.
++fnu
+-kernel standard_io_encoding unicode
