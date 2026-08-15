@@ -137,9 +137,22 @@ defmodule Cherry.MixProject do
     [
       main: "readme",
       name: "Cherry",
+      # The small CherryBomb mark; the large lockup lives at the top of
+      # the README (absolute URL, so it renders on hexdocs and GitHub).
+      logo: "priv/themes/cherrybomb/assets/cherrybomb-mark.png",
       source_url: @source_url,
       source_ref: "v#{@version}",
-      extras: ["README.md", "CHANGELOG.md"]
+      extras: ["README.md", "CHANGELOG.md"],
+      groups_for_modules: [
+        "Core API": [Cherry, Cherry.Build, Cherry.Build.Options, Cherry.Check, Cherry.Site],
+        Content: [~r/^Cherry\.Content\./, ~r/^Cherry\.Collections/],
+        "Portfolio & CV": [~r/^Cherry\.Portfolio/, ~r/^Cherry\.CV/],
+        Themes: [~r/^Cherry\.Theme/],
+        "SEO & Machine Surface": [~r/^Cherry\.SEO/, ~r/^Cherry\.Machine/, Cherry.StableJSON],
+        Pipeline: [~r/^Cherry\.Pipeline/],
+        "CLI & Commands": [~r/^Cherry\.CLI/, ~r/^Cherry\.Commands/, Cherry.Skill],
+        "Serve & Upgrade": [~r/^Cherry\.Serve/, ~r/^Cherry\.Upgrade/, Cherry.Binary]
+      ]
     ]
   end
 
@@ -150,7 +163,10 @@ defmodule Cherry.MixProject do
         "GitHub" => @source_url,
         "Site" => "https://cherrybomb.dev"
       },
-      files: ~w(lib priv mix.exs README.md LICENSE-MIT LICENSE-APACHE assets/LICENSE CHANGELOG.md)
+      # priv/ is listed by subdirectory so local dialyzer PLT caches
+      # (priv/plts) never ship in the package.
+      files:
+        ~w(lib priv/themes priv/serve mix.exs README.md LICENSE-MIT LICENSE-APACHE assets/LICENSE CHANGELOG.md)
     ]
   end
 end
