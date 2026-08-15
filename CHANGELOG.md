@@ -7,11 +7,18 @@ Entries are terse one-liners linked to their PR: `- Thing that changed. (#12)`
 
 ## [Unreleased]
 
+## [0.1.0-rc.2] — 2026-08-15
+
 ### Fixed
+- The standalone binary exited the moment `cherry serve` printed its banner (`Cherry.Binary` halted unconditionally after every command); blocking verbs now hold the VM open, single-sourced in `Cherry.CLI.Registry.blocking?/1` so the binary and the mix task cannot drift. (#39)
+- `install.sh` / `install.ps1` downloaded GitHub's HTML 404 page while only prereleases exist (`releases/latest` never resolves a prerelease); both installers now resolve the tag via the releases API and fall back to the newest release of any kind. (#39)
+- `cherry publish` accepts the bare slug `gen.post` returns in its envelope; an ambiguous slug is a usage error naming the candidates, and the path form still works. (#39)
+- `cherry check` no longer reports protocol-relative URLs (`//host/…`) as broken internal links; they are external by definition. (#39)
 - Hex package hygiene ahead of the first real publish: dialyzer PLT caches no longer ship in the tarball; hexdocs carry the CherryBomb marks (sidebar logo plus the lockup bundled into the README via ExDoc assets, so docs are self-contained) and a grouped module sidebar; README gains a "Use from Elixir" section and reality-checked Status; `cherry.new` scaffolds depend on the hex release matching the installer instead of the develop branch, and the `cherry_new` hex page gets a README. (#34, #35)
 - Pagefind search drawer rendered in document flow inside the nav, pushing the whole page down with an off-centre results column, a dead thumbnail gutter, browser-yellow highlight marks, and a search input that overflowed the viewport on mobile. Both themes now anchor the drawer as a token-themed overlay panel under the input (`showImages: false`, internal scroll), and the header wraps at 44rem so search gets a full-width row on small screens. (#30)
 
 ### Changed
+- Serve docs, the skill, and the authoring guide now cover `--port`, recommending `--port 0` (bind a free ephemeral port, reported in the envelope) for scripts, CI, and agents; the skill also teaches publish-by-slug. (#39)
 - `gen.action` workflows pin the build action to the release tag of the running cherry (`holsee/cherry/action@v<version>`) instead of `@develop`, so generated pipelines stop tracking a moving ref; the action README example pins to `v0.1.0-rc.1` and the TODO is gone. (#33)
 - CherryBomb brand assets (logo, mascot, wordmark, and all repo derivatives) are excluded from the MIT/Apache-2.0 dual license: `assets/LICENSE` reserves them while permitting in-product display and nominative use; the hex package ships the notice alongside the theme's nav mark. (#30)
 - Site prose voice pass: no em dashes anywhere on cherrybomb.dev, all JSON code blocks fully pretty-printed. (#30)

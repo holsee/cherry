@@ -25,7 +25,7 @@ cherry version
 ```
 
 ```text
-cherry 0.1.0-rc.1
+cherry 0.1.0-rc.2
 ```
 
 > [!NOTE]

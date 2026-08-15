@@ -60,12 +60,12 @@ mix cherry.new mysite
 The scaffold is a complete site: content directories, a `cherry.exs` config, a first
 post, a GitHub Pages deploy workflow, an `AGENTS.md` describing the publish loop, and
 a `mix.exs` that depends on the cherry release matching the installer — from there
-the site's own `{:cherry, "~> 0.1.0-rc.1"}` dependency pulls the real framework:
+the site's own `{:cherry, "~> 0.1.0-rc.2"}` dependency pulls the real framework:
 
 ```elixir
 def deps do
   [
-    {:cherry, "~> 0.1.0-rc.1"}
+    {:cherry, "~> 0.1.0-rc.2"}
   ]
 end
 ```
@@ -156,7 +156,7 @@ Builds are deterministic by contract: same input, byte-identical output.
 
 ## Status
 
-**v0.1.0-rc.1 is out**: five release binaries with provenance attestation, the full
+**v0.1.0-rc.2 is out**: five release binaries with provenance attestation, the full
 authoring loop, the verifier, both themes, the portfolio/CV views, self-upgrade, and
 the agent skill. [cherrybomb.dev](https://cherrybomb.dev) is Cherry's own dogfood,
 built from [`example/`](https://github.com/holsee/cherry/tree/develop/example) on
