@@ -9,6 +9,7 @@ Every guide is a worked example: the command, its real output, and what it means
 
 <ul class="guide-list">
 <li><a href="/guides/quick-start/">Quick-start</a><p>Install Cherry, make a site, write a post, put it on the internet. Fifteen minutes, no Elixir required to run it.</p></li>
+<li><a href="/guides/elixir/">Using Cherry from Elixir</a><p>The hex package behind the binary: cherry_new scaffolding, mix task parity, and the library API for custom tooling.</p></li>
 <li><a href="/guides/authoring-loop/">The authoring loop</a><p>gen.post, edit, serve, publish, and the markdown mirrors every route ships.</p></li>
 <li><a href="/guides/check/">The verifier</a><p>cherry check builds in memory and hands back structured diagnostics: the build, check, fix loop that keeps a site honest.</p></li>
 <li><a href="/guides/themes/">Themes, tokens, and drift</a><p>Two official themes, a token styling API, ejects with provenance, and theme.diff so your overrides survive upgrades.</p></li>

@@ -1,5 +1,9 @@
 # cherry_new
 
+[![Hex version](https://img.shields.io/hexpm/v/cherry_new.svg)](https://hex.pm/packages/cherry_new)
+[![Hex docs](https://img.shields.io/badge/hex-docs-8e7ce6.svg)](https://hexdocs.pm/cherry_new)
+[![License](https://img.shields.io/hexpm/l/cherry_new.svg)](https://hex.pm/packages/cherry_new)
+
 Project generator for [Cherry](https://hex.pm/packages/cherry), the static
 site generator for hackers.
 
