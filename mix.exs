@@ -140,6 +140,9 @@ defmodule Cherry.MixProject do
       # The small CherryBomb mark; the large lockup lives at the top of
       # the README (absolute URL, so it renders on hexdocs and GitHub).
       logo: "priv/themes/cherrybomb/assets/cherrybomb-mark.png",
+      # Bundle the large lockup into the docs so the README hero renders
+      # self-contained on hexdocs; the same relative path works on GitHub.
+      assets: %{"assets/docs" => "assets/docs"},
       source_url: @source_url,
       source_ref: "v#{@version}",
       extras: ["README.md", "CHANGELOG.md"],

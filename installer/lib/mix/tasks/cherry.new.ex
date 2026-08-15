@@ -86,11 +86,16 @@ defmodule Mix.Tasks.Cherry.New do
     app |> String.split("_") |> Enum.map_join(" ", &String.capitalize/1)
   end
 
+  # Captured at compile time from the installer's own mix.exs; the
+  # installer and cherry version in lockstep, so scaffolded sites depend
+  # on the hex release that matches this installer. "~> X.Y.Z-rc.N"
+  # also admits the eventual stable X.Y.Z.
+  @cherry_version Mix.Project.config()[:version]
+
   defp cherry_dep(opts) do
     case Keyword.fetch(opts, :cherry_path) do
       {:ok, dir} -> ~s({:cherry, path: #{inspect(dir)}})
-      # TODO: switch to the Hex package once cherry ships a real release.
-      :error -> ~s({:cherry, github: "holsee/cherry", branch: "develop"})
+      :error -> ~s[{:cherry, "~> #{@cherry_version}"}]
     end
   end
 

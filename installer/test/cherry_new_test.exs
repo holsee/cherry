@@ -49,12 +49,14 @@ defmodule CherryNewTest do
     assert File.exists?(Path.join(site, "static/images/.gitkeep"))
   end
 
-  test "defaults the cherry dep to GitHub", %{tmp_dir: tmp} do
+  test "defaults the cherry dep to the matching hex release", %{tmp_dir: tmp} do
     site = Path.join(tmp, "plain")
     ExUnit.CaptureIO.capture_io(fn -> Mix.Tasks.Cherry.New.run([site]) end)
 
-    assert File.read!(Path.join(site, "mix.exs")) =~
-             ~s({:cherry, github: "holsee/cherry", branch: "develop"})
+    version = Mix.Project.config()[:version]
+    mix_exs = File.read!(Path.join(site, "mix.exs"))
+    assert mix_exs =~ ~s[{:cherry, "~> #{version}"}]
+    refute mix_exs =~ "github:"
   end
 
   test "refuses a non-empty target", %{tmp_dir: tmp} do
