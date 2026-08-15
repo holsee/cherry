@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="https://raw.githubusercontent.com/holsee/cherry/develop/assets/cherrybomb_text_web.webp" alt="CherryBomb" width="520">
+  <img src="assets/docs/cherrybomb_text_web.webp" alt="CherryBomb" width="520">
 </p>
 
 <p align="center">

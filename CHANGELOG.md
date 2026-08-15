@@ -8,6 +8,7 @@ Entries are terse one-liners linked to their PR: `- Thing that changed. (#12)`
 ## [Unreleased]
 
 ### Fixed
+- Hex package hygiene ahead of the first real publish: dialyzer PLT caches no longer ship in the tarball; hexdocs carry the CherryBomb marks (sidebar logo plus the lockup bundled into the README via ExDoc assets, so docs are self-contained) and a grouped module sidebar; README gains a "Use from Elixir" section and reality-checked Status; `cherry.new` scaffolds depend on the hex release matching the installer instead of the develop branch, and the `cherry_new` hex page gets a README. (#34, #35)
 - Pagefind search drawer rendered in document flow inside the nav, pushing the whole page down with an off-centre results column, a dead thumbnail gutter, browser-yellow highlight marks, and a search input that overflowed the viewport on mobile. Both themes now anchor the drawer as a token-themed overlay panel under the input (`showImages: false`, internal scroll), and the header wraps at 44rem so search gets a full-width row on small screens. (#30)
 
 ### Changed
