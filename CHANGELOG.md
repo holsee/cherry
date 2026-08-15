@@ -7,6 +7,8 @@ Entries are terse one-liners linked to their PR: `- Thing that changed. (#12)`
 
 ## [Unreleased]
 
+## [0.1.0-rc.3] — 2026-08-15
+
 ### Fixed
 - `cherry serve` no longer crashes when no file-watcher backend is available (inotify-tools missing on Linux, the common case in containers and CI): the site serves without live reload, a warning names the platform's remedy, the banner says so, and the envelope carries `live_reload: false`. (#42)
 - The standalone binary forces UTF-8 filename and terminal encoding (`rel/vm.args.eex`), so latin1-locale containers stop warning on boot and mangling the banner. (#42)

@@ -17,7 +17,7 @@ cherry upgrade --check --json
   "ok": true,
   "command": "upgrade",
   "data": {
-    "current": "0.1.0-rc.2",
+    "current": "0.1.0-rc.3",
     "target": "v0.2.0",
     "asset": "cherry-linux-x86_64",
     "status": "outdated"
@@ -41,7 +41,7 @@ What happens, in order:
 4. Swaps the executable in place: write beside, rename out, rename in. The running image is never overwritten.
 
 ```text
-upgraded cherry 0.1.0-rc.2 → 0.2.0
+upgraded cherry 0.1.0-rc.3 → 0.2.0
 ```
 
 > [!NOTE]
