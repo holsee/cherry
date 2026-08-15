@@ -24,13 +24,27 @@ esac
 
 asset="cherry-$os-$arch"
 
-# releases/latest never resolves a prerelease, so casual installs stay stable.
-base="https://github.com/$repo/releases/latest/download"
+# Prefer the latest stable release; while only prereleases exist,
+# releases/latest 404s, so fall back to the newest release of any kind.
+tag_of() {
+  grep -m1 '"tag_name"' | sed -E 's/.*"tag_name": *"([^"]+)".*/\1/'
+}
+
+tag=$(curl -fsSL "https://api.github.com/repos/$repo/releases/latest" 2>/dev/null | tag_of || true)
+if [ -z "$tag" ]; then
+  tag=$(curl -fsSL "https://api.github.com/repos/$repo/releases?per_page=1" 2>/dev/null | tag_of || true)
+fi
+if [ -z "$tag" ]; then
+  echo "error: no releases found for $repo" >&2
+  exit 1
+fi
+
+base="https://github.com/$repo/releases/download/$tag"
 
 tmp=$(mktemp -d)
 trap 'rm -rf "$tmp"' EXIT
 
-echo "downloading $asset (latest stable)..."
+echo "downloading $asset ($tag)..."
 curl -fsSL -o "$tmp/$asset" "$base/$asset"
 curl -fsSL -o "$tmp/SHA256SUMS" "$base/SHA256SUMS"
 

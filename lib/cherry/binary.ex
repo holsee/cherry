@@ -20,9 +20,21 @@ defmodule Cherry.Binary do
   @impl Application
   @spec start(Application.start_type(), term()) :: no_return()
   def start(_type, _args) do
-    code = Cherry.CLI.run(binary_argv())
-    System.halt(code)
+    argv = binary_argv()
+    code = Cherry.CLI.run(argv)
+
+    # A blocking verb (serve) has a live supervision tree behind it;
+    # halting here would tear the server down the moment the banner
+    # prints. Anything else halts with the command's exit code.
+    if code == 0 and blocking?(argv) do
+      Process.sleep(:infinity)
+    else
+      System.halt(code)
+    end
   end
+
+  defp blocking?([verb | _rest]), do: Cherry.CLI.Registry.blocking?(verb)
+  defp blocking?([]), do: false
 
   # Burrito hands user arguments to the VM as plain arguments
   # (System.argv/0 is empty inside a release).

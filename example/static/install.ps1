@@ -7,13 +7,22 @@ $repo = "holsee/cherry"
 $asset = "cherry-windows-x86_64.exe"
 $installDir = if ($env:CHERRY_INSTALL_DIR) { $env:CHERRY_INSTALL_DIR } else { Join-Path $env:LOCALAPPDATA "cherry\bin" }
 
-# releases/latest never resolves a prerelease, so casual installs stay stable.
-$base = "https://github.com/$repo/releases/latest/download"
+# Prefer the latest stable release; while only prereleases exist,
+# releases/latest 404s, so fall back to the newest release of any kind.
+try {
+  $tag = (Invoke-RestMethod "https://api.github.com/repos/$repo/releases/latest").tag_name
+} catch {
+  $releases = Invoke-RestMethod "https://api.github.com/repos/$repo/releases?per_page=1"
+  if (-not $releases) { throw "no releases found for $repo" }
+  $tag = $releases[0].tag_name
+}
+
+$base = "https://github.com/$repo/releases/download/$tag"
 $tmp = Join-Path ([System.IO.Path]::GetTempPath()) ([System.IO.Path]::GetRandomFileName())
 New-Item -ItemType Directory -Path $tmp | Out-Null
 
 try {
-  Write-Host "downloading $asset (latest stable)..."
+  Write-Host "downloading $asset ($tag)..."
   Invoke-WebRequest -Uri "$base/$asset" -OutFile (Join-Path $tmp $asset)
   Invoke-WebRequest -Uri "$base/SHA256SUMS" -OutFile (Join-Path $tmp "SHA256SUMS")
 

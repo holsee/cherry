@@ -61,13 +61,18 @@ defmodule Cherry.ExampleTest do
     assert index =~ "AI-agent-friendly CLI"
     assert index =~ "JSON Resume"
 
-    # The real installers (ADR 0007): resolve latest stable, verify checksums.
+    # The real installers (ADR 0007): resolve latest stable with a
+    # prerelease fallback (releases/latest 404s until a stable release
+    # exists), verify checksums.
     install = File.read!(Path.join(out, "install.sh"))
-    assert install =~ "releases/latest/download"
+    assert install =~ "releases/latest"
+    assert install =~ "releases?per_page=1"
     assert install =~ "SHA256SUMS"
     assert install =~ "checksum mismatch"
 
     ps1 = File.read!(Path.join(out, "install.ps1"))
+    assert ps1 =~ "releases/latest"
+    assert ps1 =~ "releases?per_page=1"
     assert ps1 =~ "Get-FileHash"
     assert ps1 =~ "SHA256SUMS"
   end
