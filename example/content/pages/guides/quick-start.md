@@ -62,7 +62,7 @@ Welcome to my site.
 ```
 
 > [!TIP]
-> With Elixir installed you can scaffold all of this in one command: `mix archive.install hex cherry_new`, then `mix cherry.new mysite`. The scaffold includes a deploy workflow and an `AGENTS.md`, so the repo works out of the box whether a shell script or a coding agent is doing the publishing.
+> With Elixir installed you can scaffold all of this in one command: `mix archive.install hex cherry_new`, then `mix cherry.new mysite`. The scaffold includes a deploy workflow and an `AGENTS.md`, so the repo works out of the box whether a shell script or a coding agent is doing the publishing. The [Elixir guide](/guides/elixir/) covers that whole mode.
 
 ## 3 · Write a post
 

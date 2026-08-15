@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="assets/cherrybomb_text.png" alt="Cherrybomb" width="520">
+  <img src="assets/docs/cherrybomb_text_web.webp" alt="CherryBomb" width="520">
 </p>
 
 <p align="center">
@@ -9,9 +9,17 @@
 </p>
 
 <p align="center">
+  <a href="https://hex.pm/packages/cherry"><img src="https://img.shields.io/hexpm/v/cherry.svg" alt="Hex version"></a>
+  <a href="https://hexdocs.pm/cherry"><img src="https://img.shields.io/badge/hex-docs-8e7ce6.svg" alt="Hex docs"></a>
+  <a href="https://github.com/holsee/cherry/actions/workflows/ci.yml"><img src="https://github.com/holsee/cherry/actions/workflows/ci.yml/badge.svg?branch=develop" alt="CI status"></a>
+  <a href="https://hex.pm/packages/cherry"><img src="https://img.shields.io/hexpm/l/cherry.svg" alt="License"></a>
+</p>
+
+<p align="center">
   <a href="https://cherrybomb.dev">cherrybomb.dev</a> ·
-  <a href="DESIGN.md">Design</a> ·
-  <a href="docs/adr/">ADRs</a> ·
+  <a href="https://cherrybomb.dev/guides/">Guides</a> ·
+  <a href="https://github.com/holsee/cherry/blob/develop/DESIGN.md">Design</a> ·
+  <a href="https://github.com/holsee/cherry/tree/develop/docs/adr">ADRs</a> ·
   <a href="CHANGELOG.md">Changelog</a>
 </p>
 
@@ -31,14 +39,69 @@ curl -fsSL https://cherrybomb.dev/install.sh | sh   # macOS / Linux
 irm https://cherrybomb.dev/install.ps1 | iex        # Windows
 ```
 
-Upgrading is `cherry upgrade`. Elixir developers can skip the binary and use Cherry
-as a mix dependency instead — every `cherry <verb>` below is also `mix cherry.<verb>`,
-flag for flag.
+Upgrading is `cherry upgrade` — checksum-verified against the release, rustup-style.
+
+## Use from Elixir
+
+Cherry is an ordinary hex package; the binary is just a convenience wrapper around it.
+
+### Scaffolding: `cherry_new`
+
+[`cherry_new`](https://hex.pm/packages/cherry_new) is the project generator — a tiny
+separate package whose only job is to give you `mix cherry.new mysite` before you
+have Cherry itself, the same pattern Phoenix uses with `phx_new`. Install it once as
+a mix archive and the task is available globally, outside any project:
+
+```sh
+mix archive.install hex cherry_new
+mix cherry.new mysite
+```
+
+The scaffold is a complete site: content directories, a `cherry.exs` config, a first
+post, a GitHub Pages deploy workflow, an `AGENTS.md` describing the publish loop, and
+a `mix.exs` that depends on the cherry release matching the installer — from there
+the site's own `{:cherry, "~> 0.1.0-rc.1"}` dependency pulls the real framework:
+
+```elixir
+def deps do
+  [
+    {:cherry, "~> 0.1.0-rc.1"}
+  ]
+end
+```
+
+### The tasks
+
+Every `cherry <verb>` is also `mix cherry.<verb>`, flag for flag, and every one of
+them takes `--json` for a structured envelope:
+
+| task | what it does |
+|---|---|
+| `mix cherry.build` | build the site → `_site/`, plain files, deploy anywhere |
+| `mix cherry.serve` | live-reloading dev server, drafts included |
+| `mix cherry.check [--strict]` | build in memory, return structured diagnostics — the verifier |
+| `mix cherry.gen.post "Title"` | scaffold a dated draft post with valid frontmatter |
+| `mix cherry.publish PATH` | flip the draft flag, re-date, move the file |
+| `mix cherry.schema COLLECTION` | print a collection's frontmatter schema — never guess |
+| `mix cherry.gen.action` | generate the GitHub Pages deploy workflow |
+| `mix cherry.gen.project` / `gen.talk` | portfolio scaffolds (positions, talks) |
+| `mix cherry.gen.theme NAME [--from THEME]` | scaffold a site-local theme from an official one |
+| `mix cherry.theme.list` / `theme.which` | inspect available themes and the active one |
+| `mix cherry.theme.eject TEMPLATE` | take ownership of one template, with provenance |
+| `mix cherry.theme.diff [--apply]` | three-way drift status for every ejected overlay |
+| `mix cherry.upgrade --check` | report newer releases (the self-swap itself is binary-only; under mix, upgrade with `mix deps.update cherry`) |
+| `mix cherry.version` | print the version |
+
+### As a library
+
+`Cherry.build/1` and `Cherry.check/1` return structs (`Cherry.Build`,
+`Cherry.Check.Diagnostic`), so custom tooling composes without shelling out — see
+the [API docs](https://hexdocs.pm/cherry).
 
 ## Quickstart
 
 ```sh
-cherry new mysite && cd mysite
+cd mysite
 cherry gen.post "Hello, world"
 cherry serve                      # live-reloading dev server
 cherry build                      # → _site/, plain files, deploy anywhere
@@ -93,18 +156,22 @@ Builds are deterministic by contract: same input, byte-identical output.
 
 ## Status
 
-**Pre-0.1 — this README is the north star, not the current state.** Cherry is being
-built in the open, README-first: [DESIGN.md](DESIGN.md) is the constitution,
-[docs/adr/](docs/adr/) records the decisions, and [DO_NEXT.md](DO_NEXT.md) is the
-build order. The first dogfood targets are [holsee's site](https://github.com/holsee/holsee.github.io)
-(migrating off Octopress, full circle) and [cherrybomb.dev](https://cherrybomb.dev)
-itself.
+**v0.1.0-rc.1 is out**: five release binaries with provenance attestation, the full
+authoring loop, the verifier, both themes, the portfolio/CV views, self-upgrade, and
+the agent skill. [cherrybomb.dev](https://cherrybomb.dev) is Cherry's own dogfood,
+built from [`example/`](https://github.com/holsee/cherry/tree/develop/example) on
+every push. Cherry is built in the open, README-first:
+[DESIGN.md](https://github.com/holsee/cherry/blob/develop/DESIGN.md) is the
+constitution and [docs/adr/](https://github.com/holsee/cherry/tree/develop/docs/adr)
+records the decisions. Next stop: stable 0.1.0.
 
 ## License
 
-Dual-licensed under [MIT](LICENSE-MIT) or [Apache 2.0](LICENSE-APACHE) — your choice.
-Contributions are accepted under the same dual license.
+Dual-licensed under [MIT](https://github.com/holsee/cherry/blob/develop/LICENSE-MIT)
+or [Apache 2.0](https://github.com/holsee/cherry/blob/develop/LICENSE-APACHE) — your
+choice. Contributions are accepted under the same dual license.
 
 The CherryBomb brand assets (logo, mascot, wordmark, and their derivatives such
 as the favicon and og-card) are **not** covered by either license — they may not
-be reused as your own branding. See [assets/LICENSE](assets/LICENSE).
+be reused as your own branding. See
+[assets/LICENSE](https://github.com/holsee/cherry/blob/develop/assets/LICENSE).

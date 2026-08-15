@@ -8,13 +8,16 @@ Entries are terse one-liners linked to their PR: `- Thing that changed. (#12)`
 ## [Unreleased]
 
 ### Fixed
+- Hex package hygiene ahead of the first real publish: dialyzer PLT caches no longer ship in the tarball; hexdocs carry the CherryBomb marks (sidebar logo plus the lockup bundled into the README via ExDoc assets, so docs are self-contained) and a grouped module sidebar; README gains a "Use from Elixir" section and reality-checked Status; `cherry.new` scaffolds depend on the hex release matching the installer instead of the develop branch, and the `cherry_new` hex page gets a README. (#34, #35)
 - Pagefind search drawer rendered in document flow inside the nav, pushing the whole page down with an off-centre results column, a dead thumbnail gutter, browser-yellow highlight marks, and a search input that overflowed the viewport on mobile. Both themes now anchor the drawer as a token-themed overlay panel under the input (`showImages: false`, internal scroll), and the header wraps at 44rem so search gets a full-width row on small screens. (#30)
 
 ### Changed
+- `gen.action` workflows pin the build action to the release tag of the running cherry (`holsee/cherry/action@v<version>`) instead of `@develop`, so generated pipelines stop tracking a moving ref; the action README example pins to `v0.1.0-rc.1` and the TODO is gone. (#33)
 - CherryBomb brand assets (logo, mascot, wordmark, and all repo derivatives) are excluded from the MIT/Apache-2.0 dual license: `assets/LICENSE` reserves them while permitting in-product display and nominative use; the hex package ships the notice alongside the theme's nav mark. (#30)
 - Site prose voice pass: no em dashes anywhere on cherrybomb.dev, all JSON code blocks fully pretty-printed. (#30)
 
 ### Added
+- "Using Cherry from Elixir" guide on cherrybomb.dev: cherry_new scaffolding, the full mix task parity table, the library API (`Cherry.build/1` / `Cherry.check/1` with struct-accurate examples), and when to pick binary vs package; README gains the same cherry_new story, the task table, and standard badges (hex version, hexdocs, CI, license) on both packages. (#37)
 - Copy buttons on code blocks: a new `copy-code.js` island in both official themes puts a hover-revealed (always visible on touch) copy button on every `pre` and any `data-copy` element, clipboard-API based, token-styled, print-hidden; islands are now compiled into both themes by `npm run build` and a sync test pins the copies byte-identical. (#31)
 - Search keyboard shortcut: Ctrl+K / ⌘K focuses the Pagefind input in both themes, and the placeholder advertises it per-platform. (#31)
 - `nav:` entries accept `position: :start | :end` (default `:end`), so configured items can lead the nav ahead of the built-ins; cherrybomb.dev puts Guides before Blog. (#31)

@@ -22,6 +22,7 @@ defmodule Cherry.ExampleTest do
           "blog/index.html",
           "guides/index.html",
           "guides/quick-start/index.html",
+          "guides/elixir/index.html",
           "404.html",
           "feed.xml",
           "sitemap.xml",
