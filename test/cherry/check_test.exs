@@ -39,6 +39,7 @@ defmodule Cherry.CheckTest do
             <a href="/about/?utm=x#team">tracked anchor</a>
             <a href="https://elsewhere.example/">external</a>
             <a href="#local">fragment</a>
+            <iframe src="//player.example/embed/1"></iframe>
             <img src="/css/site.css">
             """),
             html_page("about/index.html", "<p>about</p>")

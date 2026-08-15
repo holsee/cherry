@@ -21,8 +21,8 @@ This is the loop the scaffolded site `AGENTS.md` teaches; keep to it:
 1. **Author** — `cherry gen.post "Title"` creates a draft; `cherry gen.project` and `cherry gen.talk` scaffold portfolio entries with valid frontmatter. Capture `data.path` from the envelope and edit that file.
 2. **Build** — `cherry build` emits the site to `_site/`. Treat a failing build as the first diagnostic, not an obstacle.
 3. **Verify** — `cherry check --strict --json` builds in memory (writes nothing) and reports structured diagnostics. Fix and re-run until clean; do not ship with warnings suppressed.
-4. **Preview** — `cherry serve` runs until interrupted (live reload, drafts included). In automation, background it or skip it; never let it block the loop.
-5. **Publish** — `cherry publish PATH` turns the draft into a dated post.
+4. **Preview** — `cherry serve` runs until interrupted (live reload, drafts included). In automation, background it or skip it; never let it block the loop. Prefer `--port 0` there: it binds a free ephemeral port and reports it in the envelope, so a taken port 4000 cannot fail the run.
+5. **Publish** — `cherry publish SLUG` (the slug `gen.post` returned) or `cherry publish PATH` turns the draft into a dated post.
 6. **Deploy** — commit and push; the GitHub Actions workflow from `cherry gen.action` builds and deploys Pages. Regenerate the workflow only when deployment shape changes.
 
 Re-run `cherry check` after any content or theme mutation that later steps depend on; a clean earlier run proves nothing about the current tree.

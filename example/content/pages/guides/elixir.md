@@ -20,7 +20,7 @@ The scaffold is a complete site: content directories, a `cherry.exs` config, a f
 ```elixir
 def deps do
   [
-    {:cherry, "~> 0.1.0-rc.1"}
+    {:cherry, "~> 0.1.0-rc.2"}
   ]
 end
 ```
@@ -37,7 +37,7 @@ Flag for flag, `cherry <verb>` is `mix cherry.<verb>`, and each one takes `--jso
 | `mix cherry.serve` | live-reloading dev server, drafts included |
 | `mix cherry.check --strict` | build in memory and return structured diagnostics |
 | `mix cherry.gen.post "Title"` | scaffold a dated draft post with valid frontmatter |
-| `mix cherry.publish PATH` | flip the draft flag, re-date, move the file |
+| `mix cherry.publish SLUG` | flip the draft flag, re-date, move the file (a path works too) |
 | `mix cherry.schema COLLECTION` | print a collection's frontmatter schema |
 | `mix cherry.gen.action` | generate the GitHub Pages deploy workflow |
 | `mix cherry.gen.project` / `gen.talk` | portfolio scaffolds |

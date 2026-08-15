@@ -10,6 +10,10 @@ defmodule Cherry.Commands.Serve do
   static files, themes, or `cherry.exs` rebuild automatically and reload
   connected browsers; a broken edit keeps the last good output serving
   and prints its diagnostics.
+
+  `--port` defaults to 4000. `--port 0` binds an ephemeral free port —
+  handy for agents and CI, where a fixed port may already be taken; the
+  port actually bound is in the banner and the `--json` envelope.
   """
 
   @moduledoc @doc_text

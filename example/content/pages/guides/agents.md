@@ -111,7 +111,7 @@ If a coding agent helps run your site, don't make it rediscover the CLI: Cherry 
 2. `cherry gen.post "Title" --json` and capture `data.path`.
 3. Write the file.
 4. `cherry check --strict --json` and work `error.details.diagnostics` until `ok: true`.
-5. `cherry publish <path> --json` and capture the new path from `data.to`.
+5. `cherry publish <slug> --json` (the slug from step 2's envelope) and capture the new path from `data.to`.
 6. Commit and push; the deploy workflow does the rest.
 
 The same six steps are a perfectly good `Makefile`; that's the point. Nothing here is agent-only. It's one interface that scripts, CI, and agents all share.

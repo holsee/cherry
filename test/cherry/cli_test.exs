@@ -69,6 +69,14 @@ defmodule Cherry.CLITest do
       assert "version" in verbs
       assert verbs == Enum.sort(verbs)
     end
+
+    test "serve is the only blocking verb — both frontends hold the VM open for it" do
+      assert Cherry.CLI.Registry.blocking?("serve")
+
+      for verb <- Cherry.CLI.Registry.verbs(), verb != "serve" do
+        refute Cherry.CLI.Registry.blocking?(verb), "#{verb} must not block"
+      end
+    end
   end
 
   defp run(argv) do
