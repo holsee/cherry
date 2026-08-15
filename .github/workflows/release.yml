@@ -125,9 +125,41 @@ jobs:
           if [ "${{ runner.os }}" = "Windows" ]; then src="$src.exe"; fi
           cp "$src" "dist/${{ matrix.asset }}"
 
+      # version, then a real serve: scaffold a minimal site, background
+      # serve on an ephemeral port with no TTY (exactly how agents and CI
+      # run it), probe it over HTTP, and prove the process is still alive.
+      # The rc.1 binary exited right after the banner; this would have
+      # caught it on every target, macOS runners included.
       - name: smoke test
         shell: bash
-        run: ./dist/${{ matrix.asset }} version
+        run: |
+          ./dist/${{ matrix.asset }} version
+
+          site=$(mktemp -d)
+          mkdir -p "$site/content/pages"
+          printf '[title: "Smoke", url: "https://smoke.example"]\n' > "$site/cherry.exs"
+          printf -- '---\ntitle: Home\ndescription: Release smoke test.\n---\n# Hello\n' \
+            > "$site/content/pages/index.md"
+
+          ./dist/${{ matrix.asset }} serve --port 0 --source "$site" > "$site/serve.log" 2>&1 &
+          pid=$!
+
+          for _ in $(seq 1 30); do
+            grep -q "localhost" "$site/serve.log" && break
+            sleep 1
+          done
+          cat "$site/serve.log"
+
+          port=$(grep -o 'localhost:[0-9]*' "$site/serve.log" | head -1 | cut -d: -f2)
+          test -n "$port" || { echo "::error::serve never printed a port"; exit 1; }
+
+          curl -fsS "http://localhost:$port/" | grep -q "Hello" \
+            || { echo "::error::serve did not answer on port $port"; exit 1; }
+
+          sleep 2
+          kill -0 "$pid" 2>/dev/null \
+            || { echo "::error::serve exited after the banner"; exit 1; }
+          kill "$pid" 2>/dev/null || true
 
       - uses: actions/upload-artifact@v7
         with:
