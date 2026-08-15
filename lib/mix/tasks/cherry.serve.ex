@@ -8,7 +8,8 @@ defmodule Mix.Tasks.Cherry.Serve do
   @spec run([String.t()]) :: no_return()
   def run(argv) do
     case Cherry.CLI.run(["serve" | argv]) do
-      # The one long-running task: the server is live, so hold the VM open.
+      # Blocking verb (Cherry.CLI.Registry.blocking?/1): the server is
+      # live, so hold the VM open. The binary does the same.
       0 -> Process.sleep(:infinity)
       code -> exit({:shutdown, code})
     end

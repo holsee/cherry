@@ -105,6 +105,63 @@ defmodule Cherry.Commands.AuthoringTest do
       assert File.exists?(Path.join(out, "ship-it/index.html"))
     end
 
+    test "accepts the bare slug gen.post returned", %{site: site} do
+      {0, output} =
+        with_io(fn ->
+          Cherry.CLI.run([
+            "gen.post",
+            "Slug Publish",
+            "--source",
+            site,
+            "--today",
+            "2026-08-14",
+            "--json"
+          ])
+        end)
+
+      %{"data" => %{"slug" => slug}} = JSON.decode!(output)
+
+      {code, output} =
+        with_io(fn ->
+          Cherry.CLI.run(["publish", slug, "--source", site, "--today", "2026-08-15", "--json"])
+        end)
+
+      assert code == 0
+      assert %{"ok" => true, "data" => data} = JSON.decode!(output)
+      assert data["to"] == "content/posts/2026-08-15-slug-publish.md"
+      refute File.read!(Path.join(site, data["to"])) =~ "draft:"
+    end
+
+    test "an ambiguous slug is a usage error naming the candidates", %{site: site} do
+      posts = Path.join(site, "content/posts")
+      File.mkdir_p!(posts)
+      File.write!(Path.join(posts, "2026-08-01-twice.md"), "---\ntitle: A\ndraft: true\n---\n")
+      File.write!(Path.join(posts, "2026-08-02-twice.md"), "---\ntitle: B\ndraft: true\n---\n")
+
+      code_holder = self()
+
+      stderr =
+        capture_io(:stderr, fn ->
+          send(code_holder, {:code, Cherry.CLI.run(["publish", "twice", "--source", site])})
+        end)
+
+      assert_receive {:code, 2}
+      assert stderr =~ "2026-08-01-twice.md"
+      assert stderr =~ "2026-08-02-twice.md"
+    end
+
+    test "an unknown slug reports not_found", %{site: site} do
+      code_holder = self()
+
+      stderr =
+        capture_io(:stderr, fn ->
+          send(code_holder, {:code, Cherry.CLI.run(["publish", "nope", "--source", site])})
+        end)
+
+      assert_receive {:code, 1}
+      assert stderr =~ "no such file or post slug: nope"
+    end
+
     test "rejects non-post filenames", %{site: site} do
       File.write!(Path.join(site, "notes.md"), "x")
 

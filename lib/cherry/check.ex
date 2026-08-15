@@ -68,7 +68,13 @@ defmodule Cherry.Check do
     @href
     |> Regex.scan(html, capture: :all_but_first)
     |> List.flatten()
-    |> Enum.filter(&String.starts_with?(&1, base))
+    |> Enum.filter(&internal?(&1, base))
+  end
+
+  # Protocol-relative URLs (`//host/…`) are external even though they
+  # start with the base path.
+  defp internal?(url, base) do
+    String.starts_with?(url, base) and not String.starts_with?(url, "//")
   end
 
   defp resolve_link(url, base) do

@@ -5,10 +5,13 @@ defmodule Cherry.Commands.Publish do
   ## Usage
 
       mix cherry.publish content/posts/2026-08-14-my-draft.md [--source DIR] [--json]
+      mix cherry.publish my-draft [--source DIR] [--json]
 
-  The file is renamed to today's date (the filename is the source of truth
-  for a post's date) and the `draft:` line is removed. With `--json`, the
-  envelope carries the old and new paths.
+  The draft can be named by path or by slug — the same slug `gen.post`
+  returns in its envelope. The file is renamed to today's date (the
+  filename is the source of truth for a post's date) and the `draft:`
+  line is removed. With `--json`, the envelope carries the old and new
+  paths.
   """
 
   @moduledoc @doc_text
@@ -27,20 +30,19 @@ defmodule Cherry.Commands.Publish do
 
   @impl Cherry.CLI.Command
   @spec run(Context.t()) :: {:ok, map()} | {:error, Error.t()}
-  def run(%Context{args: [rel_path | _rest], opts: opts}) do
+  def run(%Context{args: [target | _rest], opts: opts}) do
     source = Keyword.get(opts, :source, File.cwd!())
     today = parse_today(opts)
-    path = Path.join(source, rel_path)
 
-    with :ok <- ensure_exists(path, rel_path),
+    with {:ok, rel_path} <- resolve_target(source, target),
          {:ok, slug} <- parse_slug(rel_path) do
-      publish(source, path, slug, today)
+      publish(source, Path.join(source, rel_path), slug, today)
     end
   end
 
   def run(%Context{}) do
     {:error,
-     %Error{code: :usage, message: "usage: cherry publish content/posts/DRAFT.md", exit: 2}}
+     %Error{code: :usage, message: "usage: cherry publish SLUG | content/posts/DRAFT.md", exit: 2}}
   end
 
   @impl Cherry.CLI.Command
@@ -49,12 +51,43 @@ defmodule Cherry.Commands.Publish do
     "Published: #{from} → #{to}"
   end
 
-  defp ensure_exists(path, rel_path) do
-    if File.exists?(path) do
-      :ok
-    else
-      {:error, %Error{code: :not_found, message: "no such file: #{rel_path}"}}
+  # A target is a file path, or the bare slug `gen.post` returned.
+  defp resolve_target(source, target) do
+    cond do
+      File.exists?(Path.join(source, target)) -> {:ok, target}
+      String.contains?(target, "/") -> not_found(target)
+      true -> resolve_slug(source, target)
     end
+  end
+
+  defp resolve_slug(source, slug) do
+    matches =
+      source
+      |> Path.join("content/posts/*.md")
+      |> Path.wildcard()
+      |> Enum.filter(&(parse_slug(Path.basename(&1)) == {:ok, slug}))
+      |> Enum.map(&to_url_path(Path.relative_to(&1, source)))
+
+    case matches do
+      [rel_path] ->
+        {:ok, rel_path}
+
+      [] ->
+        not_found(slug)
+
+      several ->
+        {:error,
+         %Error{
+           code: :ambiguous,
+           message:
+             "slug #{slug} matches several posts — publish by path: #{Enum.join(several, ", ")}",
+           exit: 2
+         }}
+    end
+  end
+
+  defp not_found(target) do
+    {:error, %Error{code: :not_found, message: "no such file or post slug: #{target}"}}
   end
 
   defp parse_slug(rel_path) do

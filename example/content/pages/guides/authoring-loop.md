@@ -47,12 +47,14 @@ cherry serve
 
 Drafts are included in serve mode and every save reloads the browser. Real builds (`cherry build`) exclude drafts unless you pass `--drafts`; future-dated posts stay hidden unless you pass `--future`.
 
+The server binds port 4000 by default; `--port 0` picks any free port and reports it, which is the right choice for scripts and agents that cannot assume 4000 is available.
+
 ## Publish
 
-Publishing flips the draft flag off and re-dates the post to today. Filename, frontmatter, and URL all move together:
+Publishing flips the draft flag off and re-dates the post to today. Name the draft by path, or just by the slug `gen.post` gave you. Filename, frontmatter, and URL all move together:
 
 ```sh
-cherry publish content/posts/2026-08-10-growing-season.md --json
+cherry publish growing-season --json
 ```
 
 ```json

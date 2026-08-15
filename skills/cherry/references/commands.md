@@ -129,10 +129,13 @@ Publishes a draft: flips `draft: true` off and re-dates the post to today.
 ### Usage
 
     mix cherry.publish content/posts/2026-08-14-my-draft.md [--source DIR] [--json]
+    mix cherry.publish my-draft [--source DIR] [--json]
 
-The file is renamed to today's date (the filename is the source of truth
-for a post's date) and the `draft:` line is removed. With `--json`, the
-envelope carries the old and new paths.
+The draft can be named by path or by slug — the same slug `gen.post`
+returns in its envelope. The file is renamed to today's date (the
+filename is the source of truth for a post's date) and the `draft:`
+line is removed. With `--json`, the envelope carries the old and new
+paths.
 
 ## cherry schema
 
@@ -162,6 +165,10 @@ Drafts are included (this is your writing loop). Edits to content,
 static files, themes, or `cherry.exs` rebuild automatically and reload
 connected browsers; a broken edit keeps the last good output serving
 and prints its diagnostics.
+
+`--port` defaults to 4000. `--port 0` binds an ephemeral free port —
+handy for agents and CI, where a fixed port may already be taken; the
+port actually bound is in the banner and the `--json` envelope.
 
 ## cherry theme.diff
 

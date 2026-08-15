@@ -32,4 +32,16 @@ defmodule Cherry.CLI.Registry do
   @doc "All known verbs, sorted, for help and error output."
   @spec verbs() :: [String.t()]
   def verbs, do: @commands |> Map.keys() |> Enum.sort()
+
+  @doc """
+  Whether a verb stays resident after a successful run.
+
+  Both frontends consult this — the mix task and the binary must agree
+  on which commands hold the VM open, or `cherry serve` exits the moment
+  the banner prints (the standalone binary shipped exactly that bug in
+  0.1.0-rc.1).
+  """
+  @spec blocking?(String.t()) :: boolean()
+  def blocking?("serve"), do: true
+  def blocking?(_verb), do: false
 end
