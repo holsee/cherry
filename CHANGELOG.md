@@ -17,6 +17,7 @@ Entries are terse one-liners linked to their PR: `- Thing that changed. (#12)`
 - Site prose voice pass: no em dashes anywhere on cherrybomb.dev, all JSON code blocks fully pretty-printed. (#30)
 
 ### Added
+- "Using Cherry from Elixir" guide on cherrybomb.dev: cherry_new scaffolding, the full mix task parity table, the library API (`Cherry.build/1` / `Cherry.check/1` with struct-accurate examples), and when to pick binary vs package; README gains the same cherry_new story, the task table, and standard badges (hex version, hexdocs, CI, license) on both packages. (#37)
 - Copy buttons on code blocks: a new `copy-code.js` island in both official themes puts a hover-revealed (always visible on touch) copy button on every `pre` and any `data-copy` element, clipboard-API based, token-styled, print-hidden; islands are now compiled into both themes by `npm run build` and a sync test pins the copies byte-identical. (#31)
 - Search keyboard shortcut: Ctrl+K / ⌘K focuses the Pagefind input in both themes, and the placeholder advertises it per-platform. (#31)
 - `nav:` entries accept `position: :start | :end` (default `:end`), so configured items can lead the nav ahead of the built-ins; cherrybomb.dev puts Guides before Blog. (#31)

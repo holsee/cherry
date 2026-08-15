@@ -9,6 +9,13 @@
 </p>
 
 <p align="center">
+  <a href="https://hex.pm/packages/cherry"><img src="https://img.shields.io/hexpm/v/cherry.svg" alt="Hex version"></a>
+  <a href="https://hexdocs.pm/cherry"><img src="https://img.shields.io/badge/hex-docs-8e7ce6.svg" alt="Hex docs"></a>
+  <a href="https://github.com/holsee/cherry/actions/workflows/ci.yml"><img src="https://github.com/holsee/cherry/actions/workflows/ci.yml/badge.svg?branch=develop" alt="CI status"></a>
+  <a href="https://hex.pm/packages/cherry"><img src="https://img.shields.io/hexpm/l/cherry.svg" alt="License"></a>
+</p>
+
+<p align="center">
   <a href="https://cherrybomb.dev">cherrybomb.dev</a> ·
   <a href="https://cherrybomb.dev/guides/">Guides</a> ·
   <a href="https://github.com/holsee/cherry/blob/develop/DESIGN.md">Design</a> ·
@@ -37,7 +44,23 @@ Upgrading is `cherry upgrade` — checksum-verified against the release, rustup-
 ## Use from Elixir
 
 Cherry is an ordinary hex package; the binary is just a convenience wrapper around it.
-Every `cherry <verb>` is also `mix cherry.<verb>`, flag for flag:
+
+### Scaffolding: `cherry_new`
+
+[`cherry_new`](https://hex.pm/packages/cherry_new) is the project generator — a tiny
+separate package whose only job is to give you `mix cherry.new mysite` before you
+have Cherry itself, the same pattern Phoenix uses with `phx_new`. Install it once as
+a mix archive and the task is available globally, outside any project:
+
+```sh
+mix archive.install hex cherry_new
+mix cherry.new mysite
+```
+
+The scaffold is a complete site: content directories, a `cherry.exs` config, a first
+post, a GitHub Pages deploy workflow, an `AGENTS.md` describing the publish loop, and
+a `mix.exs` that depends on the cherry release matching the installer — from there
+the site's own `{:cherry, "~> 0.1.0-rc.1"}` dependency pulls the real framework:
 
 ```elixir
 def deps do
@@ -47,21 +70,33 @@ def deps do
 end
 ```
 
-```sh
-mix cherry.gen.post "Hello, world"
-mix cherry.serve
-mix cherry.build
-mix cherry.check --strict
-```
+### The tasks
 
-Or drive it as a library — `Cherry.build/1` and `Cherry.check/1` return structs
-(`Cherry.Build`, `Cherry.Check.Diagnostic`), so custom tooling composes without
-shelling out. Scaffolding a new site is one archive away:
+Every `cherry <verb>` is also `mix cherry.<verb>`, flag for flag, and every one of
+them takes `--json` for a structured envelope:
 
-```sh
-mix archive.install hex cherry_new
-mix cherry.new mysite
-```
+| task | what it does |
+|---|---|
+| `mix cherry.build` | build the site → `_site/`, plain files, deploy anywhere |
+| `mix cherry.serve` | live-reloading dev server, drafts included |
+| `mix cherry.check [--strict]` | build in memory, return structured diagnostics — the verifier |
+| `mix cherry.gen.post "Title"` | scaffold a dated draft post with valid frontmatter |
+| `mix cherry.publish PATH` | flip the draft flag, re-date, move the file |
+| `mix cherry.schema COLLECTION` | print a collection's frontmatter schema — never guess |
+| `mix cherry.gen.action` | generate the GitHub Pages deploy workflow |
+| `mix cherry.gen.project` / `gen.talk` | portfolio scaffolds (positions, talks) |
+| `mix cherry.gen.theme NAME [--from THEME]` | scaffold a site-local theme from an official one |
+| `mix cherry.theme.list` / `theme.which` | inspect available themes and the active one |
+| `mix cherry.theme.eject TEMPLATE` | take ownership of one template, with provenance |
+| `mix cherry.theme.diff [--apply]` | three-way drift status for every ejected overlay |
+| `mix cherry.upgrade --check` | report newer releases (the self-swap itself is binary-only; under mix, upgrade with `mix deps.update cherry`) |
+| `mix cherry.version` | print the version |
+
+### As a library
+
+`Cherry.build/1` and `Cherry.check/1` return structs (`Cherry.Build`,
+`Cherry.Check.Diagnostic`), so custom tooling composes without shelling out — see
+the [API docs](https://hexdocs.pm/cherry).
 
 ## Quickstart
 
