@@ -12,7 +12,10 @@ defmodule Cherry.Serve.Watcher do
   alias Cherry.Serve.Reloader
 
   @debounce_ms 120
-  @probe_timeout_ms 5_000
+  # Generous, because a wrong "blind" verdict costs live reload while a
+  # slow start costs nothing but a moment on a filesystem that is broken
+  # anyway. Windows spawns a watcher program before it can report.
+  @probe_timeout_ms 8_000
   @probe_interval_ms 250
   @probe_name ".cherry-live-probe"
 
@@ -55,7 +58,7 @@ defmodule Cherry.Serve.Watcher do
 
   defp delivers_events?(source) do
     probe = Path.join(probe_dir(source), @probe_name)
-    delivered? = probe(probe, Path.expand(probe), deadline())
+    delivered? = probe(probe, deadline())
     File.rm(probe)
     drain()
     delivered?
@@ -65,7 +68,7 @@ defmodule Cherry.Serve.Watcher do
   # (inotifywait has to spawn), so a single write can land in the gap and
   # look like a dead filesystem. Rewrite the probe until an event comes
   # back or the deadline passes.
-  defp probe(probe, expanded, deadline) do
+  defp probe(probe, deadline) do
     cond do
       now() >= deadline ->
         false
@@ -75,15 +78,18 @@ defmodule Cherry.Serve.Watcher do
       File.write(probe, "#{now()}") != :ok ->
         true
 
-      await(expanded, min(now() + @probe_interval_ms, deadline)) ->
+      await(min(now() + @probe_interval_ms, deadline)) ->
         true
 
       true ->
-        probe(probe, expanded, deadline)
+        probe(probe, deadline)
     end
   end
 
-  defp await(probe, deadline) do
+  # Matched by filename, not by full path: Windows reports events through
+  # paths that need not compare equal to the one we wrote (8.3 short names,
+  # drive-letter case), and the name alone is unambiguous — we chose it.
+  defp await(deadline) do
     remaining = deadline - now()
 
     if remaining <= 0 do
@@ -91,7 +97,7 @@ defmodule Cherry.Serve.Watcher do
     else
       receive do
         {:file_event, _pid, {path, _events}} ->
-          Path.expand(path) == probe or await(probe, deadline)
+          Path.basename(path) == @probe_name or await(deadline)
       after
         remaining -> false
       end
