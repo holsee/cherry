@@ -45,7 +45,7 @@ defmodule Cherry.Commands.Upgrade do
 
     result =
       if Keyword.get(opts, :check, false) do
-        with {:ok, plan} <- Upgrade.check(upgrade_opts), do: {:ok, check_data(plan)}
+        check(upgrade_opts)
       else
         with {:ok, outcome} <- Upgrade.run(upgrade_opts), do: {:ok, run_data(outcome)}
       end
@@ -53,10 +53,31 @@ defmodule Cherry.Commands.Upgrade do
     with {:error, failure} <- result, do: {:error, translate(failure)}
   end
 
+  # "Is there anything newer?" is a question, and "only prereleases exist"
+  # is an answer to it — not a failure. Upgrading to a release that does
+  # not exist still is.
+  defp check(upgrade_opts) do
+    case Upgrade.check(upgrade_opts) do
+      {:ok, plan} ->
+        {:ok, check_data(plan)}
+
+      {:error, :no_stable_release} ->
+        {:ok, %{current: Cherry.version(), target: nil, asset: nil, status: "no_stable_release"}}
+
+      {:error, failure} ->
+        {:error, failure}
+    end
+  end
+
   @impl Cherry.CLI.Command
   @spec human(map()) :: iodata()
   def human(%{status: "up_to_date", current: current}) do
     "cherry #{current} is up to date"
+  end
+
+  def human(%{status: "no_stable_release", current: current}) do
+    "cherry #{current} — no stable release published yet; " <>
+      "pass --version vX.Y.Z-rc.N to target a prerelease"
   end
 
   def human(%{status: "outdated", current: current, target: target}) do

@@ -20,6 +20,7 @@ defmodule Cherry.Check do
     Diagnostic.sort(
       broken_links(build) ++
         missing_descriptions(build) ++
+        unfilled_scaffolds(build) ++
         missing_alt(build) ++
         duplicate_titles(build) ++
         feed_sanity(build) ++
@@ -101,6 +102,44 @@ defmodule Cherry.Check do
         file: doc.source,
         rule: "missing-description",
         message: "no description: — search snippets and social cards fall back to nothing",
+        severity: :warning
+      }
+    end
+  end
+
+  # --- scaffolds nobody filled in --------------------------------------
+
+  # `gen.post` and friends leave a body to write and empty strings to
+  # replace. Publishing without doing either is almost never intended,
+  # and nothing else in the suite notices: an empty post renders as a
+  # title over nothing at all.
+  defp unfilled_scaffolds(build) do
+    empty_bodies(build) ++ empty_fields(build)
+  end
+
+  defp empty_bodies(build) do
+    # Posts and pages only: a portfolio entry that is all frontmatter is
+    # a legitimate record, not an unfinished draft.
+    for %Document{raw?: false} = doc <- build.documents,
+        doc.collection in ["posts", "pages"],
+        String.trim(doc.body) == "" do
+      %Diagnostic{
+        file: doc.source,
+        rule: "empty-body",
+        message: "no body — the page renders as a heading over nothing",
+        severity: :warning
+      }
+    end
+  end
+
+  defp empty_fields(build) do
+    for %Document{raw?: false} = doc <- build.documents,
+        {field, ""} <- Enum.sort(doc.meta),
+        field != :description do
+      %Diagnostic{
+        file: doc.source,
+        rule: "unfilled-field",
+        message: "#{field}: is still the empty string the scaffold wrote",
         severity: :warning
       }
     end

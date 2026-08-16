@@ -23,6 +23,11 @@ defmodule Cherry.Serve do
     port = Keyword.get(opts, :port, 4000)
 
     with {:ok, _build} <- Cherry.build(source: source, output: output, drafts: true) do
+      # Bandit.Clock caches the Date header in an ETS table owned by the
+      # :bandit application. Starting only the child spec leaves that
+      # table missing, and every response logs a warning.
+      {:ok, _apps} = Application.ensure_all_started(:bandit)
+
       children = [
         {Registry, keys: :duplicate, name: Reloader.registry()},
         {Bandit, plug: {Cherry.Serve.Plug, %{output: output}}, port: port, startup_log: false},

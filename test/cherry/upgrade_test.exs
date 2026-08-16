@@ -66,6 +66,25 @@ defmodule Cherry.UpgradeTest do
       assert {:error, :no_stable_release} = Upgrade.check(api_base: api(port))
     end
 
+    test "the command answers rather than failing when only prereleases exist" do
+      port = serve(tag: "v9.9.9", prerelease: true)
+
+      context = %Cherry.CLI.Context{
+        verb: "upgrade",
+        args: [],
+        opts: [check: true, api_base: api(port)]
+      }
+
+      # "nothing stable yet" is the answer to --check, not an error: an
+      # agent asking whether an upgrade is due should not have to treat a
+      # non-zero exit as normal.
+      assert {:ok, %{status: "no_stable_release", target: nil} = data} =
+               Cherry.Commands.Upgrade.run(context)
+
+      assert data.current == Cherry.version()
+      assert Cherry.Commands.Upgrade.human(data) =~ "no stable release published yet"
+    end
+
     test "a prerelease is reachable by explicit tag" do
       port = serve(tag: "v9.9.9", prerelease: true)
 

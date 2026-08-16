@@ -23,7 +23,7 @@ defmodule Cherry.Commands.JsonEnvelopeTest do
   @today "2026-08-14"
 
   # Verbs proven below; the completeness gate keeps this list honest.
-  @covered ~w(build check gen.action gen.post gen.project gen.talk gen.theme
+  @covered ~w(build check config gen.action gen.post gen.project gen.talk gen.theme
               publish schema theme.diff theme.eject theme.list theme.which upgrade version)
 
   # serve runs until interrupted — its envelope cannot round-trip in a test.
@@ -40,6 +40,16 @@ defmodule Cherry.Commands.JsonEnvelopeTest do
 
     test "schema" do
       assert %{"collection" => "posts", "fields" => _} = data(["schema", "posts"])
+    end
+
+    test "config", %{tmp_dir: tmp} do
+      src = fixture(tmp)
+
+      assert %{"config" => %{"title" => _}} = data(["config", "--source", src])
+      assert %{"key" => "title", "value" => _} = data(["config", "title", "--source", src])
+
+      assert %{"key" => "author", "value" => "Wren", "previous" => _} =
+               data(["config", "author", "Wren", "--source", src])
     end
 
     test "build", %{tmp_dir: tmp} do

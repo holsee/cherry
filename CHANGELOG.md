@@ -8,12 +8,18 @@ Entries are terse one-liners linked to their PR: `- Thing that changed. (#12)`
 ## [Unreleased]
 
 ### Added
+- `cherry config` reads and writes `cherry.exs`, closing the last gap in the CLI-only loop: a scaffolded theme can now be activated (`cherry config theme themes/NAME`) without an editor. Writes rewrite only the changed value — comments and layout survive — are validated by reloading the site, and roll back if the value is rejected. Structured settings like `nav:` are refused rather than reformatted. (#47)
+- `cherry version` reports the git revision it was compiled from, so a build from a branch is no longer indistinguishable from the release it was branched from. `null` for a build compiled from hex. (#47)
+- `check` gains `empty-body` and `unfilled-field`: a published post with no prose, or frontmatter still holding the empty string a generator wrote, no longer passes silently. (#47)
 - `search: "cherry"`, a built-in search engine that needs no Node: the index is an inverted list built in-process from the parsed documents and emitted as `search/index.json`, ranked in the browser by a ~2 kB island that ships from `priv/search/` so any theme gets it. Pagefind stays available as `search: "pagefind"` for sites that want it and can afford `npx` on the build machine. (#46)
 
 ### Changed
 - The `@search` template assign carries the configured engine (`"cherry"`, `"pagefind"`, `nil`) instead of a boolean, since the two engines need different markup; `<%= if @search do %>` still reads as "search is on". (#46)
 
 ### Fixed
+- `cherry serve` claimed live reload on filesystems that never deliver change events (a Docker bind mount from a Windows or macOS host, a network share): the watcher started, the banner promised reloads, and no edit ever rebuilt. Serve now proves the watcher works with a probe in the content directory before believing it, and degrades with a warning naming the likely cause when it does not. Probing the watch root would not do — that mount delivers events for the root and none for its subdirectories, which is exactly where content lives. (#47)
+- `cherry serve` logged `Header timestamp couldn't be fetched from ETS cache` on every single response: Bandit was started as a bare child spec, leaving the clock table its own application owns unstarted. (#47)
+- `cherry upgrade --check` exited 1 when only prereleases existed. "Nothing stable yet" is an answer, not a failure; it now exits 0 with `status: "no_stable_release"`. The upgrade itself still refuses. (#47)
 - `copy-code.ts` was missing the `export {}` that keeps an island out of the shared TypeScript global scope, so its top-level names leaked and collided with any new island's. (#46)
 - `cherry gen.theme` produced a theme that `cherry check --strict` immediately rejected: because overlays are keyed by theme name under `themes/`, a site-local theme resolved its own templates as untracked overlays of itself and every one was reported as drift. Overlays now only exist relative to an installed theme; `theme.eject` refuses a site-local theme instead of writing onto it. (#45)
 

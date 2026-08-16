@@ -42,6 +42,33 @@ alt text, duplicate titles, Atom feed sanity. Errors exit 1;
 (`file`, `rule`, `message`, `severity`) — this is the agent's
 verifier loop: build → check → fix → repeat.
 
+## cherry config
+
+Flags: `--source VALUE` — plus the global flags.
+
+Reads and writes `cherry.exs`, so a site can be configured without an
+editor.
+
+### Usage
+
+    mix cherry.config [--source DIR] [--json]
+    mix cherry.config KEY [--source DIR] [--json]
+    mix cherry.config KEY VALUE [--source DIR] [--json]
+
+With no arguments it prints the site's resolved configuration. With a
+key it prints one value. With a key and a value it writes that value
+to `cherry.exs` and reloads the site to prove the result is valid —
+an invalid write is rolled back and reported, so the file is never
+left broken.
+
+Writable keys are the scalar ones: ["title", "url", "description", "author", "theme", "search", "base_path", "social_image"].
+Structured settings like `nav:` are refused rather than rewritten,
+because rewriting them would lose the formatting and comments around
+them; edit those in the file.
+
+Only the value being changed is rewritten — the rest of the file,
+including comments and layout, is left byte-for-byte alone.
+
 ## cherry gen.action
 
 Flags: `--source VALUE`, `--branch VALUE`, `--force` — plus the global flags.
@@ -263,4 +290,9 @@ Prints the Cherry version.
 
 With `--json`, emits the standard envelope:
 
-    {"ok":true,"command":"version","data":{"version":"..."}}
+    {"ok":true,"command":"version","data":{"version":"...","revision":"..."}}
+
+`revision` is the git commit this build was compiled from, so a build
+from a branch is distinguishable from the release it was branched
+from. It is `null` when Cherry was compiled from a hex package rather
+than a checkout.
