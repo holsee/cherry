@@ -6,7 +6,7 @@ defmodule Mix.Tasks.Cherry.VersionTest do
   test "mix cherry.version prints the version through the seam" do
     output = capture_io(fn -> Mix.Tasks.Cherry.Version.run([]) end)
 
-    assert output == "cherry #{Cherry.version()}\n"
+    assert String.starts_with?(output, "cherry #{Cherry.version()}")
   end
 
   test "moduledoc is single-sourced from the command module" do

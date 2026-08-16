@@ -21,7 +21,7 @@ This is the loop the scaffolded site `AGENTS.md` teaches; keep to it:
 1. **Author** — `cherry gen.post "Title"` creates a draft; `cherry gen.project` and `cherry gen.talk` scaffold portfolio entries with valid frontmatter. Capture `data.path` from the envelope and edit that file.
 2. **Build** — `cherry build` emits the site to `_site/`. Treat a failing build as the first diagnostic, not an obstacle.
 3. **Verify** — `cherry check --strict --json` builds in memory (writes nothing) and reports structured diagnostics. Fix and re-run until clean; do not ship with warnings suppressed.
-4. **Preview** — `cherry serve` runs until interrupted (live reload, drafts included). In automation, background it or skip it; never let it block the loop. Prefer `--port 0` there: it binds a free ephemeral port and reports it in the envelope, so a taken port 4000 cannot fail the run.
+4. **Preview** — `cherry serve` runs until interrupted (live reload, drafts included). In automation, background it or skip it; never let it block the loop. Prefer `--port 0` there: it binds a free ephemeral port and reports it in the envelope, so a taken port 4000 cannot fail the run. Trust `live_reload` in the envelope over the assumption that edits reload: on a Docker bind mount or a network share it is `false`, and you must rebuild explicitly.
 5. **Publish** — `cherry publish SLUG` (the slug `gen.post` returned) or `cherry publish PATH` turns the draft into a dated post.
 6. **Deploy** — commit and push; the GitHub Actions workflow from `cherry gen.action` builds and deploys Pages. Regenerate the workflow only when deployment shape changes.
 
@@ -33,6 +33,7 @@ Re-run `cherry check` after any content or theme mutation that later steps depen
 
 - `broken-link` — an internal href resolves to nothing the build emits.
 - `missing-description` / `missing-alt` / `duplicate-title` — SEO and accessibility contract.
+- `empty-body` / `unfilled-field` — a scaffold nobody finished: a post with no prose, or frontmatter still holding the empty string a generator wrote. Write the content; do not delete the rule.
 - `feed-missing` / `feed-invalid` — Atom or JSON Feed sanity.
 - `stale-overlay` / `untracked-overlay` — theme drift; go to the theme section below.
 
@@ -49,6 +50,8 @@ Never hand-copy a theme file — provenance is what keeps upgrades mergeable.
 
 ## Mutate deliberately
 
+- `cherry config` reads and writes `cherry.exs`, so site settings never need an editor: `cherry config` lists everything, `cherry config KEY` reads one, `cherry config KEY VALUE` writes one. The write is validated by reloading the site and rolled back if the value is rejected, and only the changed value is rewritten — comments and layout survive. Structured settings like `nav:` are refused by design; edit those in the file.
+- Activating a scaffolded theme is two commands, not a file edit: `cherry gen.theme NAME` then `cherry config theme themes/NAME`.
 - `gen.post`, `gen.project`, `gen.talk`, and `gen.theme` refuse to overwrite existing files; a refusal means the thing exists — read it instead of forcing.
 - `publish` moves a file; capture `data.from` and `data.to` and update anything referencing the old path.
 - `gen.post` and `publish` accept `--today YYYY-MM-DD` for deterministic dates in tests and reproducible runs.
@@ -58,7 +61,8 @@ Never hand-copy a theme file — provenance is what keeps upgrades mergeable.
 
 - `cherry upgrade --check` reports the running version against the latest stable GitHub release; it works under mix too and touches nothing.
 - `cherry upgrade` downloads this platform's asset, verifies it against the release's `SHA256SUMS`, and swaps the executable in place. It refuses on any checksum problem and leaves the current binary untouched.
-- No stable release exists yet? The error says so — pass `--version vX.Y.Z-rc.N` deliberately to track a prerelease.
+- No stable release exists yet? `--check` says so and still exits 0 with `status: "no_stable_release"` — pass `--version vX.Y.Z-rc.N` deliberately to track a prerelease.
+- `cherry version --json` carries `revision`, the commit the build was compiled from, so a build from a branch is distinguishable from the release it was branched from. It is `null` for a build compiled from hex.
 - Under mix, upgrading the library is `mix deps.update cherry`, not this command.
 - On Windows the replaced executable lingers as `.old` (locked while running); it is safe to delete later and the next upgrade reuses it.
 

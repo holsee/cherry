@@ -26,6 +26,29 @@ defmodule Cherry do
     :cherry |> Application.spec(:vsn) |> to_string()
   end
 
+  # Captured at compile time: a checkout knows its commit, a package
+  # built from hex does not. Without this, every build between two
+  # releases reports the version of the release it was branched from,
+  # and a bug report cannot name the code it came from.
+  @revision (try do
+               case System.cmd("git", ["rev-parse", "--short", "HEAD"], stderr_to_stdout: true) do
+                 {sha, 0} -> String.trim(sha)
+                 _no_repo -> nil
+               end
+             rescue
+               _no_git -> nil
+             end)
+
+  @doc """
+  The git revision this build was compiled from, or `nil`.
+
+  Present when Cherry was compiled from a checkout — which includes the
+  released binaries, since CI builds them from one — and absent when it
+  was compiled from a hex package.
+  """
+  @spec revision() :: String.t() | nil
+  def revision, do: @revision
+
   @doc """
   Builds a site: loads `cherry.exs` from `:source` and runs the pipeline.
 

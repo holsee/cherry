@@ -88,6 +88,88 @@ defmodule Cherry.CheckTest do
     end
   end
 
+  describe "unfilled scaffolds" do
+    test "a published post with no body warns — a title over nothing" do
+      build =
+        build_token(
+          documents: [
+            %Document{
+              collection: "posts",
+              source: "posts/empty.md",
+              path: "empty/index.html",
+              meta: %{title: "Empty", description: "d"},
+              body: "\n  \n"
+            },
+            %Document{
+              collection: "posts",
+              source: "posts/written.md",
+              path: "written/index.html",
+              meta: %{title: "Written", description: "d"},
+              body: "Actual prose."
+            }
+          ]
+        )
+
+      assert [%{file: "posts/empty.md", severity: :warning}] =
+               rule(Check.run(build), "empty-body")
+    end
+
+    test "a portfolio entry that is all frontmatter is a record, not a draft" do
+      build =
+        build_token(
+          documents: [
+            %Document{
+              collection: "projects",
+              source: "portfolio/projects/c.md",
+              path: "portfolio/c/index.html",
+              meta: %{title: "C"},
+              body: ""
+            }
+          ]
+        )
+
+      assert rule(Check.run(build), "empty-body") == []
+    end
+
+    test "an empty string left by a generator warns, naming the field" do
+      build =
+        build_token(
+          documents: [
+            %Document{
+              collection: "talks",
+              source: "portfolio/talks/t.md",
+              meta: %{title: "T", event: ""},
+              body: "x"
+            }
+          ]
+        )
+
+      assert [%{file: "portfolio/talks/t.md", message: message, severity: :warning}] =
+               rule(Check.run(build), "unfilled-field")
+
+      assert message =~ "event:"
+    end
+
+    test "an empty description is left to its own rule, not double-reported" do
+      build =
+        build_token(
+          documents: [
+            %Document{
+              collection: "posts",
+              source: "posts/a.md",
+              meta: %{title: "A", description: ""},
+              body: "x"
+            }
+          ]
+        )
+
+      diagnostics = Check.run(build)
+
+      assert rule(diagnostics, "unfilled-field") == []
+      assert [_one] = rule(diagnostics, "missing-description")
+    end
+  end
+
   describe "missing-alt" do
     test "an <img> without alt warns; alt text (even empty) passes" do
       build =
