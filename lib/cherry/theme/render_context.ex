@@ -19,7 +19,7 @@ defmodule Cherry.Theme.RenderContext do
     page_title: "",
     head_extra: "",
     nav: [],
-    search?: false,
+    search: nil,
     page_class: ""
   ]
 
@@ -29,7 +29,7 @@ defmodule Cherry.Theme.RenderContext do
           page_title: String.t(),
           head_extra: String.t(),
           nav: [NavItem.t()],
-          search?: boolean(),
+          search: String.t() | nil,
           page_class: String.t()
         }
 
@@ -39,6 +39,11 @@ defmodule Cherry.Theme.RenderContext do
   `page_class` is the layout's body class (`page-home`, `page-guides`,
   `page-post`, …) so a theme can restyle whole sections without new
   templates.
+
+  `search` carries the configured engine (`"cherry"`, `"pagefind"`, or
+  `nil`) rather than a boolean, because the two engines need different
+  markup and assets; `<%= if @search do %>` still reads as "search is
+  on" in a template.
   """
   @spec page(t(), String.t(), String.t(), String.t()) :: t()
   def page(%__MODULE__{} = context, page_title, head_extra, page_class \\ "") do

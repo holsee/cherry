@@ -36,8 +36,10 @@ defmodule Cherry.Site do
               doc: "\"default\" for the built-in theme, or a theme directory."
             ],
             search: [
-              type: {:in, ["pagefind"]},
-              doc: "Optional post-build search: `\"pagefind\"` shells out to Pagefind."
+              type: {:in, ["cherry", "pagefind"]},
+              doc:
+                "Optional search: `\"cherry\"` builds the index in-process (no Node), " <>
+                  "`\"pagefind\"` shells out to Pagefind."
             ],
             description: [
               type: :string,
