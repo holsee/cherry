@@ -10,7 +10,7 @@ defmodule Cherry.ThemeDiffTest do
   import ExUnit.CaptureIO
 
   alias Cherry.Theme
-  alias Cherry.Theme.{Drift, Provenance}
+  alias Cherry.Theme.{Drift, Provenance, Resolver}
 
   @moduletag :tmp_dir
 
@@ -145,6 +145,55 @@ defmodule Cherry.ThemeDiffTest do
 
   defp stamp_lines(_root, base) do
     String.split(Provenance.stamp(base, "default", "0.0.9"), "\n", parts: 2)
+  end
+
+  describe "site-local themes" do
+    @tag :tmp_dir
+    test "gen.theme produces a theme that check --strict accepts", %{root: root} do
+      # The exact path a site owner follows to make the theme their own.
+      index = Path.join(root, "content/pages/index.md")
+      File.mkdir_p!(Path.dirname(index))
+      File.write!(index, "---\ntitle: Home\ndescription: d\n---\nHome.\n")
+
+      {_, 0} = run(["gen.theme", "mine", "--source", root])
+
+      File.write!(
+        Path.join(root, "cherry.exs"),
+        "[title: \"T\", url: \"https://t.example\", theme: \"themes/mine\"]"
+      )
+
+      {:ok, site} = Cherry.Site.load(root)
+      {:ok, theme} = Theme.load_active(site)
+
+      # A theme living inside the site owns its templates: they are not
+      # overlays of themselves, so there is no drift to report.
+      assert Resolver.site_local?(site, theme)
+      assert Resolver.overlay_path(site, theme, :post) == nil
+      assert Drift.entries(site, theme) == []
+
+      {output, code} = run(["check", "--strict", "--source", root, "--json"])
+      assert code == 0, output
+      assert %{"ok" => true} = JSON.decode!(output)
+    end
+
+    test "theme.eject refuses a site-local theme instead of writing onto it", %{root: root} do
+      {_, 0} = run(["gen.theme", "mine", "--source", root])
+
+      File.write!(
+        Path.join(root, "cherry.exs"),
+        "[title: \"T\", url: \"https://t.example\", theme: \"themes/mine\"]"
+      )
+
+      {stderr, code} = run_stderr(["theme.eject", "post", "--source", root])
+
+      assert code == 2
+      assert stderr =~ "already lives in this site"
+    end
+
+    test "an installed theme still gets overlays", %{site: site, theme: theme} do
+      refute Resolver.site_local?(site, theme)
+      assert Resolver.overlay_path(site, theme, :post) =~ "themes/default/templates/post.html.eex"
+    end
   end
 
   defp upstream(ctx), do: ctx.theme |> Theme.template_path(:post) |> File.read!()

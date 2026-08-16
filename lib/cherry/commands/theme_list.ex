@@ -112,7 +112,7 @@ defmodule Cherry.Commands.ThemeList do
   defp overlay_state(site, theme, name) do
     overlay = Resolver.overlay_path(site, theme, name)
 
-    if File.exists?(overlay) do
+    if overlay && File.exists?(overlay) do
       current = Theme.template_path(theme, name)
       current_content = if File.exists?(current), do: File.read!(current), else: ""
 
