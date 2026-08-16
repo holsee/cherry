@@ -37,6 +37,7 @@ defmodule Cherry.Theme.Drift do
   def entries(%Site{} = site, %Theme{} = theme) do
     for spec <- theme.templates,
         overlay = Resolver.overlay_path(site, theme, spec.name),
+        not is_nil(overlay),
         File.exists?(overlay) do
       %Entry{template: spec.name, overlay: overlay, status: status(overlay, theme, spec.name)}
     end

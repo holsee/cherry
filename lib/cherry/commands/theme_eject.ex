@@ -99,6 +99,16 @@ defmodule Cherry.Commands.ThemeEject do
     overlay = Resolver.overlay_path(site, theme, name)
 
     cond do
+      is_nil(overlay) ->
+        {:error,
+         %Error{
+           code: :site_local_theme,
+           message:
+             "#{theme.name} already lives in this site — edit its templates directly at " <>
+               "#{Theme.template_path(theme, name)}",
+           exit: 2
+         }}
+
       not File.exists?(template_file) ->
         {:error,
          %Error{code: :unknown_template, message: "theme has no template #{name}", exit: 2}}

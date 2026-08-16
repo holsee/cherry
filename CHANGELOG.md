@@ -7,6 +7,9 @@ Entries are terse one-liners linked to their PR: `- Thing that changed. (#12)`
 
 ## [Unreleased]
 
+### Fixed
+- `cherry gen.theme` produced a theme that `cherry check --strict` immediately rejected: because overlays are keyed by theme name under `themes/`, a site-local theme resolved its own templates as untracked overlays of itself and every one was reported as drift. Overlays now only exist relative to an installed theme; `theme.eject` refuses a site-local theme instead of writing onto it. (#45)
+
 ## [0.1.0-rc.3] — 2026-08-15
 
 ### Fixed
