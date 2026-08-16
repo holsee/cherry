@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title><%= h(@page_title) %> · <%= h(@site.title) %></title>
-<%= @head_extra %><%= if @search do %><link rel="stylesheet" href="<%= href(@site, "pagefind/pagefind-ui.css") %>">
+<%= @head_extra %><%= if @search == "pagefind" do %><link rel="stylesheet" href="<%= href(@site, "pagefind/pagefind-ui.css") %>">
 <% end %><link rel="stylesheet" href="<%= href(@site, "assets/site.css") %>">
 <script>
 /* No-flash: apply the stored theme before first paint. */
@@ -28,7 +28,11 @@
 <svg data-theme-icon="dark" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true" style="display:none"><path d="M13.5 9.5A6 6 0 1 1 6.5 2.5a5 5 0 0 0 7 7Z"/></svg>
 <span data-theme-label>auto</span>
 </button>
-<%= if @search do %><div id="search" class="site-search"></div>
+<%= if @search == "pagefind" do %><div id="search" class="site-search"></div>
+<% end %><%= if @search == "cherry" do %><div class="site-search" data-search="<%= href(@site, "search/index.json") %>">
+<input type="search" class="site-search-input" placeholder="Search" aria-label="Search this site" autocomplete="off" spellcheck="false">
+<div class="site-search-results" data-search-results aria-live="polite"></div>
+</div>
 <% end %></nav>
 </div>
 </header>
@@ -43,7 +47,7 @@
 <a href="<%= href(@site, "feed.xml") %>">RSS</a>
 </div>
 </footer>
-<%= if @search do %><script src="<%= href(@site, "pagefind/pagefind-ui.js") %>"></script>
+<%= if @search == "pagefind" do %><script src="<%= href(@site, "pagefind/pagefind-ui.js") %>"></script>
 <script>
 window.addEventListener("DOMContentLoaded", function () {
   new PagefindUI({ element: "#search", showImages: false });
@@ -60,6 +64,7 @@ window.addEventListener("DOMContentLoaded", function () {
   });
 });
 </script>
+<% end %><%= if @search == "cherry" do %><script src="<%= href(@site, "search/search.js") %>" defer></script>
 <% end %><script src="<%= href(@site, "assets/theme-toggle.js") %>" defer></script>
 <script src="<%= href(@site, "assets/copy-code.js") %>" defer></script>
 </body>

@@ -287,7 +287,13 @@ This directly answers Jekyll's frozen-copies problem and shadcn's unanswered FAQ
 - Zero JS by default; enhancements (theme toggle, search UI) are `<script>` islands that fail soft — authored in TypeScript in the cherry repo, shipped as compiled JS assets (user site builds stay node-free).
 - Design pass will be done with the impeccable skill when we build it. Typography-first; the old site's "code and stuff" personality, modernized.
 
-**Search:** Pagefind as an *optional* post-build step (`search: pagefind` in config; `cherry.build` shells out if configured). It's the best static-search answer going (~100 kB payload on typical sites, prebuilt UI components, zero-config multilingual) and being optional keeps the core dependency-free.
+**Search:** optional, and two engines answer to the same `search:` key.
+
+`search: cherry` is the built-in one: an inverted index built in-process from the parsed documents and emitted as `search/index.json`, queried by a ~2 kB island shipped from `priv/search/`. No Node, no npm, no network, no subprocess — so it works wherever the binary works, and because it is a pure function of the content it lands inside the deterministic build and the double-build gate covers it. Ranking is tf-idf over emitted weights, with titles counted three times and tags twice. Deliberately simple: no stemmer beyond plural folding, no multilingual support, no wasm.
+
+`search: pagefind` remains for sites that want the better engine and accept its cost — `cherry.build` shells out to `npx pagefind` after emit, which needs Node and the npm registry on whatever machine builds the site. It indexes the rendered HTML rather than the source, handles many languages, and ships a richer UI.
+
+The default is neither. A site that sets nothing pays for nothing, and the core stays dependency-free.
 
 ---
 

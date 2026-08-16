@@ -956,3 +956,103 @@ pre.lumis {
     display: none;
   }
 }
+
+/* --- Search (built-in engine, opt-in via `search: "cherry"`) ---------- */
+/* Cherry renders these results itself, so there is no third-party UI to
+   bridge: the tokens apply directly and both renditions follow. */
+
+.site-search-input {
+  width: 100%;
+  padding: 0.3rem 0.6rem;
+  font: inherit;
+  font-size: 0.85rem;
+  color: var(--color-fg);
+  background: var(--color-bg);
+  border: 1px solid var(--color-border);
+  border-radius: 6px;
+}
+
+.site-search-input::placeholder {
+  color: var(--color-muted);
+}
+
+.site-search-input:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 1px;
+}
+
+.site-search-results {
+  display: none;
+}
+
+/* Open state is a panel under the input, overlaying the page rather
+   than pushing the header around. */
+.site-search-open .site-search-results {
+  display: block;
+  position: absolute;
+  top: calc(100% + 0.625rem);
+  right: 0;
+  z-index: 60;
+  width: min(30rem, 88vw);
+  max-height: min(65vh, 30rem);
+  padding: 0.35rem;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  background: var(--color-bg);
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  box-shadow: 0 14px 40px color-mix(in srgb, black 25%, transparent);
+}
+
+.site-search-results ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.site-search-results a {
+  display: block;
+  padding: 0.5rem 0.7rem;
+  color: var(--color-fg);
+  text-decoration: none;
+  border-radius: 6px;
+}
+
+.site-search-results a:hover,
+.site-search-results a:focus-visible {
+  background: var(--color-surface);
+}
+
+.site-search-title {
+  display: block;
+  font-weight: 600;
+}
+
+.site-search-date {
+  display: block;
+  margin-top: 0.15rem;
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  color: var(--color-muted);
+}
+
+.site-search-excerpt {
+  display: block;
+  margin-top: 0.25rem;
+  font-size: 0.8125rem;
+  line-height: 1.5;
+  color: var(--color-muted);
+}
+
+.site-search-empty {
+  margin: 0;
+  padding: 0.6rem 0.7rem;
+  font-size: 0.8125rem;
+  color: var(--color-muted);
+}
+
+@media print {
+  .site-search {
+    display: none;
+  }
+}

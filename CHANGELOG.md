@@ -7,7 +7,14 @@ Entries are terse one-liners linked to their PR: `- Thing that changed. (#12)`
 
 ## [Unreleased]
 
+### Added
+- `search: "cherry"`, a built-in search engine that needs no Node: the index is an inverted list built in-process from the parsed documents and emitted as `search/index.json`, ranked in the browser by a ~2 kB island that ships from `priv/search/` so any theme gets it. Pagefind stays available as `search: "pagefind"` for sites that want it and can afford `npx` on the build machine. (#46)
+
+### Changed
+- The `@search` template assign carries the configured engine (`"cherry"`, `"pagefind"`, `nil`) instead of a boolean, since the two engines need different markup; `<%= if @search do %>` still reads as "search is on". (#46)
+
 ### Fixed
+- `copy-code.ts` was missing the `export {}` that keeps an island out of the shared TypeScript global scope, so its top-level names leaked and collided with any new island's. (#46)
 - `cherry gen.theme` produced a theme that `cherry check --strict` immediately rejected: because overlays are keyed by theme name under `themes/`, a site-local theme resolved its own templates as untracked overlays of itself and every one was reported as drift. Overlays now only exist relative to an installed theme; `theme.eject` refuses a site-local theme instead of writing onto it. (#45)
 
 ## [0.1.0-rc.3] — 2026-08-15

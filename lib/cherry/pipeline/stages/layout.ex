@@ -54,7 +54,7 @@ defmodule Cherry.Pipeline.Stages.Layout do
           []
         end ++ Enum.map(trailing, &custom_nav_item(site, &1))
 
-    %RenderContext{site: site, theme: theme, nav: nav, search?: site.search == "pagefind"}
+    %RenderContext{site: site, theme: theme, nav: nav, search: site.search}
   end
 
   # Configured entries keep their declared order within their position
