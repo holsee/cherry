@@ -60,12 +60,12 @@ mix cherry.new mysite
 The scaffold is a complete site: content directories, a `cherry.exs` config, a first
 post, a GitHub Pages deploy workflow, an `AGENTS.md` describing the publish loop, and
 a `mix.exs` that depends on the cherry release matching the installer — from there
-the site's own `{:cherry, "~> 0.1.0-rc.3"}` dependency pulls the real framework:
+the site's own `{:cherry, "~> 0.1.0"}` dependency pulls the real framework:
 
 ```elixir
 def deps do
   [
-    {:cherry, "~> 0.1.0-rc.3"}
+    {:cherry, "~> 0.1.0"}
   ]
 end
 ```
@@ -161,14 +161,17 @@ Builds are deterministic by contract: same input, byte-identical output.
 
 ## Status
 
-**v0.1.0-rc.3 is out**: five release binaries with provenance attestation, the full
-authoring loop, the verifier, both themes, the portfolio/CV views, self-upgrade, and
-the agent skill. [cherrybomb.dev](https://cherrybomb.dev) is Cherry's own dogfood,
+**v0.1.0 is out**, the first stable release: five release binaries with provenance
+attestation, the full authoring loop, the verifier, both themes, the portfolio/CV
+views, built-in search, self-upgrade, and the agent skill. The CLI is complete
+enough to run a site end to end without an editor —
+[demo/GUIDE.md](https://github.com/holsee/cherry/blob/main/demo/GUIDE.md) proves it,
+command by command. [cherrybomb.dev](https://cherrybomb.dev) is Cherry's own dogfood,
 built from [`example/`](https://github.com/holsee/cherry/tree/develop/example) on
 every push. Cherry is built in the open, README-first:
 [DESIGN.md](https://github.com/holsee/cherry/blob/develop/DESIGN.md) is the
 constitution and [docs/adr/](https://github.com/holsee/cherry/tree/develop/docs/adr)
-records the decisions. Next stop: stable 0.1.0.
+records the decisions.
 
 ## License
 
