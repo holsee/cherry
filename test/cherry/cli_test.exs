@@ -10,7 +10,15 @@ defmodule Cherry.CLITest do
       {output, code} = run(["version"])
 
       assert code == 0
-      assert output == "cherry #{Cherry.version()}\n"
+      assert String.starts_with?(output, "cherry #{Cherry.version()}")
+    end
+
+    # Both renderings, without depending on whether this particular build
+    # was compiled from a checkout — `Cherry.revision/0` is a compile-time
+    # constant, so branching on it here would be dead code in one world.
+    test "the human line names the revision when the build has one" do
+      assert render(%{version: "1.0.0", revision: "abc1234"}) == "cherry 1.0.0 (abc1234)"
+      assert render(%{version: "1.0.0", revision: nil}) == "cherry 1.0.0"
     end
 
     test "--json emits the success envelope" do
@@ -21,7 +29,7 @@ defmodule Cherry.CLITest do
       assert JSON.decode!(output) == %{
                "ok" => true,
                "command" => "version",
-               "data" => %{"version" => Cherry.version()}
+               "data" => %{"version" => Cherry.version(), "revision" => Cherry.revision()}
              }
     end
   end
@@ -83,6 +91,8 @@ defmodule Cherry.CLITest do
     {code, output} = with_io(fn -> CLI.run(argv) end)
     {output, code}
   end
+
+  defp render(data), do: data |> Cherry.Commands.Version.human() |> IO.iodata_to_binary()
 
   defp run_stderr(argv) do
     code_holder = self()

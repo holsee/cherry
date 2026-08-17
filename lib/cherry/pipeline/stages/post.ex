@@ -18,6 +18,10 @@ defmodule Cherry.Pipeline.Stages.Post do
   @spec run(Build.t()) :: {:ok, Build.t()} | {:error, String.t()}
   def run(%Build{site: %Site{search: nil}} = build), do: {:ok, build}
 
+  # The built-in engine indexes in `Stages.Search`, before emit; there is
+  # nothing left to do here.
+  def run(%Build{site: %Site{search: "cherry"}} = build), do: {:ok, build}
+
   def run(%Build{site: %Site{search: "pagefind"} = site} = build) do
     command = ~s(npx --yes pagefind --site "#{site.output}")
 

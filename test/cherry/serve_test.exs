@@ -129,6 +129,47 @@ defmodule Cherry.ServeTest do
     end
   end
 
+  describe "with a watcher that sees nothing" do
+    @tag :no_server
+    test "serve degrades rather than promising a reload that never comes" do
+      tmp = Path.join(System.tmp_dir!(), "cherry-blindfs-#{System.unique_integer([:positive])}")
+      site = Path.join(tmp, "site")
+      File.mkdir_p!(site)
+      on_exit(fn -> File.rm_rf!(tmp) end)
+      File.cp_r!(@fixture, site)
+      File.rm_rf!(Path.join(site, "expected"))
+
+      # A zero-length probe window is a filesystem that never delivers:
+      # the watcher starts, and no event can arrive in time. This is what
+      # a Docker bind mount does for real, on every edit.
+      Application.put_env(:cherry, :fs_probe_timeout, 0)
+      on_exit(fn -> Application.delete_env(:cherry, :fs_probe_timeout) end)
+
+      {result, stderr} =
+        ExUnit.CaptureIO.with_io(:stderr, fn ->
+          Cherry.Serve.start(source: site, output: Path.join(site, "_site"), port: 0)
+        end)
+
+      assert {:ok, pid, port} = result
+      refute Cherry.Serve.live_reload?(pid)
+      assert stderr =~ "delivers no change events"
+
+      {200, body} = get(port, "/hello-world/")
+      assert body =~ "Hello, world"
+
+      refute File.exists?(Path.join([site, "content", "posts", ".cherry-live-probe"])),
+             "the probe file must not survive the check"
+
+      Supervisor.stop(pid)
+    end
+  end
+
+  # The shared server proves the healthy path: "editing a post rebuilds"
+  # above cannot pass unless the probe accepted this filesystem.
+  test "the probe that proves live reload leaves nothing behind", %{site: site} do
+    refute File.exists?(Path.join([site, "content", "posts", ".cherry-live-probe"]))
+  end
+
   defp get(port, path) do
     url = ~c"http://localhost:#{port}#{path}"
 

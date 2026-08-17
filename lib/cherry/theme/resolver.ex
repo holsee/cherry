@@ -13,10 +13,34 @@ defmodule Cherry.Theme.Resolver do
 
   @levels [:site_overlay, :theme, :framework]
 
-  @doc "Where a site's overlay file for this theme + template would live."
-  @spec overlay_path(Site.t(), Theme.t(), atom()) :: Path.t()
-  def overlay_path(%Site{root: root}, %Theme{name: theme_name}, name) do
-    Path.join([root, "themes", theme_name, "templates", "#{name}.html.eex"])
+  @doc """
+  Where a site's overlay file for this theme + template would live, or
+  `nil` when the theme is site-local.
+
+  An overlay only means something relative to an *installed* theme. A
+  theme that lives inside the site — what `cherry gen.theme` writes, and
+  what `theme: "themes/mine"` selects — owns its templates outright, so
+  the overlay path would land on the theme's own files and report every
+  one of them as untracked drift.
+  """
+  @spec overlay_path(Site.t(), Theme.t(), atom()) :: Path.t() | nil
+  def overlay_path(%Site{root: root} = site, %Theme{name: theme_name} = theme, name) do
+    unless site_local?(site, theme) do
+      Path.join([root, "themes", theme_name, "templates", "#{name}.html.eex"])
+    end
+  end
+
+  @doc "Whether this theme is loaded from inside the site itself."
+  @spec site_local?(Site.t(), Theme.t()) :: boolean()
+  def site_local?(%Site{root: site_root}, %Theme{root: theme_root}) do
+    site = normalize(site_root)
+    theme = normalize(theme_root)
+
+    theme != site and String.starts_with?(theme, site <> "/")
+  end
+
+  defp normalize(path) do
+    path |> Path.expand() |> String.replace("\\", "/") |> String.trim_trailing("/")
   end
 
   @doc """
@@ -25,10 +49,10 @@ defmodule Cherry.Theme.Resolver do
   """
   @spec chain(Site.t(), Theme.t(), atom()) :: [{atom(), Path.t(), boolean()}]
   def chain(%Site{} = site, %Theme{} = theme, name) do
-    Enum.map(@levels, fn level ->
-      path = level_path(level, site, theme, name)
-      {level, path, File.exists?(path)}
-    end)
+    @levels
+    |> Enum.map(fn level -> {level, level_path(level, site, theme, name)} end)
+    |> Enum.reject(fn {_level, path} -> is_nil(path) end)
+    |> Enum.map(fn {level, path} -> {level, path, File.exists?(path)} end)
   end
 
   @doc "Resolves a template to the winning `{level, path}`."

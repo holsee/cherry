@@ -16,6 +16,7 @@ defmodule Cherry.Pipeline do
     Stages.Layout,
     Stages.Feeds,
     Stages.Machine,
+    Stages.Search,
     Stages.Emit,
     Stages.Post
   ]

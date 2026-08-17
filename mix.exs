@@ -1,7 +1,7 @@
 defmodule Cherry.MixProject do
   use Mix.Project
 
-  @version "0.1.0-rc.3"
+  @version "0.1.0"
   @source_url "https://github.com/holsee/cherry"
 
   def project do
@@ -169,7 +169,7 @@ defmodule Cherry.MixProject do
       # priv/ is listed by subdirectory so local dialyzer PLT caches
       # (priv/plts) never ship in the package.
       files:
-        ~w(lib priv/themes priv/serve mix.exs README.md LICENSE-MIT LICENSE-APACHE assets/LICENSE CHANGELOG.md)
+        ~w(lib priv/themes priv/serve priv/search mix.exs README.md LICENSE-MIT LICENSE-APACHE assets/LICENSE CHANGELOG.md)
     ]
   end
 end
