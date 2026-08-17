@@ -8,7 +8,7 @@ No local Elixir toolchain required.
 - uses: actions/checkout@v7
 
 # Pin to a cherry release tag; @develop also works if you want the edge.
-- uses: holsee/cherry/action@v0.1.0-rc.3
+- uses: holsee/cherry/action@v0.1.0
   with:
     source: .        # the site's mix project (default ".")
     check: strict    # strict | warn | off (default "strict")

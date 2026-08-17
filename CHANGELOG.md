@@ -1,13 +1,19 @@
 # Changelog
 
 All notable changes to Cherry are documented here. Format follows
-[Keep a Changelog](https://keepachangelog.com/); versioning follows SemVer once 0.1.0 ships.
+[Keep a Changelog](https://keepachangelog.com/); versioning follows SemVer.
 
 Entries are terse one-liners linked to their PR: `- Thing that changed. (#12)`
 
 ## [Unreleased]
 
+## [0.1.0] — 2026-08-17
+
+The first stable release. The entries here are what landed since rc.3; the
+three release-candidate sections below record the rest of the road to 0.1.0.
+
 ### Added
+- `demo/GUIDE.md` and the site it builds (`demo/site`): a CLI-only walkthrough from an empty directory to a deployed site, every command run and its real output pasted in, gated by a test that fails if the guide shows a verb the CLI does not have or the site it describes stops building clean. (#48)
 - `cherry config` reads and writes `cherry.exs`, closing the last gap in the CLI-only loop: a scaffolded theme can now be activated (`cherry config theme themes/NAME`) without an editor. Writes rewrite only the changed value — comments and layout survive — are validated by reloading the site, and roll back if the value is rejected. Structured settings like `nav:` are refused rather than reformatted. (#47)
 - `cherry version` reports the git revision it was compiled from, so a build from a branch is no longer indistinguishable from the release it was branched from. `null` for a build compiled from hex. (#47)
 - `check` gains `empty-body` and `unfilled-field`: a published post with no prose, or frontmatter still holding the empty string a generator wrote, no longer passes silently. (#47)

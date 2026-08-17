@@ -43,7 +43,7 @@ irm https://cherrybomb.dev/install.ps1 | iex          # Windows PowerShell
 ```
 
 If you already have an Elixir toolchain you can use Cherry as a dependency
-instead — `{:cherry, "~> 0.1.0-rc.3"}` in a site's `mix.exs` — and every verb
+instead — `{:cherry, "~> 0.1.0"}` in a site's `mix.exs` — and every verb
 below becomes `mix cherry.<verb>`. You need nothing else: no Node, no bundler,
 no runtime.
 
@@ -51,12 +51,12 @@ Then confirm what you are actually running:
 
 ```console
 $ cherry version
-cherry 0.1.0-rc.3 (36d8c19)
+cherry 0.1.0 (4dae966)
 ```
 
 The parenthesised value is the git commit the binary was compiled from. It
 matters when you are between releases: two builds can both call themselves
-`0.1.0-rc.3` and differ. A build compiled from a hex package has no revision
+`0.1.0` and differ. A build compiled from a hex package has no revision
 and prints just the version.
 
 Everything is scriptable from here on. Add `--json` to any verb for a machine
@@ -542,17 +542,17 @@ already GitHub Actions, so flip it before the first deploying run, not after.
 
 ```console
 $ cherry upgrade --check --json
-{"command":"upgrade","data":{"status":"no_stable_release","target":null,"asset":null,"current":"0.1.0-rc.3"},"ok":true}
+{"command":"upgrade","data":{"status":"up_to_date","target":"v0.1.0","asset":"cherry-linux-x86_64","current":"0.1.0"},"ok":true}
 ```
 
-`--check` reports and touches nothing, and it succeeds even when the answer is
-"there is nothing stable yet" — that is an answer, not a failure. Statuses are
-`up_to_date`, `outdated`, and `no_stable_release`.
+`--check` reports and touches nothing. Statuses are `up_to_date`, `outdated`,
+and `no_stable_release` — the last one succeeds too, because "there is nothing
+stable yet" is an answer, not a failure.
 
 `cherry upgrade` downloads this platform's asset, verifies it against the
 release's `SHA256SUMS`, and swaps the running executable in place. Any checksum
-problem aborts and leaves the current binary untouched. While only prereleases
-exist, target one explicitly with `--version v0.1.0-rc.3`.
+problem aborts and leaves the current binary untouched. Prereleases never
+arrive uninvited; target one explicitly with `--version v0.2.0-rc.1`.
 
 Under mix, upgrade the dependency instead — `mix deps.update cherry` — which
 `cherry upgrade` will tell you.

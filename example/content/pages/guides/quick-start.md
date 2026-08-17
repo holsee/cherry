@@ -25,8 +25,10 @@ cherry version
 ```
 
 ```text
-cherry 0.1.0-rc.3
+cherry 0.1.0
 ```
+
+A release binary also prints, in parentheses, the git revision it was compiled from — useful when you are running something built between releases.
 
 > [!NOTE]
 > Elixir developers can skip the binary entirely: add `{:cherry, "~> 0.1"}` to a mix project and every command below is `mix cherry.<verb>`. Same verbs, same flags, same output, by construction.
