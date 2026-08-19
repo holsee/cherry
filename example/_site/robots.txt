@@ -1,4 +1,0 @@
-User-agent: *
-Allow: /
-
-Sitemap: https://cherrybomb.dev/sitemap.xml

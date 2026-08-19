@@ -10,3 +10,5 @@
 erl_crash.dump
 cherry-*.tar
 /tmp/
+example/_site/
+installer/doc/
