@@ -25,7 +25,7 @@ defmodule Cherry.CherrybombThemeTest do
 
     css = File.read!(Path.join(out, "assets/site.css"))
     assert css =~ "CherryBomb"
-    assert css =~ "--color-accent: #ff4d7d"
+    assert css =~ "--color-accent: light-dark(#c0134f, #ff4d7d)"
 
     # Same pages, same routes — only the world changed.
     for file <- [

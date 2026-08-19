@@ -453,27 +453,27 @@ what it does, and any override you have in place:
 ```console
 $ cherry theme.tokens
 tokens of theme default:
-  --color-bg             #ffffff
+  --color-bg             light-dark(#ffffff, #15171b)
                          Page background.
-  --color-accent         #b3173e
+  --color-accent         light-dark(#b3173e, #f4718c)
                          Links and interactive accents.
   --measure              42rem
                          Reading column width (~66ch).
   …
 ```
 
-Overriding one is a config write, not a CSS file:
+Every color is one `light-dark(light, dark)` pair — both renditions in a
+single value. Overriding one is a config write, not a CSS file, and the demo
+site runs with its accent moved to violet exactly this way:
 
 ```console
-$ cherry config tokens.--color-accent "#7c3aed" --json
-{"command":"config","data":{"key":"tokens.--color-accent","path":"cherry.exs","previous":null,"value":"#7c3aed"},"ok":true}
+$ cherry config tokens.--color-accent "light-dark(#7c3aed, #a78bfa)" --json
+{"command":"config","data":{"key":"tokens.--color-accent","path":"cherry.exs","previous":null,"value":"light-dark(#7c3aed, #a78bfa)"},"ok":true}
 ```
 
 The name must exist in `theme.tokens` — a typo is refused here, with the
-nearest real token named, instead of becoming a dead line in `cherry.exs`. A
-value applies to both the light and dark renditions unless you write it as
-`light-dark(a, b)`. The demo site runs with its accent moved to violet this
-way.
+nearest real token named, instead of becoming a dead line in `cherry.exs`.
+A plain value (`"#7c3aed"`) works too and applies to both renditions.
 
 Rung 3 is a file: anything in `assets/custom.css` ships as
 `/assets/custom.css` and loads after everything else. Theme CSS lives inside

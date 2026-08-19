@@ -7,7 +7,11 @@
   description: "Notes on the BEAM, backpressure, and the long tail of distributed systems.",
   author: "Juno Vale",
   search: "cherry",
-  # Written by `cherry config tokens.--color-accent "#7c3aed"` (GUIDE §10):
-  # the default theme with its accent moved to violet, no CSS involved.
-  tokens: ["--color-accent": "#7c3aed", "--color-accent-strong": "#5b21b6"]
+  # Written by `cherry config tokens.--color-accent ...` (GUIDE §10): the
+  # default theme with its accent moved to violet, no CSS involved. A
+  # light-dark() value carries both renditions in one override.
+  tokens: [
+    "--color-accent": "light-dark(#7c3aed, #a78bfa)",
+    "--color-accent-strong": "light-dark(#5b21b6, #c4b5fd)"
+  ]
 ]

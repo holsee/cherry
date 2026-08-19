@@ -19,9 +19,12 @@
  * gate-enforced; both renditions verified by screenshot.
  *
  * Every color lives in a custom property below — templates and component
- * rules never carry a literal color (gate-enforced). Light is defined on
- * :root; dark redefines the same tokens under prefers-color-scheme and
- * under an explicit [data-theme] set by the toggle, which always wins.
+ * rules never carry a literal color (gate-enforced). Each color token is
+ * defined twice: a plain light value first (the complete fallback world
+ * for engines without light-dark()), then a light-dark() pair inside
+ * @supports. Forcing a rendition is one property — the toggle sets
+ * [data-theme], which flips color-scheme, and every token follows. No
+ * duplicated dark blocks, no drift between media query and toggle.
  *
  * Everything lives in `@layer theme`, so the site's own overrides — the
  * `tokens:` config block and `assets/custom.css`, both unlayered — win
@@ -57,50 +60,36 @@
   color-scheme: light;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root:not([data-theme="light"]) {
-    --color-bg: #14090f;
-    --color-surface: #1f1016;
-    --color-fg: #f5e7ee;
-    --color-muted: #b39aa8;
-    --color-border: #3a2230;
-    --color-accent: #ff4d7d;
-    --color-accent-strong: #ff7a9e;
-    --color-selection: #5c1030;
+@supports (color: light-dark(#fff, #000)) {
+  :root {
+    --color-bg: light-dark(#fbf6f8, #14090f);
+    --color-surface: light-dark(#f3e7ed, #1f1016);
+    --color-fg: light-dark(#26141d, #f5e7ee);
+    --color-muted: light-dark(#6d5563, #b39aa8);
+    --color-border: light-dark(#e6d2dc, #3a2230);
+    --color-accent: light-dark(#c0134f, #ff4d7d);
+    --color-accent-strong: light-dark(#96063c, #ff7a9e);
+    --color-selection: light-dark(#ffd3e0, #5c1030);
 
-    --syn-keyword: #ff4d7d;
-    --syn-string: #45e0b8;
-    --syn-comment: #9a8292;
-    --syn-function: #c89bff;
-    --syn-constant: #ffb454;
-    --syn-type: #56d8ff;
-    --syn-variable: #f5e7ee;
-    --syn-punct: #b39aa8;
+    --syn-keyword: light-dark(#c0134f, #ff4d7d);
+    --syn-string: light-dark(#0b7a5e, #45e0b8);
+    --syn-comment: light-dark(#75616d, #9a8292);
+    --syn-function: light-dark(#6d3ac1, #c89bff);
+    --syn-constant: light-dark(#a55a00, #ffb454);
+    --syn-type: light-dark(#0369a1, #56d8ff);
+    --syn-variable: light-dark(#26141d, #f5e7ee);
+    --syn-punct: light-dark(#6d5563, #b39aa8);
 
+    color-scheme: light dark;
+  }
+
+  :root[data-theme="light"] {
+    color-scheme: light;
+  }
+
+  :root[data-theme="dark"] {
     color-scheme: dark;
   }
-}
-
-:root[data-theme="dark"] {
-  --color-bg: #14090f;
-  --color-surface: #1f1016;
-  --color-fg: #f5e7ee;
-  --color-muted: #b39aa8;
-  --color-border: #3a2230;
-  --color-accent: #ff4d7d;
-  --color-accent-strong: #ff7a9e;
-  --color-selection: #5c1030;
-
-  --syn-keyword: #ff4d7d;
-  --syn-string: #45e0b8;
-  --syn-comment: #9a8292;
-  --syn-function: #c89bff;
-  --syn-constant: #ffb454;
-  --syn-type: #56d8ff;
-  --syn-variable: #f5e7ee;
-  --syn-punct: #b39aa8;
-
-  color-scheme: dark;
 }
 
 /* ---------- base ---------- */
@@ -834,6 +823,11 @@ pre.lumis {
 @media print {
   :root,
   :root[data-theme="dark"] {
+    /* One property flips every light-dark() token to its light value —
+     * including the syntax palette, which the pre-light-dark print
+     * rendition could not reach. */
+    color-scheme: light;
+
     --color-bg: #ffffff;
     --color-fg: #000000;
     --color-muted: #444444;
