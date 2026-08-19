@@ -67,11 +67,14 @@ defmodule Cherry.ExampleTest do
     assert guides_at < blog_at
 
     # The landing pitch: the checklist, the portfolio/CV story, and the
-    # from-nothing transcript that opens with cherry new.
+    # from-nothing transcript that opens with cherry new. (The command
+    # itself is spanned apart by syntax highlighting; the scaffolded
+    # site's name survives as text.)
     assert index =~ ~s(class="checks")
     assert index =~ "AI-agent-friendly CLI"
     assert index =~ "JSON Resume"
-    assert index =~ "cherry new junovale"
+    assert index =~ "From nothing"
+    assert index =~ "junovale"
 
     # Docs joined the nav.
     assert index =~ ~s(>Docs</a>)
