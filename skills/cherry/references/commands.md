@@ -225,8 +225,10 @@ Reports drift between the site's theme overlays and the installed theme.
 Statuses: `current` (upstream unchanged), `auto_updatable` (upstream
 moved, your copy untouched — `--apply` re-ejects it with fresh
 provenance), `conflict` (both moved; resolve by hand or re-eject with
-`theme.eject --force`), `untracked` (no provenance header). This is
-the managed-drift answer to silently frozen theme copies.
+`theme.eject --force`), `untracked` (no provenance header),
+`rewritten` (a `.heex` rewrite — owned outright), `shadowed` (an
+`.eex` copy a `.heex` rewrite outranks). This is the managed-drift
+answer to silently frozen theme copies.
 
 ## cherry theme.eject
 
