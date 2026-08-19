@@ -73,9 +73,9 @@ defmodule Cherry.DemoTest do
       assert guide =~ "cherry #{verb}", "the guide never shows `cherry #{verb}`"
     end
 
-    # `cherry new` does not exist — scaffolding is the cherry_new archive,
-    # and the guide says so. This gate keeps that from regressing into a
-    # command a binary-only reader cannot run.
-    refute guide =~ ~r/^\$ cherry new /m
+    # `cherry new` is the binary lane's scaffold; the mix lane's twin
+    # lives in the cherry_new archive, not core, so the guide must show
+    # the verb without promising a `mix cherry.new` task from core.
+    assert guide =~ ~r/^\$ cherry new /m
   end
 end

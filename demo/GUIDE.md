@@ -10,7 +10,9 @@ Read it start to finish the first time. After that, each section stands alone.
 readability; nothing else is edited. Commands are written for the standalone
 binary (`cherry build`).
 If you installed Cherry as an Elixir dependency instead, every verb is a mix
-task with the same name and flags: `mix cherry.build`. Inside this repository,
+task with the same name and flags: `mix cherry.build`. The one exception is
+`cherry new` — its mix twin comes from the `cherry_new` archive (§2), not from
+core. Inside this repository,
 add `--source demo/site` to point at the demo rather than the current directory.
 
 **Contents**
@@ -99,26 +101,42 @@ You get a site, not a framework: markdown under `content/`, files to copy under
 `static/`, one `cherry.exs`, and an `AGENTS.md` describing the loop for whatever
 coding agent you point at it.
 
-### With the standalone binary only
+### With the standalone binary
 
-There is no `cherry new` — scaffolding lives in the mix archive above, so a
-binary-only install has nothing to run it. The gap is one file wide, and worth
-knowing exactly how wide:
+`cherry new` plants the same site — minus the mix project files a
+binary-only install has no use for:
 
-```bash
-mkdir -p junovale/content/posts junovale/content/pages
-cd junovale
-cat > cherry.exs <<'EOF'
-[
-  title: "Juno Vale",
-  url: "https://junovale.example"
-]
-EOF
+```console
+$ cherry new junovale
+* creating cherry.exs
+* creating .gitignore
+* creating README.md
+* creating AGENTS.md
+* creating .claude/skills/publish/SKILL.md
+* creating content/pages/index.md
+* creating content/pages/about.md
+* creating content/posts/2026-08-19-hello-cherry.md
+* creating static/images/.gitkeep
+
+Your orchard is planted at junovale. Next:
+
+    cd junovale
+    cherry serve          # live-reloading dev server
+    cherry check          # the verifier agents build against
+    cherry gen.action     # GitHub Pages deploy workflow
+
+AGENTS.md documents the whole workflow — point your agent at it.
 ```
 
-That is the whole bootstrap. `cherry.exs` has to exist before any verb works —
-including `cherry config`, which reads a site before it writes one — but from
-here everything is commands:
+It refuses a directory that already has anything in it, and the title
+humanizes from the directory name (`juno-vale` → `Juno Vale`). This is
+the one verb without a `mix cherry.new` twin in core: the archive above
+owns that name, so the two install lanes can coexist in one project.
+
+The scaffold is also nothing you could not type yourself. `cherry.exs`
+is the only file any verb strictly requires — `cherry config`, which
+reads a site before it writes one, works the moment that file exists —
+and from there everything is commands:
 
 ```console
 $ cherry config
