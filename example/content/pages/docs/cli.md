@@ -15,11 +15,27 @@ Nineteen verbs, one contract. Every command accepts `--json` for a machine-reada
 Verbs are identical under the standalone binary (`cherry build`) and the Elixir dependency (`mix cherry.build`), with one exception noted under [`new`](#cherry-new). Envelopes always have the same shape:
 
 ```json
-{"ok": true, "command": "build", "data": {"output": "_site", "pages": 12, "assets": 4}}
+{
+  "ok": true,
+  "command": "build",
+  "data": {
+    "output": "_site",
+    "pages": 12,
+    "assets": 4
+  }
+}
 ```
 
 ```json
-{"ok": false, "command": "config", "error": {"code": "usage", "message": "...", "details": {}}}
+{
+  "ok": false,
+  "command": "config",
+  "error": {
+    "code": "usage",
+    "message": "...",
+    "details": {}
+  }
+}
 ```
 
 ### Everyday
@@ -83,7 +99,15 @@ cherry gen.post "Post title" [--source DIR] [--json]
 One file in `content/posts/` named `YYYY-MM-DD-slug.md`, valid frontmatter, `draft: true`. The envelope carries the path and the slug:
 
 ```json
-{"ok": true, "command": "gen.post", "data": {"date": "2026-08-19", "path": "content/posts/2026-08-19-sweep-post.md", "slug": "sweep-post"}}
+{
+  "ok": true,
+  "command": "gen.post",
+  "data": {
+    "date": "2026-08-19",
+    "path": "content/posts/2026-08-19-sweep-post.md",
+    "slug": "sweep-post"
+  }
+}
 ```
 
 #### cherry publish
@@ -96,7 +120,15 @@ cherry publish content/posts/2026-08-14-my-draft.md [--source DIR] [--json]
 Turns a draft into a published post: removes the `draft:` line and renames the file to today's date, because the filename is the source of truth for a post's date. Name the draft by path or by the slug `gen.post` returned:
 
 ```json
-{"ok": true, "command": "publish", "data": {"date": "2026-08-19", "from": "content/posts/2026-01-01-drafty.md", "to": "content/posts/2026-08-19-drafty.md"}}
+{
+  "ok": true,
+  "command": "publish",
+  "data": {
+    "date": "2026-08-19",
+    "from": "content/posts/2026-01-01-drafty.md",
+    "to": "content/posts/2026-08-19-drafty.md"
+  }
+}
 ```
 
 #### cherry gen.project and cherry gen.talk
@@ -185,7 +217,16 @@ cherry upgrade [--check] [--version vX.Y.Z] [--json]
 Upgrades the binary in place, rustup style: resolves the latest stable GitHub release, downloads this platform's binary, verifies it against the release's `SHA256SUMS`, and swaps the running executable. `--check` only reports:
 
 ```json
-{"ok": true, "command": "upgrade", "data": {"status": "up_to_date", "current": "0.2.0", "target": "v0.2.0", "asset": "cherry-linux-x86_64"}}
+{
+  "ok": true,
+  "command": "upgrade",
+  "data": {
+    "status": "up_to_date",
+    "current": "0.2.0",
+    "target": "v0.2.0",
+    "asset": "cherry-linux-x86_64"
+  }
+}
 ```
 
 Mix users upgrade with `mix deps.update cherry` as ever.

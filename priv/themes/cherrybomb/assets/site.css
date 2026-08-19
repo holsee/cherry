@@ -1177,10 +1177,19 @@ video.video-local {
   max-width: 64rem;
 }
 
+/* One content column for the landing's story: the transcript-heavy
+   loop, the pitch paragraphs, and the closing all share 48rem, so the
+   page holds one width from hero to footer. The checklist grid is the
+   single deliberate wide moment. */
 .page-home .loop,
+.page-home .beyond,
 .page-home .closing {
-  max-width: var(--measure);
+  max-width: 48rem;
   margin: 0 auto;
+}
+
+.page-home .beyond {
+  margin-top: 4rem;
 }
 
 .hero {
@@ -1314,11 +1323,7 @@ video.video-local {
   }
 }
 
-/* Beyond the blog: the portfolio/CV pitch, one wide poster paragraph. */
-.beyond {
-  max-width: 52rem;
-  margin: 4rem auto 0;
-}
+/* Beyond the blog: the portfolio/CV pitch, one poster paragraph. */
 
 .beyond p {
   font-size: 1.125rem;

@@ -1,0 +1,8 @@
+<%!-- cherry:eject theme=cherrybomb version=0.1.0 sha256=9a3be1c618d04e3543ec107d4dd8b63bf79a0f32d089d65373dd59e26025c3de --%>
+<% import Cherry.Theme.Helpers %><article>
+<h1><%= h(@doc.meta.title) %></h1>
+<p class="post-meta">
+<time datetime="<%= Date.to_iso8601(@doc.meta.date) %>"><%= format_date(@doc.meta.date) %></time> · <a href="https://x.com/holsee" rel="me author">@holsee</a><%= for tag <- @doc.meta.tags do %> · <a href="<%= href(@site, "blog/tags/" <> tag_slug(tag) <> "/") %>"><%= h(tag) %></a><% end %>
+</p>
+<%= @doc.html %>
+</article>

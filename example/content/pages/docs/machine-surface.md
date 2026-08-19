@@ -11,13 +11,30 @@ Cherry assumes a coding agent is sitting next to you, and gives it a real interf
 Every verb takes `--json` and emits one envelope shape:
 
 ```json
-{"ok": true, "command": "check", "data": {"errors": 0, "warnings": 0, "pages": 34, "diagnostics": []}}
+{
+  "ok": true,
+  "command": "check",
+  "data": {
+    "errors": 0,
+    "warnings": 0,
+    "pages": 34,
+    "diagnostics": []
+  }
+}
 ```
 
 Failures carry a code, a message, and details:
 
 ```json
-{"ok": false, "command": "config", "error": {"code": "usage", "message": "invalid flags: --sorce", "details": {}}}
+{
+  "ok": false,
+  "command": "config",
+  "error": {
+    "code": "usage",
+    "message": "invalid flags: --sorce",
+    "details": {}
+  }
+}
 ```
 
 Exit codes are part of the contract: 0 success, 1 the command ran and failed, 2 usage error. An agent's whole loop is: run a verb, branch on the exit code, parse the envelope, fix what the diagnostics name, repeat. Three verbs make that loop tight:
