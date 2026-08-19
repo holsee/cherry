@@ -875,6 +875,26 @@ video.video-local {
   background: var(--color-surface);
 }
 
+/* ---------- touch ---------- */
+
+/* Hit areas, not layout: padding grows the target, the negative margin
+ * gives the space back, so nothing moves and small mono links still
+ * clear the WCAG 2.5.8 floor on touch screens. */
+.site-nav a,
+.site-footer a,
+.post-meta a {
+  padding: 0.55rem 0.25rem;
+  margin: -0.55rem -0.25rem;
+}
+
+/* iOS zooms any focused input under 16px; keep the compact look on
+ * pointer-precise screens and go 16px where it matters. */
+@media (pointer: coarse) {
+  .site-search-input {
+    font-size: 1rem;
+  }
+}
+
 /* Print: black on white, no chrome, never split an entry. */
 
 @media print {
