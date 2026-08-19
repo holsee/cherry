@@ -824,11 +824,14 @@ pre.lumis {
    in light, dark, and print like everything else on the page. */
 .diagram {
   margin: 2rem 0;
+  overflow-x: auto;
 }
 
+/* Below min-width the labels become unreadable; scroll instead of shrink. */
 .diagram svg {
   display: block;
   width: 100%;
+  min-width: 34rem;
   height: auto;
 }
 
