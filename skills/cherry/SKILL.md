@@ -44,13 +44,14 @@ Without `--strict`, warnings stay warnings and only errors fail the check.
 Never hand-copy a theme file — provenance is what keeps upgrades mergeable.
 
 - Inspect with `cherry theme.list` and `cherry theme.which TEMPLATE` (shows the three-level lookup chain and the winner).
+- Restyle before you eject: `cherry theme.tokens` lists the theme's styling API — every CSS token with its default, doc, and any site override — and `cherry config tokens.--color-accent "#7c3aed"` writes an override. Token overrides and the site's `assets/custom.css` load unlayered over the theme's `@layer theme` CSS, so they always win; most restyles never need to touch a template. A token value applies to both light and dark unless written as `light-dark(a, b)`.
 - Take ownership of a template with `cherry theme.eject TEMPLATE`; the copy records provenance.
 - After a Cherry upgrade, run `cherry theme.diff`: `current` needs nothing, `auto_updatable` re-ejects cleanly with `--apply`, `conflict` means both sides moved — merge by hand, then `theme.eject --force`; `untracked` has no provenance — re-eject to adopt it.
 - A whole-theme fork is `cherry gen.theme NAME [--from THEME]`.
 
 ## Mutate deliberately
 
-- `cherry config` reads and writes `cherry.exs`, so site settings never need an editor: `cherry config` lists everything, `cherry config KEY` reads one, `cherry config KEY VALUE` writes one. The write is validated by reloading the site and rolled back if the value is rejected, and only the changed value is rewritten — comments and layout survive. Structured settings like `nav:` are refused by design; edit those in the file.
+- `cherry config` reads and writes `cherry.exs`, so site settings never need an editor: `cherry config` lists everything, `cherry config KEY` reads one, `cherry config KEY VALUE` writes one. The write is validated by reloading the site and rolled back if the value is rejected, and only the changed value is rewritten — comments and layout survive. Structured settings like `nav:` are refused by design; edit those in the file. The exception is theme token overrides, addressed with a dotted key: `cherry config tokens.NAME VALUE` (the name must exist in `cherry theme.tokens`, so typos fail here instead of becoming dead config).
 - Activating a scaffolded theme is two commands, not a file edit: `cherry gen.theme NAME` then `cherry config theme themes/NAME`.
 - `gen.post`, `gen.project`, `gen.talk`, and `gen.theme` refuse to overwrite existing files; a refusal means the thing exists — read it instead of forcing.
 - `publish` moves a file; capture `data.from` and `data.to` and update anything referencing the old path.

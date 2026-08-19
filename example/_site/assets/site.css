@@ -1,0 +1,1301 @@
+/* CherryBomb — Cherry's brand theme.
+ *
+ * THESIS: the logo's night, inhabited — the graffiti/retrowave energy of
+ * the cherrybomb mark carried by ground, glow, and color, while the prose
+ * stays ruthlessly readable. The brush script belongs to the artwork;
+ * the theme's own voice is a heavy system sans set tight.
+ * OWN-WORLD: near-black with a magenta cast at night, warm poster paper
+ * by day; one hot-pink accent with a fuse-orange counterpoint in code;
+ * the site title carries a brush-stroke underline, and code blocks are
+ * where the neon actually burns.
+ * STORY: a reader arrives after dark, the wall lights up, the writing
+ * still reads like writing; flip the toggle and it's the same poster
+ * pasted up in daylight.
+ * FIRST VIEWPORT: identical skeleton to the default theme (the contract),
+ * different world: pink title stroke, sans prose, night ground.
+ * FORM: brand theme beside the clean default (decision 2026-08-14);
+ * glow is budgeted — the title stroke and the code border, nothing else.
+ * FINISH: same discipline as the default theme: tokens only,
+ * gate-enforced; both renditions verified by screenshot.
+ *
+ * Every color lives in a custom property below — templates and component
+ * rules never carry a literal color (gate-enforced). Light is defined on
+ * :root; dark redefines the same tokens under prefers-color-scheme and
+ * under an explicit [data-theme] set by the toggle, which always wins.
+ */
+
+:root {
+  --color-bg: #fbf6f8;
+  --color-surface: #f3e7ed;
+  --color-fg: #26141d;
+  --color-muted: #6d5563;
+  --color-border: #e6d2dc;
+  --color-accent: #c0134f;
+  --color-accent-strong: #96063c;
+  --color-selection: #ffd3e0;
+
+  --syn-keyword: #c0134f;
+  --syn-string: #0b7a5e;
+  --syn-comment: #75616d;
+  --syn-function: #6d3ac1;
+  --syn-constant: #a55a00;
+  --syn-type: #0369a1;
+  --syn-variable: #26141d;
+  --syn-punct: #6d5563;
+
+  --font-prose:
+    system-ui, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --font-mono: ui-monospace, "Cascadia Code", "SF Mono", Consolas, "DejaVu Sans Mono", monospace;
+  --measure: 42rem;
+
+  color-scheme: light;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --color-bg: #14090f;
+    --color-surface: #1f1016;
+    --color-fg: #f5e7ee;
+    --color-muted: #b39aa8;
+    --color-border: #3a2230;
+    --color-accent: #ff4d7d;
+    --color-accent-strong: #ff7a9e;
+    --color-selection: #5c1030;
+
+    --syn-keyword: #ff4d7d;
+    --syn-string: #45e0b8;
+    --syn-comment: #9a8292;
+    --syn-function: #c89bff;
+    --syn-constant: #ffb454;
+    --syn-type: #56d8ff;
+    --syn-variable: #f5e7ee;
+    --syn-punct: #b39aa8;
+
+    color-scheme: dark;
+  }
+}
+
+:root[data-theme="dark"] {
+  --color-bg: #14090f;
+  --color-surface: #1f1016;
+  --color-fg: #f5e7ee;
+  --color-muted: #b39aa8;
+  --color-border: #3a2230;
+  --color-accent: #ff4d7d;
+  --color-accent-strong: #ff7a9e;
+  --color-selection: #5c1030;
+
+  --syn-keyword: #ff4d7d;
+  --syn-string: #45e0b8;
+  --syn-comment: #9a8292;
+  --syn-function: #c89bff;
+  --syn-constant: #ffb454;
+  --syn-type: #56d8ff;
+  --syn-variable: #f5e7ee;
+  --syn-punct: #b39aa8;
+
+  color-scheme: dark;
+}
+
+/* ---------- base ---------- */
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;
+  background: var(--color-bg);
+  color: var(--color-fg);
+  font-family: var(--font-prose);
+  font-size: 1.125rem;
+  line-height: 1.7;
+}
+
+::selection {
+  background: var(--color-selection);
+}
+
+.wrap {
+  max-width: var(--measure);
+  margin: 0 auto;
+  padding: 0 1.25rem;
+}
+
+a {
+  color: var(--color-accent);
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.15em;
+}
+
+a:hover {
+  color: var(--color-accent-strong);
+}
+
+a:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+
+/* ---------- header / footer ---------- */
+
+.site-header {
+  padding: 2rem 0 0;
+}
+
+.site-header .wrap {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+/* The signature: a brush-stroke underline beneath the site title —
+ * the logo's tail, redrawn in CSS from the theme's own tokens. */
+.site-title {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  white-space: nowrap;
+  flex-shrink: 0;
+  font-weight: 800;
+  font-size: 1.0625rem;
+  letter-spacing: -0.01em;
+  color: var(--color-fg);
+  text-decoration: none;
+}
+
+.site-title::after {
+  content: "";
+  position: absolute;
+  left: -0.15em;
+  right: -0.35em;
+  bottom: -0.28em;
+  height: 0.32em;
+  background: linear-gradient(100deg, var(--color-accent), var(--color-accent-strong));
+  transform: skewX(-18deg) rotate(-1.2deg);
+  border-radius: 0.06em 0.22em 0.08em 0.2em;
+  opacity: 0.9;
+}
+
+.site-title:hover {
+  color: var(--color-accent);
+}
+
+.site-nav {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  font-family: var(--font-mono);
+  font-size: 0.8125rem;
+}
+
+.site-nav a {
+  color: var(--color-muted);
+  text-decoration: none;
+}
+
+.site-nav a:hover {
+  color: var(--color-accent);
+}
+
+main {
+  padding: 3rem 0 4rem;
+}
+
+.site-footer {
+  border-top: 1px solid var(--color-border);
+  padding: 1.25rem 0 2.5rem;
+  font-family: var(--font-mono);
+  font-size: 0.8125rem;
+  color: var(--color-muted);
+}
+
+.site-footer .wrap {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.site-footer a {
+  color: var(--color-muted);
+}
+
+.site-footer a:hover {
+  color: var(--color-accent);
+}
+
+/* Theme toggle: hidden until its script runs; fails soft without JS. */
+.theme-toggle {
+  display: none;
+  align-items: center;
+  gap: 0.4rem;
+  border: 1px solid var(--color-border);
+  border-radius: 999px;
+  background: transparent;
+  color: var(--color-muted);
+  font: inherit;
+  padding: 0.2rem 0.75rem;
+  cursor: pointer;
+}
+
+.theme-toggle[data-ready] {
+  display: inline-flex;
+}
+
+.theme-toggle:hover {
+  color: var(--color-fg);
+  border-color: var(--color-muted);
+}
+
+.theme-toggle:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+}
+
+.theme-toggle svg {
+  width: 0.875rem;
+  height: 0.875rem;
+}
+
+/* ---------- prose ---------- */
+
+h1,
+h2,
+h3 {
+  line-height: 1.25;
+  text-wrap: balance;
+}
+
+h1 {
+  font-size: 2rem;
+  font-weight: 800;
+  letter-spacing: -0.025em;
+  margin: 0 0 0.75rem;
+}
+
+h2 {
+  font-size: 1.375rem;
+  font-weight: 800;
+  letter-spacing: -0.015em;
+  margin: 2.5rem 0 0.75rem;
+}
+
+h3 {
+  font-size: 1.125rem;
+  font-weight: 700;
+  margin: 2rem 0 0.5rem;
+}
+
+p,
+ul,
+ol {
+  margin: 0 0 1.25rem;
+}
+
+blockquote {
+  margin: 1.5rem 0;
+  padding: 0.25rem 0 0.25rem 1.25rem;
+  border-left: 1px solid var(--color-border);
+  color: var(--color-muted);
+}
+
+hr {
+  border: 0;
+  border-top: 1px solid var(--color-border);
+  margin: 2.5rem 0;
+}
+
+img {
+  max-width: 100%;
+  height: auto;
+}
+
+/* Heading deep links: the transform stage appends an empty a.anchor to
+ * every heading. Quiet by default, a # on hover — never in the way. */
+a.anchor {
+  margin-left: 0.35em;
+  text-decoration: none;
+  opacity: 0;
+  transition: opacity 120ms ease;
+}
+
+a.anchor::before {
+  content: "#";
+  color: var(--color-muted);
+}
+
+h1:hover a.anchor,
+h2:hover a.anchor,
+h3:hover a.anchor,
+h4:hover a.anchor,
+a.anchor:focus-visible {
+  opacity: 1;
+}
+
+a.anchor:hover::before,
+a.anchor:focus-visible::before {
+  color: var(--color-accent);
+}
+
+/* GitHub-style alerts (> [!NOTE] …) from the transform stage. Each
+ * variant borrows a hue from the syntax palette — no new tokens. */
+.markdown-alert {
+  --alert-hue: var(--color-accent);
+  margin: 1.5rem 0;
+  padding: 0.75rem 1.25rem 0.5rem;
+  border-left: 1px solid var(--alert-hue);
+  border-radius: 0 8px 8px 0;
+  background: color-mix(in srgb, var(--alert-hue) 7%, transparent);
+}
+
+.markdown-alert > p {
+  margin-bottom: 0.75rem;
+}
+
+.markdown-alert-title {
+  font-weight: 700;
+  font-size: 0.8125rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--alert-hue);
+}
+
+.markdown-alert-note {
+  --alert-hue: var(--syn-type);
+}
+
+.markdown-alert-tip {
+  --alert-hue: var(--syn-string);
+}
+
+.markdown-alert-important {
+  --alert-hue: var(--syn-function);
+}
+
+.markdown-alert-warning {
+  --alert-hue: var(--syn-constant);
+}
+
+.markdown-alert-caution {
+  --alert-hue: var(--syn-keyword);
+}
+
+/* The transform stage wraps every table in .table-scroll, so tables keep
+ * their semantics for assistive tech and still scroll on narrow screens. */
+.table-scroll {
+  overflow-x: auto;
+  margin: 0 0 1.25rem;
+}
+
+table {
+  border-collapse: collapse;
+  width: 100%;
+  font-size: 0.9375rem;
+}
+
+.table-scroll table {
+  margin: 0;
+}
+
+th,
+td {
+  text-align: left;
+  padding: 0.5rem 0.75rem;
+  border-bottom: 1px solid var(--color-border);
+}
+
+th {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--color-muted);
+}
+
+/* ---------- metadata ---------- */
+
+.post-meta {
+  font-family: var(--font-mono);
+  font-size: 0.8125rem;
+  color: var(--color-muted);
+  margin: 0 0 2.5rem;
+}
+
+.post-meta a {
+  color: var(--color-muted);
+}
+
+.post-meta a:hover {
+  color: var(--color-accent);
+}
+
+/* ---------- post list ---------- */
+
+.post-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.post-list li {
+  display: flex;
+  align-items: baseline;
+  gap: 1.25rem;
+  padding: 0.45rem 0;
+}
+
+.post-list time {
+  font-family: var(--font-mono);
+  font-size: 0.8125rem;
+  color: var(--color-muted);
+  flex-shrink: 0;
+}
+
+.post-list a {
+  color: var(--color-fg);
+  text-decoration: none;
+}
+
+.post-list a:hover {
+  color: var(--color-accent);
+}
+
+@media (max-width: 34rem) {
+  .post-list li {
+    flex-direction: column;
+    gap: 0.1rem;
+    padding: 0.65rem 0;
+  }
+}
+
+/* ---------- code: the memory moment ---------- */
+
+code {
+  font-family: var(--font-mono);
+  font-size: 0.875em;
+}
+
+:not(pre) > code {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: 4px;
+  padding: 0.1em 0.35em;
+}
+
+/* Where the neon burns: the code block wears a soft accent halo cast
+ * downward — the theme's one glow besides the title stroke. In the
+ * light rendition the mix stays subtle: pink breath, not pink noise. */
+pre {
+  background: var(--color-surface);
+  border: 1px solid color-mix(in srgb, var(--color-accent) 35%, var(--color-border));
+  border-radius: 8px;
+  padding: 1rem 1.25rem;
+  overflow-x: auto;
+  margin: 1.5rem 0;
+  line-height: 1.6;
+  box-shadow: 0 4px 22px color-mix(in srgb, var(--color-accent) 14%, transparent);
+}
+
+pre code {
+  font-size: 0.8125rem;
+  background: none;
+  border: 0;
+  padding: 0;
+}
+
+/* Lumis (html_linked) token classes, colored from the theme's own tokens
+ * so the toggle swaps code and prose as one world. */
+pre.lumis {
+  color: var(--syn-variable);
+}
+
+[class^="l-keyword"],
+[class*=" l-keyword"] {
+  color: var(--syn-keyword);
+}
+
+[class^="l-string"],
+[class*=" l-string"],
+[class^="l-character"] {
+  color: var(--syn-string);
+}
+
+[class^="l-comment"],
+[class*=" l-comment"] {
+  color: var(--syn-comment);
+  font-style: italic;
+}
+
+[class^="l-function"],
+[class*=" l-function"],
+[class^="l-method"] {
+  color: var(--syn-function);
+}
+
+[class^="l-constant"],
+[class*=" l-constant"],
+[class^="l-number"],
+[class^="l-boolean"] {
+  color: var(--syn-constant);
+}
+
+[class^="l-type"],
+[class*=" l-type"],
+[class^="l-module"],
+[class^="l-namespace"],
+[class^="l-attribute"],
+[class^="l-tag"] {
+  color: var(--syn-type);
+}
+
+[class^="l-variable"],
+[class*=" l-variable"],
+[class^="l-property"] {
+  color: var(--syn-variable);
+}
+
+[class^="l-punctuation"],
+[class*=" l-punctuation"],
+[class^="l-operator"] {
+  color: var(--syn-punct);
+}
+
+/* String interpolation symbols read as strings. */
+.l-string-special-symbol {
+  color: var(--syn-constant);
+}
+
+/* ---------- portfolio: the developer story ---------- */
+
+.profile {
+  margin: 0 0 3rem;
+}
+
+.profile h1 {
+  margin-bottom: 0.25rem;
+}
+
+.profile-headline {
+  font-size: 1.125rem;
+  color: var(--color-muted);
+  margin: 0 0 0.75rem;
+}
+
+.profile-meta {
+  font-family: var(--font-mono);
+  font-size: 0.8125rem;
+  color: var(--color-muted);
+  margin: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem 1.1rem;
+}
+
+.profile-meta a {
+  color: var(--color-muted);
+}
+
+.profile-meta a:hover {
+  color: var(--color-accent);
+}
+
+/* The rail: years as waypoints, entries hanging off a hairline. */
+
+.timeline-year {
+  position: relative;
+  border-left: 1px solid var(--color-border);
+  padding: 0 0 1.5rem 1.75rem;
+  margin: 0;
+}
+
+.year-mark {
+  font-family: var(--font-mono);
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--color-muted);
+  margin: 0 0 1.25rem;
+  position: relative;
+}
+
+.year-mark::before {
+  content: "";
+  position: absolute;
+  left: calc(-1.75rem - 4.5px);
+  top: 50%;
+  transform: translateY(-50%);
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--color-accent);
+}
+
+.timeline-entry {
+  margin: 0 0 1.75rem;
+}
+
+.timeline-entry h3 {
+  font-size: 1.0625rem;
+  margin: 0 0 0.2rem;
+}
+
+.entry-kind {
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--color-accent);
+  margin: 0 0 0.15rem;
+}
+
+.entry-meta {
+  font-family: var(--font-mono);
+  font-size: 0.8125rem;
+  color: var(--color-muted);
+  margin: 0 0 0.4rem;
+}
+
+.entry-meta a {
+  color: var(--color-muted);
+  text-decoration-color: var(--color-border);
+}
+
+.entry-meta a:hover {
+  color: var(--color-accent);
+}
+
+.entry-highlights {
+  margin: 0.4rem 0 0.5rem;
+  padding-left: 1.1rem;
+}
+
+.entry-highlights li {
+  margin: 0.15rem 0;
+}
+
+.entry-tags {
+  font-family: var(--font-mono);
+  font-size: 0.8125rem;
+  margin: 0.3rem 0 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.3rem 0.8rem;
+}
+
+.entry-tags a {
+  color: var(--color-muted);
+  text-decoration: none;
+}
+
+.entry-tags a::before {
+  content: "#";
+  opacity: 0.6;
+}
+
+.entry-tags a:hover {
+  color: var(--color-accent);
+}
+
+/* Standing roles, not events: open source sits beside the timeline. */
+
+.oss h2,
+.story-section h2 {
+  font-size: 1.25rem;
+  margin: 2.5rem 0 1rem;
+}
+
+.oss-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.oss-list li {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 0.35rem 0.8rem;
+  padding: 0.35rem 0;
+}
+
+.oss-role {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--color-muted);
+  border: 1px solid var(--color-border);
+  border-radius: 999px;
+  padding: 0.05rem 0.55rem;
+}
+
+.story-lede {
+  color: var(--color-muted);
+  margin-top: -0.5rem;
+}
+
+.story-link {
+  font-family: var(--font-mono);
+  font-size: 0.875rem;
+  margin: -1rem 0 2rem;
+}
+
+/* ---------- the CV: employer-shaped, print-first ---------- */
+
+.cv-header h1 {
+  margin-bottom: 0.25rem;
+}
+
+.cv-headline {
+  font-size: 1.125rem;
+  color: var(--color-muted);
+  margin: 0 0 0.75rem;
+}
+
+.cv-contact {
+  font-family: var(--font-mono);
+  font-size: 0.8125rem;
+  color: var(--color-muted);
+  margin: 0 0 0.3rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem 1.1rem;
+}
+
+.cv-contact a {
+  color: var(--color-muted);
+}
+
+.cv-contact a:hover {
+  color: var(--color-accent);
+}
+
+.cv-updated {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--color-muted);
+  margin: 0 0 2rem;
+}
+
+.cv-section h2 {
+  font-size: 1rem;
+  font-family: var(--font-mono);
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--color-muted);
+  border-bottom: 1px solid var(--color-border);
+  padding-bottom: 0.35rem;
+  margin: 2.25rem 0 1rem;
+}
+
+.cv-entry {
+  margin: 0 0 1.25rem;
+}
+
+.cv-entry h3 {
+  font-size: 1.0625rem;
+  margin: 0 0 0.15rem;
+}
+
+/* Skills are claims with receipts: each links to its story page. */
+
+.cv-skills {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 1.4rem;
+}
+
+.cv-skills li {
+  font-family: var(--font-mono);
+  font-size: 0.875rem;
+}
+
+.cv-skill-years {
+  color: var(--color-muted);
+}
+
+/* Print: black on white, no chrome, never split an entry. */
+
+@media print {
+  :root,
+  :root[data-theme="dark"] {
+    --color-bg: #ffffff;
+    --color-fg: #000000;
+    --color-muted: #444444;
+    --color-border: #bbbbbb;
+    --color-accent: #000000;
+    --color-accent-strong: #000000;
+  }
+
+  .site-header,
+  .site-footer,
+  .theme-toggle {
+    display: none;
+  }
+
+  body {
+    font-size: 11pt;
+  }
+
+  .cv-entry,
+  .cv-section h2 {
+    break-inside: avoid;
+  }
+
+  .cv a {
+    text-decoration: none;
+    color: inherit;
+  }
+
+  .cv-json-link {
+    display: none;
+  }
+}
+
+/* --- Search (Pagefind, opt-in via `search: "pagefind"`) --------------- */
+/* The Pagefind UI colors itself from these bridges to our tokens, so it
+   follows both renditions for free. The drawer is lifted out of the page
+   flow into a panel anchored under the input, so results overlay the page
+   instead of shoving it down. */
+
+.site-search {
+  position: relative;
+  min-width: 14rem;
+}
+
+#search {
+  --pagefind-ui-primary: var(--color-accent);
+  --pagefind-ui-text: var(--color-fg);
+  --pagefind-ui-background: var(--color-bg);
+  --pagefind-ui-border: var(--color-border);
+  --pagefind-ui-tag: var(--color-surface);
+  --pagefind-ui-font: var(--font-prose);
+  --pagefind-ui-scale: 0.85;
+}
+
+#search .pagefind-ui__search-input {
+  font-family: var(--font-mono);
+  font-weight: 400;
+  background: color-mix(in srgb, var(--color-surface) 55%, var(--color-bg));
+}
+
+#search .pagefind-ui__search-input:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+}
+
+#search .pagefind-ui__search-clear {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--color-muted);
+  background: none;
+}
+
+#search .pagefind-ui__drawer:not(.pagefind-ui__hidden) {
+  position: absolute;
+  top: calc(100% + 0.625rem);
+  right: 0;
+  z-index: 60;
+  width: min(30rem, 88vw);
+  max-height: min(65vh, 30rem);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding: 0.5rem 1.25rem 1.25rem;
+  background: color-mix(in srgb, var(--color-surface) 70%, var(--color-bg));
+  border: 1px solid color-mix(in srgb, var(--color-accent) 35%, var(--color-border));
+  border-radius: 10px;
+  box-shadow: 0 18px 48px color-mix(in srgb, black 45%, transparent);
+}
+
+#search .pagefind-ui__message {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--color-muted);
+}
+
+#search .pagefind-ui__result {
+  border-top: 1px solid var(--color-border);
+}
+
+#search .pagefind-ui__result-link {
+  color: var(--color-fg);
+}
+
+#search .pagefind-ui__result-link:hover {
+  color: var(--color-accent);
+}
+
+#search .pagefind-ui__result-excerpt mark {
+  background: color-mix(in srgb, var(--color-accent) 30%, transparent);
+  color: var(--color-fg);
+  padding: 0 0.15em;
+  border-radius: 3px;
+}
+
+#search .pagefind-ui__button {
+  font-family: var(--font-mono);
+  background: none;
+  color: var(--color-accent);
+  border: 1px solid var(--color-border);
+}
+
+@media (max-width: 44rem) {
+  .site-header .wrap {
+    flex-wrap: wrap;
+  }
+
+  .site-nav {
+    flex-wrap: wrap;
+  }
+
+  .site-search {
+    order: 10;
+    flex: 1 1 100%;
+    min-width: 0;
+  }
+
+  #search .pagefind-ui__drawer:not(.pagefind-ui__hidden) {
+    left: 0;
+    right: 0;
+    width: auto;
+  }
+}
+
+/* --- Copy buttons on code blocks (copy-code.js island) ---------------- */
+/* The island wraps each pre in .code-copy so the button anchors to the
+   block while the code scrolls beneath it. */
+
+.code-copy {
+  position: relative;
+}
+
+.copy-code {
+  position: absolute;
+  top: 0.5rem;
+  right: 0.5rem;
+  z-index: 2;
+  padding: 0.15rem 0.55rem;
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  line-height: 1.6;
+  color: var(--color-muted);
+  background: color-mix(in srgb, var(--color-surface) 85%, var(--color-bg));
+  border: 1px solid var(--color-border);
+  border-radius: 6px;
+  cursor: pointer;
+  /* Visible at rest so blocks read as copyable; full strength on hover. */
+  opacity: 0.55;
+  transition: opacity 120ms ease, color 120ms ease, border-color 120ms ease;
+}
+
+.code-copy:hover .copy-code,
+[data-copy]:hover .copy-code,
+.copy-code:focus-visible {
+  opacity: 1;
+}
+
+.copy-code:hover,
+.copy-code-done {
+  color: var(--color-accent);
+  border-color: color-mix(in srgb, var(--color-accent) 55%, var(--color-border));
+  opacity: 1;
+}
+
+/* The install one-liners are flex rows; the button rides the row. */
+.cmd .copy-code {
+  position: static;
+  margin-left: auto;
+  flex-shrink: 0;
+}
+
+@media (hover: none) {
+  .copy-code {
+    opacity: 1;
+  }
+}
+
+@media print {
+  .copy-code {
+    display: none;
+  }
+}
+
+/* --- The dogfood surfaces: landing (page-home) and guides ------------- */
+/* The nav mark ships with the theme; any cherrybomb site gets it. */
+
+.site-title::before {
+  content: "";
+  flex-shrink: 0;
+  width: 1.35em;
+  height: 1.35em;
+  margin-right: 0.4em;
+  background: url("cherrybomb-mark.png") center / contain no-repeat;
+}
+
+/* The brush underline clears the mark and sits under the wordmark only. */
+.site-title::after {
+  left: 1.6em;
+}
+
+/* Landing: the wrap widens; each section owns its own measure. */
+.page-home main .wrap {
+  max-width: 64rem;
+}
+
+.page-home .loop,
+.page-home .closing {
+  max-width: var(--measure);
+  margin: 0 auto;
+}
+
+.hero {
+  text-align: center;
+  padding: 1rem 0 2.5rem;
+}
+
+.hero-mark {
+  width: clamp(180px, 30vw, 300px);
+  height: auto;
+  filter: drop-shadow(0 12px 34px color-mix(in srgb, var(--color-accent) 38%, transparent));
+  animation: hero-rise 640ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.hero h1 {
+  font-size: clamp(2.25rem, 6vw, 3.5rem);
+  font-weight: 800;
+  letter-spacing: -0.035em;
+  line-height: 1.05;
+  margin: 1.25rem 0 1rem;
+  animation: hero-rise 640ms cubic-bezier(0.16, 1, 0.3, 1) 70ms both;
+}
+
+.hero h1 em {
+  font-style: italic;
+  color: var(--color-accent);
+}
+
+.hero-tagline {
+  font-size: 1.1875rem;
+  color: var(--color-muted);
+  margin: 0 auto 1.75rem;
+  max-width: 36rem;
+  animation: hero-rise 640ms cubic-bezier(0.16, 1, 0.3, 1) 130ms both;
+}
+
+.hero-actions {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  margin: 0 0 2.25rem;
+  animation: hero-rise 640ms cubic-bezier(0.16, 1, 0.3, 1) 190ms both;
+}
+
+/* Buttons wear the brush: the title underline's gradient as a full block,
+ * skewed like the swash in the lockup. */
+.button {
+  display: inline-block;
+  padding: 0.6rem 1.5rem;
+  font-weight: 800;
+  text-decoration: none;
+  color: var(--color-bg);
+  background: linear-gradient(100deg, var(--color-accent), var(--color-accent-strong));
+  transform: skewX(-6deg);
+  border-radius: 0.4rem 0.9rem 0.5rem 1rem;
+  box-shadow: 0 6px 18px color-mix(in srgb, var(--color-accent) 30%, transparent);
+}
+
+.button:hover {
+  color: var(--color-bg);
+  transform: skewX(-6deg) translateY(-1px);
+}
+
+.button-ghost {
+  background: transparent;
+  color: var(--color-accent);
+  border: 1px solid color-mix(in srgb, var(--color-accent) 55%, var(--color-border));
+  box-shadow: none;
+}
+
+.button-ghost:hover {
+  color: var(--color-accent-strong);
+}
+
+.cmd {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+  max-width: 33rem;
+  margin: 0.6rem auto;
+  padding: 0.55rem 1.1rem;
+  background: var(--color-surface);
+  border: 1px solid color-mix(in srgb, var(--color-accent) 25%, var(--color-border));
+  border-radius: 8px;
+  font-family: var(--font-mono);
+  font-size: 0.9375rem;
+  overflow-x: auto;
+}
+
+.cmd-os {
+  flex: none;
+  font-size: 0.6875rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--color-muted);
+}
+
+.cmd code {
+  background: none;
+  border: 0;
+  padding: 0;
+  white-space: nowrap;
+}
+
+@keyframes hero-rise {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-mark,
+  .hero h1,
+  .hero-tagline,
+  .hero-actions {
+    animation: none;
+  }
+
+  .copy-code {
+    transition: none;
+  }
+}
+
+/* Beyond the blog: the portfolio/CV pitch, one wide poster paragraph. */
+.beyond {
+  max-width: 52rem;
+  margin: 4rem auto 0;
+}
+
+.beyond p {
+  font-size: 1.125rem;
+  line-height: 1.6;
+  padding-left: 1.1rem;
+  border-left: 1px solid color-mix(in srgb, var(--color-accent) 45%, var(--color-border));
+}
+
+/* The top ten: a brush-checked list, two ragged columns on desktop. */
+.checklist {
+  max-width: 56rem;
+  margin: 4rem auto 0;
+}
+
+.checks {
+  list-style: none;
+  margin: 2rem 0 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.2rem 2.75rem;
+}
+
+.checks li {
+  position: relative;
+  padding-left: 2.15rem;
+  line-height: 1.55;
+}
+
+.checks li:nth-child(even) {
+  transform: rotate(0.2deg);
+}
+
+.checks li:nth-child(odd) {
+  transform: rotate(-0.2deg);
+}
+
+.checks li strong {
+  font-weight: 800;
+  letter-spacing: -0.01em;
+}
+
+/* The checkbox: a brush-skewed accent tile with a painted tick. */
+.checks li::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0.14em;
+  width: 1.2em;
+  height: 1.2em;
+  border: 1px solid color-mix(in srgb, var(--color-accent) 60%, var(--color-border));
+  border-radius: 0.25em;
+  transform: skewX(-6deg) rotate(-2deg);
+  background: linear-gradient(
+    100deg,
+    color-mix(in srgb, var(--color-accent) 26%, transparent),
+    color-mix(in srgb, var(--color-accent-strong) 16%, transparent)
+  );
+}
+
+.checks li::after {
+  content: "";
+  position: absolute;
+  left: 0.26em;
+  top: 0.4em;
+  width: 0.68em;
+  height: 0.36em;
+  border-left: 2px solid var(--color-accent);
+  border-bottom: 2px solid var(--color-accent);
+  transform: rotate(-48deg);
+}
+
+@media (max-width: 40rem) {
+  .checks {
+    grid-template-columns: 1fr;
+  }
+
+  .checks li:nth-child(odd),
+  .checks li:nth-child(even) {
+    transform: none;
+  }
+
+  .hero-actions {
+    flex-wrap: wrap;
+  }
+}
+
+/* Guides: a reading section — index list plus tightened rhythm. */
+.guide-list {
+  list-style: none;
+  padding: 0;
+  margin: 2rem 0;
+}
+
+.guide-list li {
+  margin: 0 0 1.5rem;
+}
+
+.guide-list a {
+  font-weight: 800;
+  font-size: 1.1875rem;
+  text-decoration-thickness: 2px;
+}
+
+.guide-list p {
+  margin: 0.2rem 0 0;
+  color: var(--color-muted);
+}
+
+@media print {
+  .hero-actions,
+  .cmd {
+    display: none;
+  }
+}

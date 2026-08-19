@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Guides · CherryBomb</title>
+<link rel="canonical" href="https://cherrybomb.dev/guides/">
+<link rel="alternate" type="application/atom+xml" title="CherryBomb" href="/feed.xml">
+<link rel="alternate" type="application/feed+json" title="CherryBomb" href="/feed.json">
+<link rel="icon" href="/favicon.ico" sizes="32x32">
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<meta name="description" content="Worked guides for Cherry, from install to deployed site. The authoring loop, the verifier, themes, deploys, scripting, and upgrades.">
+<meta property="og:description" content="Worked guides for Cherry, from install to deployed site. The authoring loop, the verifier, themes, deploys, scripting, and upgrades.">
+<meta property="og:title" content="Guides">
+<meta property="og:url" content="https://cherrybomb.dev/guides/">
+<meta property="og:site_name" content="CherryBomb">
+<meta property="og:image" content="https://cherrybomb.dev/og-card.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta property="og:type" content="website">
+<link rel="stylesheet" href="/pagefind/pagefind-ui.css">
+<link rel="stylesheet" href="/assets/site.css">
+<script>
+/* No-flash: apply the stored theme before first paint. */
+(function () {
+  try {
+    var t = localStorage.getItem("cherry-theme");
+    if (t === "light" || t === "dark") document.documentElement.dataset.theme = t;
+  } catch (e) {}
+})();
+</script>
+</head>
+<body class="page-guides">
+<header class="site-header">
+<div class="wrap">
+<a class="site-title" href="/">CherryBomb</a>
+<nav class="site-nav"><a href="/guides/">Guides</a>
+<a href="/blog/">Blog</a>
+
+<button class="theme-toggle" type="button" aria-label="Theme">
+<svg data-theme-icon="auto" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><circle cx="8" cy="8" r="6"/><path d="M8 2 A6 6 0 0 1 8 14 Z" fill="currentColor" stroke="none"/></svg>
+<svg data-theme-icon="light" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true" style="display:none"><circle cx="8" cy="8" r="3.5"/><path d="M8 1v2M8 13v2M1 8h2M13 8h2M3 3l1.4 1.4M11.6 11.6L13 13M13 3l-1.4 1.4M4.4 11.6L3 13"/></svg>
+<svg data-theme-icon="dark" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true" style="display:none"><path d="M13.5 9.5A6 6 0 1 1 6.5 2.5a5 5 0 0 0 7 7Z"/></svg>
+<span data-theme-label>auto</span>
+</button>
+<div id="search" class="site-search"></div>
+</nav>
+</div>
+</header>
+<main>
+<div class="wrap">
+<article>
+<h1 id="guides">Guides<a href="#guides" aria-label="Link to heading 'Guides'" data-heading-content="Guides" class="anchor"></a></h1>
+<p>Every guide is a worked example: the command, its real output, and what it means. Each assumes the one before it, but none require it.</p>
+<ul class="guide-list">
+<li><a href="/guides/quick-start/">Quick-start</a><p>Install Cherry, make a site, write a post, put it on the internet. Fifteen minutes, no Elixir required to run it.</p></li>
+<li><a href="/guides/authoring-loop/">The authoring loop</a><p>gen.post, edit, serve, publish, and the markdown mirrors every route ships.</p></li>
+<li><a href="/guides/check/">The verifier</a><p>cherry check builds in memory and hands back structured diagnostics: the build, check, fix loop that keeps a site honest.</p></li>
+<li><a href="/guides/themes/">Themes, tokens, and drift</a><p>Two official themes, a token styling API, ejects with provenance, and theme.diff so your overrides survive upgrades.</p></li>
+<li><a href="/guides/deploy/">Deploying to GitHub Pages</a><p>gen.action writes the workflow; Pages setup, custom domains, and project-page base paths.</p></li>
+<li><a href="/guides/agents/">Scripting and agents</a><p>The --json envelope contract, schemas, llms.txt, and markdown mirrors, from jq one-liners to the shipped agent skill.</p></li>
+<li><a href="/guides/upgrade/">Staying current</a><p>cherry upgrade swaps the binary in place, checksum-verified against the release.</p></li>
+</ul>
+</article>
+
+</div>
+</main>
+<footer class="site-footer">
+<div class="wrap">
+<span>© CherryBomb</span>
+<a href="/feed.xml">RSS</a>
+</div>
+</footer>
+<script src="/pagefind/pagefind-ui.js"></script>
+<script>
+window.addEventListener("DOMContentLoaded", function () {
+  new PagefindUI({ element: "#search", showImages: false });
+  var input = document.querySelector("#search input");
+  if (!input) return;
+  var mac = /Mac|iP/.test(navigator.platform || "");
+  input.setAttribute("placeholder", "Search (" + (mac ? "⌘" : "Ctrl+") + "K)");
+  window.addEventListener("keydown", function (e) {
+    if ((e.metaKey || e.ctrlKey) && (e.key === "k" || e.key === "K")) {
+      e.preventDefault();
+      input.focus();
+      input.select();
+    }
+  });
+});
+</script>
+<script src="/assets/theme-toggle.js" defer></script>
+<script src="/assets/copy-code.js" defer></script>
+</body>
+</html>

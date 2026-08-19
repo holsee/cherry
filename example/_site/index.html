@@ -1,0 +1,162 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Home · CherryBomb</title>
+<link rel="canonical" href="https://cherrybomb.dev/">
+<link rel="alternate" type="application/atom+xml" title="CherryBomb" href="/feed.xml">
+<link rel="alternate" type="application/feed+json" title="CherryBomb" href="/feed.json">
+<link rel="icon" href="/favicon.ico" sizes="32x32">
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<meta name="description" content="Cherry is a static site generator for hackers. Typed content, deterministic builds, real theming, one binary.">
+<meta property="og:description" content="Cherry is a static site generator for hackers. Typed content, deterministic builds, real theming, one binary.">
+<meta property="og:title" content="Home">
+<meta property="og:url" content="https://cherrybomb.dev/">
+<meta property="og:site_name" content="CherryBomb">
+<meta property="og:image" content="https://cherrybomb.dev/og-card.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta property="og:type" content="website">
+<link rel="stylesheet" href="/pagefind/pagefind-ui.css">
+<link rel="stylesheet" href="/assets/site.css">
+<script>
+/* No-flash: apply the stored theme before first paint. */
+(function () {
+  try {
+    var t = localStorage.getItem("cherry-theme");
+    if (t === "light" || t === "dark") document.documentElement.dataset.theme = t;
+  } catch (e) {}
+})();
+</script>
+</head>
+<body class="page-home">
+<header class="site-header">
+<div class="wrap">
+<a class="site-title" href="/">CherryBomb</a>
+<nav class="site-nav"><a href="/guides/">Guides</a>
+<a href="/blog/">Blog</a>
+
+<button class="theme-toggle" type="button" aria-label="Theme">
+<svg data-theme-icon="auto" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><circle cx="8" cy="8" r="6"/><path d="M8 2 A6 6 0 0 1 8 14 Z" fill="currentColor" stroke="none"/></svg>
+<svg data-theme-icon="light" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true" style="display:none"><circle cx="8" cy="8" r="3.5"/><path d="M8 1v2M8 13v2M1 8h2M13 8h2M3 3l1.4 1.4M11.6 11.6L13 13M13 3l-1.4 1.4M4.4 11.6L3 13"/></svg>
+<svg data-theme-icon="dark" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true" style="display:none"><path d="M13.5 9.5A6 6 0 1 1 6.5 2.5a5 5 0 0 0 7 7Z"/></svg>
+<span data-theme-label>auto</span>
+</button>
+<div id="search" class="site-search"></div>
+</nav>
+</div>
+</header>
+<main>
+<div class="wrap">
+<article>
+<section class="hero">
+<img class="hero-mark" src="/brand/cherrybomb-mark.webp" alt="CherryBomb: two cherries with a lit fuse and sunglasses" width="320" height="320">
+<h1>A static site generator<br>for <em>hackers</em></h1>
+<p class="hero-tagline">A modern take on Octopress: typed content, deterministic builds, themes that survive upgrades. One binary, fuse lit.</p>
+<p class="hero-actions"><a class="button" href="/guides/quick-start/">Quick-start</a> <a class="button button-ghost" href="https://github.com/holsee/cherry">GitHub</a></p>
+<div class="cmd" data-copy><span class="cmd-os">macOS / Linux</span><code>curl -fsSL https://cherrybomb.dev/install.sh | sh</code></div>
+<div class="cmd" data-copy><span class="cmd-os">Windows</span><code>irm https://cherrybomb.dev/install.ps1 | iex</code></div>
+</section>
+<section class="loop">
+<h2 id="the-loop">The loop<a href="#the-loop" aria-label="Link to heading 'The loop'" data-heading-content="The loop" class="anchor"></a></h2>
+<p>The whole workflow is four commands, and every one of them has a <code>--json</code> twin with stable exit codes. Pleasant to run by hand, trivial to script. Real output throughout.</p>
+<h3 id="1--scaffold">1 · Scaffold<a href="#1--scaffold" aria-label="Link to heading '1 · Scaffold'" data-heading-content="1 · Scaffold" class="anchor"></a></h3>
+<pre class="lumis"><code class="language-bash" translate="no" tabindex="0"><div class="l-line" data-line="1"><span class="l-function-call">cherry</span> <span class="l-variable-parameter">gen.post</span> <span class="l-string">&quot;Growing season&quot;</span> <span class="l-variable-parameter">--json</span>
+</div></code></pre>
+<pre class="lumis"><code class="language-json" translate="no" tabindex="0"><div class="l-line" data-line="1"><span class="l-punctuation-bracket">{</span>
+</div><div class="l-line" data-line="2">  <span class="l-property">&quot;ok&quot;</span><span class="l-punctuation-delimiter">:</span> <span class="l-boolean">true</span><span class="l-punctuation-delimiter">,</span>
+</div><div class="l-line" data-line="3">  <span class="l-property">&quot;command&quot;</span><span class="l-punctuation-delimiter">:</span> <span class="l-string">&quot;gen.post&quot;</span><span class="l-punctuation-delimiter">,</span>
+</div><div class="l-line" data-line="4">  <span class="l-property">&quot;data&quot;</span><span class="l-punctuation-delimiter">:</span> <span class="l-punctuation-bracket">{</span>
+</div><div class="l-line" data-line="5">    <span class="l-property">&quot;date&quot;</span><span class="l-punctuation-delimiter">:</span> <span class="l-string">&quot;2026-08-14&quot;</span><span class="l-punctuation-delimiter">,</span>
+</div><div class="l-line" data-line="6">    <span class="l-property">&quot;path&quot;</span><span class="l-punctuation-delimiter">:</span> <span class="l-string">&quot;content/posts/2026-08-14-growing-season.md&quot;</span><span class="l-punctuation-delimiter">,</span>
+</div><div class="l-line" data-line="7">    <span class="l-property">&quot;slug&quot;</span><span class="l-punctuation-delimiter">:</span> <span class="l-string">&quot;growing-season&quot;</span>
+</div><div class="l-line" data-line="8">  <span class="l-punctuation-bracket">}</span>
+</div><div class="l-line" data-line="9"><span class="l-punctuation-bracket">}</span>
+</div></code></pre>
+<p>One file, valid frontmatter, <code>draft: true</code>. The envelope hands back the path, so pipe it straight into your editor, a script, or whatever else does your writing.</p>
+<h3 id="2--verify">2 · Verify<a href="#2--verify" aria-label="Link to heading '2 · Verify'" data-heading-content="2 · Verify" class="anchor"></a></h3>
+<p><code>cherry check</code> builds the whole site in memory, writes nothing, and returns structured diagnostics. Here it catches a link to a page that doesn't exist:</p>
+<pre class="lumis"><code class="language-bash" translate="no" tabindex="0"><div class="l-line" data-line="1"><span class="l-function-call">cherry</span> <span class="l-variable-parameter">check</span> <span class="l-variable-parameter">--strict</span> <span class="l-variable-parameter">--json</span>
+</div></code></pre>
+<pre class="lumis"><code class="language-json" translate="no" tabindex="0"><div class="l-line" data-line="1"><span class="l-punctuation-bracket">{</span>
+</div><div class="l-line" data-line="2">  <span class="l-property">&quot;ok&quot;</span><span class="l-punctuation-delimiter">:</span> <span class="l-boolean">false</span><span class="l-punctuation-delimiter">,</span>
+</div><div class="l-line" data-line="3">  <span class="l-property">&quot;command&quot;</span><span class="l-punctuation-delimiter">:</span> <span class="l-string">&quot;check&quot;</span><span class="l-punctuation-delimiter">,</span>
+</div><div class="l-line" data-line="4">  <span class="l-property">&quot;error&quot;</span><span class="l-punctuation-delimiter">:</span> <span class="l-punctuation-bracket">{</span>
+</div><div class="l-line" data-line="5">    <span class="l-property">&quot;code&quot;</span><span class="l-punctuation-delimiter">:</span> <span class="l-string">&quot;check_failed&quot;</span><span class="l-punctuation-delimiter">,</span>
+</div><div class="l-line" data-line="6">    <span class="l-property">&quot;message&quot;</span><span class="l-punctuation-delimiter">:</span> <span class="l-string">&quot;Checked 12 page(s): 1 error(s), 0 warning(s).&quot;</span><span class="l-punctuation-delimiter">,</span>
+</div><div class="l-line" data-line="7">    <span class="l-property">&quot;details&quot;</span><span class="l-punctuation-delimiter">:</span> <span class="l-punctuation-bracket">{</span>
+</div><div class="l-line" data-line="8">      <span class="l-property">&quot;errors&quot;</span><span class="l-punctuation-delimiter">:</span> <span class="l-number">1</span><span class="l-punctuation-delimiter">,</span>
+</div><div class="l-line" data-line="9">      <span class="l-property">&quot;diagnostics&quot;</span><span class="l-punctuation-delimiter">:</span> <span class="l-punctuation-bracket">[</span>
+</div><div class="l-line" data-line="10">        <span class="l-punctuation-bracket">{</span>
+</div><div class="l-line" data-line="11">          <span class="l-property">&quot;file&quot;</span><span class="l-punctuation-delimiter">:</span> <span class="l-string">&quot;content/pages/reading.md&quot;</span><span class="l-punctuation-delimiter">,</span>
+</div><div class="l-line" data-line="12">          <span class="l-property">&quot;rule&quot;</span><span class="l-punctuation-delimiter">:</span> <span class="l-string">&quot;broken-link&quot;</span><span class="l-punctuation-delimiter">,</span>
+</div><div class="l-line" data-line="13">          <span class="l-property">&quot;severity&quot;</span><span class="l-punctuation-delimiter">:</span> <span class="l-string">&quot;error&quot;</span><span class="l-punctuation-delimiter">,</span>
+</div><div class="l-line" data-line="14">          <span class="l-property">&quot;message&quot;</span><span class="l-punctuation-delimiter">:</span> <span class="l-string">&quot;links to /guides/pruning/, which this build does not emit&quot;</span>
+</div><div class="l-line" data-line="15">        <span class="l-punctuation-bracket">}</span>
+</div><div class="l-line" data-line="16">      <span class="l-punctuation-bracket">]</span>
+</div><div class="l-line" data-line="17">    <span class="l-punctuation-bracket">}</span>
+</div><div class="l-line" data-line="18">  <span class="l-punctuation-bracket">}</span>
+</div><div class="l-line" data-line="19"><span class="l-punctuation-bracket">}</span>
+</div></code></pre>
+<p>The diagnostic names the file, the rule, and the problem. Fix it, run again, exit 0. That's the verifier loop: build, check, fix, repeat.</p>
+<h3 id="3--ship">3 · Ship<a href="#3--ship" aria-label="Link to heading '3 · Ship'" data-heading-content="3 · Ship" class="anchor"></a></h3>
+<pre class="lumis"><code class="language-bash" translate="no" tabindex="0"><div class="l-line" data-line="1"><span class="l-function-call">cherry</span> <span class="l-variable-parameter">build</span>
+</div></code></pre>
+<pre class="lumis"><code class="language-plaintext" translate="no" tabindex="0"><div class="l-line" data-line="1">Built 12 page(s), 2 asset(s) → _site
+</div></code></pre>
+<p>Same tree in, same bytes out: builds are deterministic, so your CI can prove nothing drifted. Push, and the GitHub Actions workflow from <code>cherry gen.action</code> deploys Pages. That's the entire pipeline.</p>
+</section>
+<section class="beyond">
+<h2 id="not-just-a-blog">Not just a blog<a href="#not-just-a-blog" aria-label="Link to heading 'Not just a blog'" data-heading-content="Not just a blog" class="anchor"></a></h2>
+<p>The same content tree that builds your posts can carry your whole developer story. Portfolio collections (positions, projects, talks, open source, education) render a <strong>timeline</strong> at <code>/portfolio/</code>, <strong>story pages</strong> that cross-link everything sharing a tag, and a <strong><code>/cv</code></strong> shaped for employers: curated bullets, evidence-backed skills, a print stylesheet that produces a clean one-pager, and a machine-readable <code>cv.json</code> in JSON Resume format. All of it static, all of it typed, all of it checked by the same verifier as the blog.</p>
+</section>
+<section class="checklist">
+<h2 id="the-top-ten">The top ten<a href="#the-top-ten" aria-label="Link to heading 'The top ten'" data-heading-content="The top ten" class="anchor"></a></h2>
+<ul class="checks">
+<li><strong>One binary.</strong> No runtime to install; <code>cherry upgrade</code> swaps itself, checksum-verified.</li>
+<li><strong>Typed content.</strong> Collections publish schemas; unknown frontmatter is a build error, not a mystery.</li>
+<li><strong>Deterministic builds.</strong> Same tree in, same bytes out, gated in CI. Diffs mean something.</li>
+<li><strong>A real verifier.</strong> <code>cherry check --strict</code> returns structured diagnostics, not vibes.</li>
+<li><strong>Themes that survive upgrades.</strong> Tokens are the styling API; ejected templates carry provenance, so upgrades merge instead of freezing.</li>
+<li><strong>Developer timeline + CV.</strong> Portfolio collections render a timeline, story pages, and a print-ready CV with JSON Resume output.</li>
+<li><strong>SEO you can't forget.</strong> Canonical, Open Graph, JSON-LD, Atom + JSON feeds, sitemap: default-on in every theme.</li>
+<li><strong>Markdown all the way out.</strong> Every route ships its markdown twin, plus <a href="/llms.txt">/llms.txt</a>. Curl it, grep it.</li>
+<li><strong>AI-agent-friendly CLI.</strong> Every verb has a <code>--json</code> envelope, and the <a href="/guides/agents/">shipped skill</a> teaches an agent the whole loop.</li>
+<li><strong>Batteries for shipping.</strong> Live-reload serve, opt-in Pagefind search, and a generated GitHub Pages workflow.</li>
+</ul>
+</section>
+<section class="closing">
+<h2 id="start-here">Start here<a href="#start-here" aria-label="Link to heading 'Start here'" data-heading-content="Start here" class="anchor"></a></h2>
+<p>The <a href="/guides/quick-start/">quick-start</a> goes from install to a deployed site in fifteen minutes. The <a href="/guides/">guides</a> cover the authoring loop, the verifier, themes, deploys, and scripting, including how the JSON interface pairs with the <a href="/guides/agents/">shipped skill</a> if a coding agent helps run your site. This very site is Cherry's own dogfood: every page here is also <a href="/index.md">plain markdown</a>.</p>
+</section>
+</article>
+
+</div>
+</main>
+<footer class="site-footer">
+<div class="wrap">
+<span>© CherryBomb</span>
+<a href="/feed.xml">RSS</a>
+</div>
+</footer>
+<script src="/pagefind/pagefind-ui.js"></script>
+<script>
+window.addEventListener("DOMContentLoaded", function () {
+  new PagefindUI({ element: "#search", showImages: false });
+  var input = document.querySelector("#search input");
+  if (!input) return;
+  var mac = /Mac|iP/.test(navigator.platform || "");
+  input.setAttribute("placeholder", "Search (" + (mac ? "⌘" : "Ctrl+") + "K)");
+  window.addEventListener("keydown", function (e) {
+    if ((e.metaKey || e.ctrlKey) && (e.key === "k" || e.key === "K")) {
+      e.preventDefault();
+      input.focus();
+      input.select();
+    }
+  });
+});
+</script>
+<script src="/assets/theme-toggle.js" defer></script>
+<script src="/assets/copy-code.js" defer></script>
+</body>
+</html>

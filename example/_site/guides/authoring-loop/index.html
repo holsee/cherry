@@ -1,0 +1,142 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The authoring loop · CherryBomb</title>
+<link rel="canonical" href="https://cherrybomb.dev/guides/authoring-loop/">
+<link rel="alternate" type="application/atom+xml" title="CherryBomb" href="/feed.xml">
+<link rel="alternate" type="application/feed+json" title="CherryBomb" href="/feed.json">
+<link rel="icon" href="/favicon.ico" sizes="32x32">
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<meta name="description" content="gen.post to publish. Drafts, live preview, re-dating, and the markdown mirror every route ships.">
+<meta property="og:description" content="gen.post to publish. Drafts, live preview, re-dating, and the markdown mirror every route ships.">
+<meta property="og:title" content="The authoring loop">
+<meta property="og:url" content="https://cherrybomb.dev/guides/authoring-loop/">
+<meta property="og:site_name" content="CherryBomb">
+<meta property="og:image" content="https://cherrybomb.dev/og-card.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta property="og:type" content="website">
+<link rel="stylesheet" href="/pagefind/pagefind-ui.css">
+<link rel="stylesheet" href="/assets/site.css">
+<script>
+/* No-flash: apply the stored theme before first paint. */
+(function () {
+  try {
+    var t = localStorage.getItem("cherry-theme");
+    if (t === "light" || t === "dark") document.documentElement.dataset.theme = t;
+  } catch (e) {}
+})();
+</script>
+</head>
+<body class="page-guides">
+<header class="site-header">
+<div class="wrap">
+<a class="site-title" href="/">CherryBomb</a>
+<nav class="site-nav"><a href="/guides/">Guides</a>
+<a href="/blog/">Blog</a>
+
+<button class="theme-toggle" type="button" aria-label="Theme">
+<svg data-theme-icon="auto" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><circle cx="8" cy="8" r="6"/><path d="M8 2 A6 6 0 0 1 8 14 Z" fill="currentColor" stroke="none"/></svg>
+<svg data-theme-icon="light" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true" style="display:none"><circle cx="8" cy="8" r="3.5"/><path d="M8 1v2M8 13v2M1 8h2M13 8h2M3 3l1.4 1.4M11.6 11.6L13 13M13 3l-1.4 1.4M4.4 11.6L3 13"/></svg>
+<svg data-theme-icon="dark" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true" style="display:none"><path d="M13.5 9.5A6 6 0 1 1 6.5 2.5a5 5 0 0 0 7 7Z"/></svg>
+<span data-theme-label>auto</span>
+</button>
+<div id="search" class="site-search"></div>
+</nav>
+</div>
+</header>
+<main>
+<div class="wrap">
+<article>
+<h1 id="the-authoring-loop">The authoring loop<a href="#the-authoring-loop" aria-label="Link to heading 'The authoring loop'" data-heading-content="The authoring loop" class="anchor"></a></h1>
+<p>Writing on a Cherry site is four verbs. Here's the whole loop with real output.</p>
+<h2 id="scaffold-a-draft">Scaffold a draft<a href="#scaffold-a-draft" aria-label="Link to heading 'Scaffold a draft'" data-heading-content="Scaffold a draft" class="anchor"></a></h2>
+<pre class="lumis"><code class="language-bash" translate="no" tabindex="0"><div class="l-line" data-line="1"><span class="l-function-call">cherry</span> <span class="l-variable-parameter">gen.post</span> <span class="l-string">&quot;Growing season&quot;</span> <span class="l-variable-parameter">--json</span>
+</div></code></pre>
+<pre class="lumis"><code class="language-json" translate="no" tabindex="0"><div class="l-line" data-line="1"><span class="l-punctuation-bracket">{</span>
+</div><div class="l-line" data-line="2">  <span class="l-property">&quot;ok&quot;</span><span class="l-punctuation-delimiter">:</span> <span class="l-boolean">true</span><span class="l-punctuation-delimiter">,</span>
+</div><div class="l-line" data-line="3">  <span class="l-property">&quot;command&quot;</span><span class="l-punctuation-delimiter">:</span> <span class="l-string">&quot;gen.post&quot;</span><span class="l-punctuation-delimiter">,</span>
+</div><div class="l-line" data-line="4">  <span class="l-property">&quot;data&quot;</span><span class="l-punctuation-delimiter">:</span> <span class="l-punctuation-bracket">{</span>
+</div><div class="l-line" data-line="5">    <span class="l-property">&quot;date&quot;</span><span class="l-punctuation-delimiter">:</span> <span class="l-string">&quot;2026-08-10&quot;</span><span class="l-punctuation-delimiter">,</span>
+</div><div class="l-line" data-line="6">    <span class="l-property">&quot;path&quot;</span><span class="l-punctuation-delimiter">:</span> <span class="l-string">&quot;content/posts/2026-08-10-growing-season.md&quot;</span><span class="l-punctuation-delimiter">,</span>
+</div><div class="l-line" data-line="7">    <span class="l-property">&quot;slug&quot;</span><span class="l-punctuation-delimiter">:</span> <span class="l-string">&quot;growing-season&quot;</span>
+</div><div class="l-line" data-line="8">  <span class="l-punctuation-bracket">}</span>
+</div><div class="l-line" data-line="9"><span class="l-punctuation-bracket">}</span>
+</div></code></pre>
+<p>The file lands with valid frontmatter and <code>draft: true</code>:</p>
+<pre class="lumis"><code class="language-markdown" translate="no" tabindex="0"><div class="l-line" data-line="1"><span class="l-keyword-directive">---
+</div><div class="l-line" data-line="2"></span><span class="l-property">title</span><span class="l-punctuation-delimiter">:</span> <span class="l-string">Growing season</span>
+</div><div class="l-line" data-line="3"><span class="l-property">date</span><span class="l-punctuation-delimiter">:</span> <span class="l-string">2026-08-10</span>
+</div><div class="l-line" data-line="4"><span class="l-property">tags</span><span class="l-punctuation-delimiter">:</span> <span class="l-punctuation-bracket">[</span><span class="l-punctuation-bracket">]</span>
+</div><div class="l-line" data-line="5"><span class="l-property">draft</span><span class="l-punctuation-delimiter">:</span> <span class="l-boolean">true</span>
+</div><div class="l-line" data-line="6"><span class="l-property">description</span><span class="l-punctuation-delimiter">:</span><span class="l-keyword-directive">
+</div><div class="l-line" data-line="7">---
+</div><div class="l-line" data-line="8"></span>
+</div></code></pre>
+<div class="markdown-alert markdown-alert-note">
+<p class="markdown-alert-title">Note</p>
+<p><code>data.path</code> is source-relative. Every later command that takes a path, <code>publish</code> included, wants it exactly in that form, so you can pipe one envelope straight into the next command untouched.</p>
+</div>
+<h2 id="write-with-the-server-running">Write with the server running<a href="#write-with-the-server-running" aria-label="Link to heading 'Write with the server running'" data-heading-content="Write with the server running" class="anchor"></a></h2>
+<pre class="lumis"><code class="language-bash" translate="no" tabindex="0"><div class="l-line" data-line="1"><span class="l-function-call">cherry</span> <span class="l-variable-parameter">serve</span>
+</div></code></pre>
+<p>Drafts are included in serve mode and every save reloads the browser. Real builds (<code>cherry build</code>) exclude drafts unless you pass <code>--drafts</code>; future-dated posts stay hidden unless you pass <code>--future</code>.</p>
+<h2 id="publish">Publish<a href="#publish" aria-label="Link to heading 'Publish'" data-heading-content="Publish" class="anchor"></a></h2>
+<p>Publishing flips the draft flag off and re-dates the post to today. Filename, frontmatter, and URL all move together:</p>
+<pre class="lumis"><code class="language-bash" translate="no" tabindex="0"><div class="l-line" data-line="1"><span class="l-function-call">cherry</span> <span class="l-variable-parameter">publish</span> <span class="l-variable-parameter">content/posts/2026-08-10-growing-season.md</span> <span class="l-variable-parameter">--json</span>
+</div></code></pre>
+<pre class="lumis"><code class="language-json" translate="no" tabindex="0"><div class="l-line" data-line="1"><span class="l-punctuation-bracket">{</span>
+</div><div class="l-line" data-line="2">  <span class="l-property">&quot;ok&quot;</span><span class="l-punctuation-delimiter">:</span> <span class="l-boolean">true</span><span class="l-punctuation-delimiter">,</span>
+</div><div class="l-line" data-line="3">  <span class="l-property">&quot;command&quot;</span><span class="l-punctuation-delimiter">:</span> <span class="l-string">&quot;publish&quot;</span><span class="l-punctuation-delimiter">,</span>
+</div><div class="l-line" data-line="4">  <span class="l-property">&quot;data&quot;</span><span class="l-punctuation-delimiter">:</span> <span class="l-punctuation-bracket">{</span>
+</div><div class="l-line" data-line="5">    <span class="l-property">&quot;date&quot;</span><span class="l-punctuation-delimiter">:</span> <span class="l-string">&quot;2026-08-14&quot;</span><span class="l-punctuation-delimiter">,</span>
+</div><div class="l-line" data-line="6">    <span class="l-property">&quot;from&quot;</span><span class="l-punctuation-delimiter">:</span> <span class="l-string">&quot;content/posts/2026-08-10-growing-season.md&quot;</span><span class="l-punctuation-delimiter">,</span>
+</div><div class="l-line" data-line="7">    <span class="l-property">&quot;to&quot;</span><span class="l-punctuation-delimiter">:</span> <span class="l-string">&quot;content/posts/2026-08-14-growing-season.md&quot;</span>
+</div><div class="l-line" data-line="8">  <span class="l-punctuation-bracket">}</span>
+</div><div class="l-line" data-line="9"><span class="l-punctuation-bracket">}</span>
+</div></code></pre>
+<div class="markdown-alert markdown-alert-warning">
+<p class="markdown-alert-title">Warning</p>
+<p>The file moved: anything referencing <code>from</code> needs updating to <code>to</code>. If a script drives this step, capture both.</p>
+</div>
+<h2 id="what-a-post-becomes">What a post becomes<a href="#what-a-post-becomes" aria-label="Link to heading 'What a post becomes'" data-heading-content="What a post becomes" class="anchor"></a></h2>
+<p>One markdown file fans out into the built site as:</p>
+<ul>
+<li><code>growing-season/index.html</code>: the themed page</li>
+<li><code>growing-season/index.md</code>: a markdown mirror of the same content, curl-able with no theme wrapping</li>
+<li>an entry in <code>feed.xml</code>, <code>feed.json</code>, <code>sitemap.xml</code>, and the blog index</li>
+<li>a tag page per tag, with JSON-LD structured data in the post's head</li>
+</ul>
+<p>Nothing on that list is opt-in. Check the <a href="/guides/check/">verifier guide</a> for keeping it all honest.</p>
+</article>
+
+</div>
+</main>
+<footer class="site-footer">
+<div class="wrap">
+<span>© CherryBomb</span>
+<a href="/feed.xml">RSS</a>
+</div>
+</footer>
+<script src="/pagefind/pagefind-ui.js"></script>
+<script>
+window.addEventListener("DOMContentLoaded", function () {
+  new PagefindUI({ element: "#search", showImages: false });
+  var input = document.querySelector("#search input");
+  if (!input) return;
+  var mac = /Mac|iP/.test(navigator.platform || "");
+  input.setAttribute("placeholder", "Search (" + (mac ? "⌘" : "Ctrl+") + "K)");
+  window.addEventListener("keydown", function (e) {
+    if ((e.metaKey || e.ctrlKey) && (e.key === "k" || e.key === "K")) {
+      e.preventDefault();
+      input.focus();
+      input.select();
+    }
+  });
+});
+</script>
+<script src="/assets/theme-toggle.js" defer></script>
+<script src="/assets/copy-code.js" defer></script>
+</body>
+</html>

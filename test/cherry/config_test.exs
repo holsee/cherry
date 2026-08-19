@@ -82,6 +82,83 @@ defmodule Cherry.ConfigTest do
     end
   end
 
+  describe "token overrides (the dotted exception)" do
+    test "writes a first override, creating the tokens list", %{tmp_dir: tmp} do
+      source = site(tmp)
+
+      assert {:ok, %{key: "tokens.--color-accent", value: "#7c3aed", previous: nil}} =
+               run(["tokens.--color-accent", "#7c3aed"], source)
+
+      assert {:ok, site} = Cherry.Site.load(source)
+      assert site.tokens == [{"--color-accent", "#7c3aed"}]
+    end
+
+    test "replaces one override in place, leaving its neighbours alone", %{tmp_dir: tmp} do
+      source = site(tmp)
+      path = Path.join(source, "cherry.exs")
+
+      File.write!(
+        path,
+        ~s([\n  title: "Orchard",\n  url: "https://orchard.example",\n) <>
+          ~s(  # the brand pass\n  tokens: ["--color-accent": "#b3173e", "--measure": "46rem"]\n]\n)
+      )
+
+      assert {:ok, %{previous: "#b3173e"}} = run(["tokens.--color-accent", "#7c3aed"], source)
+
+      content = File.read!(path)
+      assert content =~ "# the brand pass"
+      assert content =~ ~s("--color-accent": "#7c3aed")
+      assert content =~ ~s("--measure": "46rem")
+    end
+
+    test "prepends into an existing tokens list", %{tmp_dir: tmp} do
+      source = site(tmp)
+      path = Path.join(source, "cherry.exs")
+
+      File.write!(
+        path,
+        ~s{[title: "Orchard", url: "https://orchard.example", tokens: ["--measure": "46rem"]]}
+      )
+
+      assert {:ok, _data} = run(["tokens.--color-accent", "#7c3aed"], source)
+
+      assert {:ok, site} = Cherry.Site.load(source)
+      assert Map.new(site.tokens) == %{"--color-accent" => "#7c3aed", "--measure" => "46rem"}
+    end
+
+    test "refuses a token the theme does not declare, naming the nearest", %{tmp_dir: tmp} do
+      source = site(tmp)
+      before = File.read!(Path.join(source, "cherry.exs"))
+
+      assert {:error, %Error{code: :unknown_key, message: message}} =
+               run(["tokens.--color-acent", "#7c3aed"], source)
+
+      assert message =~ "--color-accent"
+      assert File.read!(Path.join(source, "cherry.exs")) == before
+    end
+
+    test "reads one override and the whole tokens map", %{tmp_dir: tmp} do
+      source = site(tmp)
+      {:ok, _} = run(["tokens.--color-accent", "#7c3aed"], source)
+
+      assert {:ok, %{key: "tokens.--color-accent", value: "#7c3aed"}} =
+               run(["tokens.--color-accent"], source)
+
+      assert {:ok, %{key: "tokens", value: %{"--color-accent" => "#7c3aed"}}} =
+               run(["tokens"], source)
+    end
+
+    test "rolls back a value the schema rejects", %{tmp_dir: tmp} do
+      source = site(tmp)
+      before = File.read!(Path.join(source, "cherry.exs"))
+
+      assert {:error, %Error{code: :invalid_value}} =
+               run(["tokens.--color-accent", "red; } body { display: none"], source)
+
+      assert File.read!(Path.join(source, "cherry.exs")) == before
+    end
+  end
+
   defp run(args, source) do
     Config.run(%Context{verb: "config", args: args, opts: [source: source]})
   end

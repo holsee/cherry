@@ -7,6 +7,11 @@ Entries are terse one-liners linked to their PR: `- Thing that changed. (#12)`
 
 ## [Unreleased]
 
+### Added
+- The customization ladder's middle rungs are real: `tokens: ["--color-accent": "#7c3aed"]` in `cherry.exs` overrides any token the theme's manifest declares (a typo errors with the nearest real name), and `assets/custom.css` loads last, always. Both ride the framework-owned head, so every theme honors them without cooperating; official theme CSS now lives in `@layer theme`, so site overrides win by cascade-layer rules rather than specificity fights. (#51)
+- `cherry theme.tokens`: the theme's styling API as a command — every token with its default, doc, and any site override, merged. (#51)
+- `cherry config tokens.NAME VALUE`: token overrides written from the CLI, the one structured setting `config` edits — entries are distinctive enough to rewrite surgically, and the name is validated against the theme manifest before the file is touched. (#51)
+
 ## [0.1.0] — 2026-08-17
 
 The first stable release. The entries here are what landed since rc.3; the

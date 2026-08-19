@@ -1,0 +1,21 @@
+# CherryBomb
+
+> Cherry is a static site generator for hackers, a modern take on Octopress.
+
+## Blog
+
+- [Blog](https://cherrybomb.dev/blog/index.md)
+- [Cherry is growing](https://cherrybomb.dev/cherry-is-growing/index.md) — 2026-08-14
+
+## Pages
+
+- [About](https://cherrybomb.dev/about/index.md)
+- [Scripting and agents](https://cherrybomb.dev/guides/agents/index.md)
+- [The authoring loop](https://cherrybomb.dev/guides/authoring-loop/index.md)
+- [The verifier](https://cherrybomb.dev/guides/check/index.md)
+- [Deploying to GitHub Pages](https://cherrybomb.dev/guides/deploy/index.md)
+- [Guides](https://cherrybomb.dev/guides/index.md)
+- [Quick-start](https://cherrybomb.dev/guides/quick-start/index.md)
+- [Themes, tokens, and drift](https://cherrybomb.dev/guides/themes/index.md)
+- [Staying current](https://cherrybomb.dev/guides/upgrade/index.md)
+- [Home](https://cherrybomb.dev/index.md)

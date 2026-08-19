@@ -23,7 +23,21 @@ The output names every template, its assigns, and the important part: the **toke
 
 ## Restyle without forking
 
-Most customization is a token override, not a template edit. Drop a file in `static/` that redefines tokens after the theme's stylesheet, and the whole world (code blocks included) follows your palette in both light and dark renditions.
+Most customization is a token override, not a template edit. Start by asking what the theme exposes:
+
+```sh
+cherry theme.tokens
+```
+
+Every token, its default, what it does, and any override you already have. Overriding one is a config write:
+
+```sh
+cherry config tokens.--color-accent "#7c3aed"
+```
+
+That lands as `tokens: ["--color-accent": "#7c3aed"]` in `cherry.exs`, and the whole world (code blocks included) follows your palette. The name is validated against the theme's manifest, so a typo is refused with the nearest real token named instead of becoming a dead line in your config. A value applies to both renditions unless you write it as `light-dark(a, b)`.
+
+When a token is not enough, `assets/custom.css` is the pressure valve: it loads after everything else, always. Theme CSS lives inside `@layer theme` and your overrides are unlayered, so yours win by declaration — no `!important`, no specificity fights.
 
 ## Take ownership of a template
 
