@@ -10,6 +10,10 @@ defmodule Cherry.SearchTest do
 
   @moduletag :tmp_dir
 
+  # Small fixture, but the double-build test competes with the demo and
+  # example full-site builds for disk when the suite runs wide.
+  @moduletag timeout: 300_000
+
   @fixture Path.expand("../fixtures/sites/blog", __DIR__)
   @today ~D[2026-08-14]
 

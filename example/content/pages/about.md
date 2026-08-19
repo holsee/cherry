@@ -6,6 +6,8 @@ description: Why Cherry exists, what it took from Octopress, and how this site i
 
 Cherry is a static site generator for hackers: a modern take on Octopress, built in Elixir.
 
+The longer story, philosophy and all, is on the blog: [Why Cherry exists](/why-cherry-exists/).
+
 Octopress got two things right that the years buried: a blog you could reason about as plain files, and a hacker's toolchain you could bend. It got one thing fatally wrong: your site lived *inside* the framework checkout, so every customization froze you in time. Cherry inverts that: your site is a plain directory, the framework is a dependency (or a single binary), themes expose tokens as their styling API, and every template you take ownership of carries provenance so upgrades merge instead of fossilizing.
 
 The second thesis: **everything answers in plain text**. Every command has a `--json` twin with stable exit codes, content collections publish their schemas, builds are byte-deterministic so diffs mean something, and every built page ships a markdown mirror plus [/llms.txt](/llms.txt). That makes the whole thing scriptable end to end. Paired with the shipped skill, it's also easy to hand to a coding agent when one helps run your site. The [scripting guide](/guides/agents/) shows the whole surface.

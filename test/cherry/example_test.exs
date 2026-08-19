@@ -9,6 +9,10 @@ defmodule Cherry.ExampleTest do
 
   @example Path.expand("../../example", __DIR__)
 
+  # A full pipeline run over the whole cherrybomb.dev site (70+ pages),
+  # competing with the rest of the suite for schedulers and disk.
+  @moduletag timeout: 300_000
+
   @tag :tmp_dir
   test "the example site builds with feed, sitemap, and styled pages", %{tmp_dir: tmp} do
     out = Path.join(tmp, "site")
