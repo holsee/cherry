@@ -18,7 +18,7 @@ Use the `cherry` CLI for deterministic, structured control of a Cherry site. Eve
 
 This is the loop the scaffolded site `AGENTS.md` teaches; keep to it:
 
-1. **Author** — `cherry gen.post "Title"` creates a draft; `cherry gen.project` and `cherry gen.talk` scaffold portfolio entries with valid frontmatter. Capture `data.path` from the envelope and edit that file.
+1. **Author** — `cherry gen.post "Title"` creates a draft; `cherry gen.project` and `cherry gen.talk` scaffold portfolio entries with valid frontmatter. Capture `data.path` from the envelope and edit that file. Markdown is GFM plus three framework-level content components in remark-directive syntax: `::figure{src="…" alt="…" caption="…"}` (alt is required), `::video{youtube="ID" title="…"}` (renders a zero-request facade; `src=` plays a local file), and `:::note{title="…"} … :::` containers for the five alert types. They are theme-independent by design; misuse is a `component` diagnostic in `cherry check`, never a broken build.
 2. **Build** — `cherry build` emits the site to `_site/`. Treat a failing build as the first diagnostic, not an obstacle.
 3. **Verify** — `cherry check --strict --json` builds in memory (writes nothing) and reports structured diagnostics. Fix and re-run until clean; do not ship with warnings suppressed.
 4. **Preview** — `cherry serve` runs until interrupted (live reload, drafts included). In automation, background it or skip it; never let it block the loop. Prefer `--port 0` there: it binds a free ephemeral port and reports it in the envelope, so a taken port 4000 cannot fail the run. Trust `live_reload` in the envelope over the assumption that edits reload: on a Docker bind mount or a network share it is `false`, and you must rebuild explicitly.

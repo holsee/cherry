@@ -67,5 +67,6 @@ window.addEventListener("DOMContentLoaded", function () {
 <% end %><%= if @search == "cherry" do %><script src="<%= href(@site, "search/search.js") %>" defer></script>
 <% end %><script src="<%= href(@site, "assets/theme-toggle.js") %>" defer></script>
 <script src="<%= href(@site, "assets/copy-code.js") %>" defer></script>
+<script src="<%= href(@site, "assets/video-embed.js") %>" defer></script>
 </body>
 </html>

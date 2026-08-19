@@ -285,6 +285,46 @@ Capture `from` and `to`. Here they match, because `--today` gave the post the
 date its filename already had. Publish without it and they differ — the file is
 renamed to today — and anything linking to the old path needs updating.
 
+### Rich content without theme lock-in
+
+Markdown is GFM throughout — tables, footnotes, task lists, `> [!NOTE]`
+alerts. On top of that, three content components cover what plain markdown
+cannot, in the directive syntax you may know from Docusaurus or VitePress:
+
+```markdown
+::figure{src="/images/nif-boundary.svg" alt="The NIF boundary" caption="The whole architecture, honestly."}
+
+::video{youtube="q6Yr9DkTn2k" title="Backpressure in Practice — ElixirConf EU 2025"}
+
+:::tip{title="Where the fear lives"}
+Container callouts take **markdown** and a custom title.
+:::
+```
+
+`figure` is an image that owns its caption. `video` embeds nothing at rest —
+it renders a styled link that makes zero third-party requests until the reader
+clicks, at which point a small island swaps in a youtube-nocookie embed
+(without JS it is just a link to YouTube); `src=` plays a local file natively.
+The callout containers are the five alert types (`note`, `tip`, `important`,
+`warning`, `caution`) with an optional title of your own.
+
+Write component asset paths root-absolute (`/images/…`). Unlike raw markdown,
+components apply the site's `base_path`, so the same source works at a domain
+root and under GitHub project pages.
+
+These are framework-level, not theme-level, which is the point: swap themes
+and every component re-renders in the new theme's tokens, because content
+never references theme internals. The rust-nif post and the ElixirConf talk
+in this demo carry all three.
+
+Misuse never breaks a build — `::figure` without alt text, `::video` without
+a title, an unknown name — the line stays visible in the output and
+`cherry check` names the file, the line, and what is wrong:
+
+```text
+[error] content/posts/2026-01-01-clip.md: component — ::figure needs alt — alt text is not optional
+```
+
 ## 6. Read the verifier properly
 
 `cherry check` builds the whole site in memory and writes nothing. It is the

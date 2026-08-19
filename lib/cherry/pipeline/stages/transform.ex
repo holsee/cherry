@@ -14,7 +14,7 @@ defmodule Cherry.Pipeline.Stages.Transform do
   @behaviour Cherry.Pipeline.Stage
 
   alias Cherry.Build
-  alias Cherry.Content.Document
+  alias Cherry.Content.{Components, Document}
 
   @mdex_options [
     extension: [
@@ -37,14 +37,22 @@ defmodule Cherry.Pipeline.Stages.Transform do
   @impl Cherry.Pipeline.Stage
   @spec run(Build.t()) :: {:ok, Build.t()}
   def run(%Build{} = build) do
-    {:ok, %Build{build | documents: Enum.map(build.documents, &transform/1)}}
+    base_path = build.site.base_path
+    {:ok, %Build{build | documents: Enum.map(build.documents, &transform(&1, base_path))}}
   end
 
-  defp transform(%Document{raw?: true} = doc), do: doc
+  defp transform(%Document{raw?: true} = doc, _base_path), do: doc
 
-  defp transform(%Document{} = doc) do
+  defp transform(%Document{} = doc, base_path) do
     if Path.extname(doc.source) == ".md" do
-      html = doc.body |> MDEx.to_html!(@mdex_options) |> wrap_tables()
+      # Content components (::figure, ::video, :::note …) expand to HTML
+      # before markdown; MDEx then renders the markdown between them.
+      html =
+        doc.body
+        |> Components.render(base_path)
+        |> MDEx.to_html!(@mdex_options)
+        |> wrap_tables()
+
       %Document{doc | html: html}
     else
       %Document{doc | html: doc.body}

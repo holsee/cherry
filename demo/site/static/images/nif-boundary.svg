@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 360 140" role="img" aria-label="The NIF boundary: BEAM on one side, Rust on the other">
+  <rect width="360" height="140" rx="8" fill="#1c2333"/>
+  <rect x="16" y="16" width="150" height="108" rx="6" fill="none" stroke="#7ee0c0" stroke-width="2"/>
+  <text x="91" y="42" fill="#7ee0c0" font-family="monospace" font-size="13" text-anchor="middle">BEAM</text>
+  <text x="91" y="66" fill="#e3e1dd" font-family="monospace" font-size="10" text-anchor="middle">supervision</text>
+  <text x="91" y="82" fill="#e3e1dd" font-family="monospace" font-size="10" text-anchor="middle">retries · state</text>
+  <rect x="194" y="16" width="150" height="108" rx="6" fill="none" stroke="#f4718c" stroke-width="2"/>
+  <text x="269" y="42" fill="#f4718c" font-family="monospace" font-size="13" text-anchor="middle">Rust NIF</text>
+  <text x="269" y="66" fill="#e3e1dd" font-family="monospace" font-size="10" text-anchor="middle">one computation</text>
+  <text x="269" y="82" fill="#e3e1dd" font-family="monospace" font-size="10" text-anchor="middle">no state · no threads</text>
+  <line x1="166" y1="70" x2="194" y2="70" stroke="#e3e1dd" stroke-width="2" stroke-dasharray="4 3"/>
+</svg>

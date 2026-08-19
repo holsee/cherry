@@ -7,6 +7,9 @@ Entries are terse one-liners linked to their PR: `- Thing that changed. (#12)`
 
 ## [Unreleased]
 
+### Added
+- Content components, framework-level so theme swaps survive them: `::figure{src alt caption}` (alt required), `::video{youtube title}` — a facade link that makes zero third-party requests until clicked, upgraded in place to a youtube-nocookie embed by a new ~500-byte island, or `src=` for a native local player — and `:::note{title} … :::` containers for the five alert types, in the remark-directive syntax Docusaurus and VitePress authors already know. Directives inside code fences are shown, not expanded; misuse never breaks a build — the line stays visible and `cherry check` gains a `component` rule naming the file, line, and problem. (#53)
+
 ### Changed
 - Both official themes moved to `light-dark()` tokens: every color token is one pair instead of three synchronized blocks (light, dark-via-media, dark-via-toggle), the toggle forces a rendition by flipping `color-scheme` alone, and printing from a forced-dark page now gets the full light rendition — syntax palette included, which the old print block could not reach. Engines without `light-dark()` get the complete light rendition (the pairs live behind `@supports`) and the toggle stays hidden there. Token manifests now declare the pair (`default:` light, `dark:`), gate-enforced against the CSS, and `theme.tokens`/`theme.list` report it. (#52)
 
