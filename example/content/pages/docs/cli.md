@@ -30,7 +30,7 @@ Verbs are identical under the standalone binary (`cherry build`) and the Elixir 
 cherry new PATH [--json]
 ```
 
-Scaffolds a complete site: `cherry.exs`, a first post, index and about pages, `AGENTS.md`, and a `.claude` publish skill. Refuses a directory that already has anything in it, and the title humanizes from the directory name (`juno-vale` becomes `Juno Vale`). A fresh scaffold builds and checks clean.
+Scaffolds a complete site: `cherry.exs`, a first post, index and about pages, `AGENTS.md`, and a `.claude` publish skill. Refuses a directory that already has anything in it, and the title humanises from the directory name (`juno-vale` becomes `Juno Vale`). A fresh scaffold builds and checks clean.
 
 This is the one verb without a `mix cherry.new` twin in core: the mix lane scaffolds with the `cherry_new` archive (`mix archive.install hex cherry_new`), which writes the same site plus the mix project files, and owns that task name.
 

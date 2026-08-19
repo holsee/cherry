@@ -71,7 +71,7 @@ The [portfolio guide](/guides/portfolio-and-cv/) builds all of this from scratch
 
 ### Markdown
 
-GitHub-flavored throughout: tables, strikethrough, task lists, footnotes, autolinks. Heading anchors are automatic. Syntax highlighting is class-based and colored by [theme tokens](/docs/theming/), so code blocks follow your palette in both renditions. GitHub-style alerts work as blockquotes (`> [!NOTE]`), and the richer [content components](/docs/components/) cover figures, video, and callouts. Raw HTML passes through, which is how this site's landing page is built.
+GitHub-flavoured throughout: tables, strikethrough, task lists, footnotes, autolinks. Heading anchors are automatic. Syntax highlighting is class-based and coloured by [theme tokens](/docs/theming/), so code blocks follow your palette in both renditions. GitHub-style alerts work as blockquotes (`> [!NOTE]`), and the richer [content components](/docs/components/) cover figures, video, and callouts. Raw HTML passes through, which is how this site's landing page is built.
 
 :::tip{title="Let the generators write the boilerplate"}
 `cherry gen.post`, `gen.project`, and `gen.talk` all emit files that satisfy their schemas, with a `--json` envelope carrying the path. The verifier's `unfilled-field` rule then reminds you about any scaffold string you forgot to replace.

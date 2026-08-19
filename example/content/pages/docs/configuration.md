@@ -76,4 +76,4 @@ $ cherry config title "Juno Vale"     # write one value
 $ cherry config tokens.--color-accent "#7c3aed"
 ```
 
-Writes are surgical: only the value changes, comments survive, and an invalid value is rolled back with the file left untouched. Structured keys (`nav:`) are refused rather than reformatted; edit those in the file. The full behavior is documented in [the CLI reference](/docs/cli/).
+Writes are surgical: only the value changes, comments survive, and an invalid value is rolled back with the file left untouched. Structured keys (`nav:`) are refused rather than reformatted; edit those in the file. The full behaviour is documented in [the CLI reference](/docs/cli/).

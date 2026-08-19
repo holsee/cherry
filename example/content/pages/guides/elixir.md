@@ -78,7 +78,7 @@ end
 #=>   "links to /guides/pruning/, which this build does not emit"}]
 ```
 
-Anything the [verifier](/guides/check/) reports on the command line is right there as `%Cherry.Check.Diagnostic{}` values. The full API is on [hexdocs.pm/cherry](https://hexdocs.pm/cherry), organized by area: core, content, themes, portfolio, pipeline.
+Anything the [verifier](/guides/check/) reports on the command line is right there as `%Cherry.Check.Diagnostic{}` values. The full API is on [hexdocs.pm/cherry](https://hexdocs.pm/cherry), organised by area: core, content, themes, portfolio, pipeline.
 
 ## When to pick which mode
 

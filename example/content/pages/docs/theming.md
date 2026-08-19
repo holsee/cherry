@@ -4,7 +4,7 @@ description: The styling ladder, design tokens, light-dark pairs, overlays, prov
 ---
 ## Theming
 
-Two convictions shape everything on this page. First, restyling a site should cost exactly as much ownership as you choose to take, never a fork. Second, whatever you do take ownership of should stay upgradeable, with the tool telling you the truth about what you own. Cherry ships two official themes (`default`, typography-first and quiet; `cherrybomb`, the one you are reading) built from the same parts: a `theme.exs` manifest, nine templates, one stylesheet whose every color flows through tokens.
+Two convictions shape everything on this page. First, restyling a site should cost exactly as much ownership as you choose to take, never a fork. Second, whatever you do take ownership of should stay upgradeable, with the tool telling you the truth about what you own. Cherry ships two official themes (`default`, typography-first and quiet; `cherrybomb`, the one you are reading) built from the same parts: a `theme.exs` manifest, nine templates, one stylesheet whose every colour flows through tokens.
 
 ### The ladder
 
@@ -70,7 +70,7 @@ Every color token in an official theme is a `light-dark()` pair: the light value
 - The theme toggle flips a single `color-scheme` property. No duplicate stylesheets, no class soup, no flash.
 - Your overrides carry both renditions in one line, or one value for both.
 - Print always gets the complete light rendition, even from a page forced dark, syntax highlighting included.
-- Engines without `light-dark()` support get the full light rendition as a fallback, never broken colors.
+- Engines without `light-dark()` support get the full light rendition as a fallback, never broken colours.
 
 ### The lookup chain
 

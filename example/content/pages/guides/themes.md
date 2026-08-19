@@ -4,7 +4,7 @@ description: Token overrides from one command, custom.css that always wins, ejec
 ---
 # Restyle without forking
 
-Octopress froze every customized blog in time: hand-copied theme files that could never take an upstream fix again. Cherry's theme system exists to kill that failure mode.
+Octopress froze every customised blog in time: hand-copied theme files that could never take an upstream fix again. Cherry's theme system exists to kill that failure mode.
 
 ## Pick a theme
 
@@ -23,7 +23,7 @@ The output names every template, its assigns, and the important part: the **toke
 
 ## Restyle without forking
 
-Most customization is a token override, not a template edit. Start by asking what the theme exposes:
+Most customisation is a token override, not a template edit. Start by asking what the theme exposes:
 
 ```sh
 cherry theme.tokens
