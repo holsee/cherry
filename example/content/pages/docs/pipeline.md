@@ -53,7 +53,7 @@ A build is a token passed through nine ordered stages. Each stage either enriche
 |---|---|
 | `Load` | Reads `cherry.exs`, content collections, portfolio, CV, and static files into one in-memory site. |
 | `Validate` | Frontmatter against [the schemas](/docs/content/), date sanity, duplicate slugs, token overrides against the theme manifest. Fails loud, names the file. |
-| `Transform` | [Content components](/docs/components/) expand first, then markdown becomes HTML: tables, footnotes, autolinks, and class-based syntax highlighting colored by theme tokens. |
+| `Transform` | [Content components](/docs/components/) expand first, then markdown becomes HTML: tables, footnotes, autolinks, and class-based syntax highlighting coloured by theme tokens. |
 | `Layout` | Resolves [the theme chain](/docs/theming/), renders every page through its template (EEx or HEEx), injects the SEO head, token overrides, and `custom.css`. |
 | `Feeds` | `feed.xml` (Atom), `feed.json`, `sitemap.xml`, canonical URLs, all derived from your configured `url`. |
 | `Machine` | `llms.txt` plus a markdown mirror beside every page: [the machine surface](/docs/machine-surface/). |

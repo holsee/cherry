@@ -22,7 +22,7 @@ Two commands, no file editing. Your site now renders through `themes/neon/`, a c
 themes/neon/
 ├── theme.exs            # the manifest: identity, templates, tokens
 ├── assets/
-│   ├── site.css         # every color flows through the tokens
+│   ├── site.css         # every colour flows through the tokens
 │   └── *.js             # the islands: theme toggle, copy buttons, video facade
 └── templates/           # nine templates, EEx
 ```
@@ -53,7 +53,7 @@ tokens: [
 ]
 ```
 
-`default:` is the light value, `dark:` the dark half of the pair; a token without `dark:` is rendition-independent. Retune these first: for a lot of themes, new colors and new faces are already the whole redesign. Anyone using your theme gets the same override ladder you get from the official ones, documentation included, because the manifest is the documentation.
+`default:` is the light value, `dark:` the dark half of the pair; a token without `dark:` is rendition-independent. Retune these first: for a lot of themes, new colours and new faces are already the whole redesign. Anyone using your theme gets the same override ladder you get from the official ones, documentation included, because the manifest is the documentation.
 
 ## 3 · The stylesheet
 

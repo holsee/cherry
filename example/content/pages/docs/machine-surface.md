@@ -30,7 +30,7 @@ Exit codes are part of the contract: 0 success, 1 the command ran and failed, 2 
 
 Every build emits, beside the HTML:
 
-| artifact | what it is |
+| artefact | what it is |
 |---|---|
 | `/llms.txt` | the site's table of contents for language models: [this site's own](/llms.txt) |
 | `PAGE/index.md` | a markdown mirror beside every page; [this page's](/docs/machine-surface/index.md) |

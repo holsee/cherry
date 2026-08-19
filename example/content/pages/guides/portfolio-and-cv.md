@@ -150,7 +150,7 @@ The timeline is your story for peers; the CV is the cut for employers. The `cv:`
 
 ## 6 · Print it, and ship the JSON twin
 
-Open `/cv/` and print. The stylesheet strips navigation, forces the light rendition (even from a dark screen, syntax colors included), and lays the page out for A4. That is the one-pager you attach to an application, generated from the same files as everything else.
+Open `/cv/` and print. The stylesheet strips navigation, forces the light rendition (even from a dark screen, syntax colours included), and lays the page out for A4. That is the one-pager you attach to an application, generated from the same files as everything else.
 
 Beside it, every build emits **`/cv.json`** in [JSON Resume](https://jsonresume.org) format, so the machine-readable version of your CV is never out of date with the human one.
 

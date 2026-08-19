@@ -21,15 +21,15 @@ The lesson: every support question of the form "how do I change X" is really "wh
 
 ## light-dark() deleted a third of our CSS problem
 
-Both official themes used to carry three synchronized copies of every color decision: light, dark via media query, dark via toggle. The modern platform primitive collapses all of it. Each token is now one pair:
+Both official themes used to carry three synchronised copies of every colour decision: light, dark via media query, dark via toggle. The modern platform primitive collapses all of it. Each token is now one pair:
 
 ```css
 --color-accent: light-dark(#c0134f, #ff4d7d);
 ```
 
-and the theme toggle flips a single `color-scheme` property. No duplicate blocks, no class soup, no flash. Printing from a forced-dark page gets the complete light rendition, including syntax colors, which the old three-block scheme could never quite reach. Engines without support get the full light rendition behind `@supports`, never broken colors.
+and the theme toggle flips a single `color-scheme` property. No duplicate blocks, no class soup, no flash. Printing from a forced-dark page gets the complete light rendition, including syntax colours, which the old three-block scheme could never quite reach. Engines without support get the full light rendition behind `@supports`, never broken colours.
 
-The lesson: when the platform grows a primitive that models your exact problem, delete your workaround with prejudice. We even gate it in CI now: a test counts the token declarations per rendition and fails if anyone reintroduces a synchronized copy.
+The lesson: when the platform grows a primitive that models your exact problem, delete your workaround with prejudice. We even gate it in CI now: a test counts the token declarations per rendition and fails if anyone reintroduces a synchronised copy.
 
 ## Components had to belong to the framework, not the theme
 

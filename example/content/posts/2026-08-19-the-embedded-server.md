@@ -81,7 +81,7 @@ A broken edit prints its diagnostics and the last good output keeps serving. Thi
 
 ## The watcher that refuses to lie
 
-My favorite part of this module has no algorithmic content at all; it is pure honesty engineering. A file watcher that *starts* is not a file watcher that *works*: on a Docker bind mount from a Windows or macOS host, inotify accepts the subscription and then never delivers a single event. A naive serve would promise live reload and silently never reload.
+My favourite part of this module has no algorithmic content at all; it is pure honesty engineering. A file watcher that *starts* is not a file watcher that *works*: on a Docker bind mount from a Windows or macOS host, inotify accepts the subscription and then never delivers a single event. A naive serve would promise live reload and silently never reload.
 
 So the watcher proves the filesystem before believing it:
 

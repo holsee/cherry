@@ -62,7 +62,7 @@ cherry gen.post "Growing season" --json
 }
 ```
 
-One file, valid frontmatter, `draft: true`. The envelope hands back the path, so pipe it straight into your editor, a script, or whatever else does your writing. Markdown is GitHub-flavored, and the things markdown is bad at are one directive away:
+One file, valid frontmatter, `draft: true`. The envelope hands back the path, so pipe it straight into your editor, a script, or whatever else does your writing. Markdown is GitHub-flavoured, and the things markdown is bad at are one directive away:
 
 ```text
 ::figure{src="/images/harvest.jpg" alt="Crates at dusk" caption="Season one."}
@@ -158,7 +158,7 @@ The same content tree that builds your posts can carry your whole developer stor
 <li><strong>Deterministic builds.</strong> Same tree in, same bytes out, gated in CI. Diffs mean something.</li>
 <li><strong>A real verifier.</strong> <code>cherry check --strict</code> returns structured diagnostics, not vibes.</li>
 <li><strong>Themes that survive upgrades.</strong> Tokens are the styling API; ejected templates carry provenance, so upgrades merge instead of freezing.</li>
-<li><strong>Light and dark as one value.</strong> Color tokens are <code>light-dark()</code> pairs; the toggle flips <code>color-scheme</code> and print stays clean.</li>
+<li><strong>Light and dark as one value.</strong> Colour tokens are <code>light-dark()</code> pairs; the toggle flips <code>color-scheme</code> and print stays clean.</li>
 <li><strong>Content components.</strong> Figures, privacy-preserving video facades, and callouts as directives; misuse is a diagnostic, never a broken build.</li>
 <li><strong>Two template languages.</strong> EEx or HEEx, decided by file extension; HEEx brings escaping by default and Phoenix-style function components, inside a static binary.</li>
 <li><strong>Developer timeline + CV.</strong> Portfolio collections render a timeline, story pages, and a print-ready CV with JSON Resume output.</li>
