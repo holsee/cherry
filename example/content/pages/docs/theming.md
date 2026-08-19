@@ -1,0 +1,128 @@
+---
+title: Theming
+description: The styling ladder, design tokens, light-dark pairs, overlays, provenance, and the HEEx lane.
+---
+## Theming
+
+Two convictions shape everything on this page. First, restyling a site should cost exactly as much ownership as you choose to take, never a fork. Second, whatever you do take ownership of should stay upgradeable, with the tool telling you the truth about what you own. Cherry ships two official themes (`default`, typography-first and quiet; `cherrybomb`, the one you are reading) built from the same parts: a `theme.exs` manifest, nine templates, one stylesheet whose every color flows through tokens.
+
+### The ladder
+
+<div class="diagram" role="img" aria-label="The five rungs of the styling ladder, each costing more ownership: tokens, custom.css, overlay, eject, new theme.">
+<svg viewBox="0 0 720 250" xmlns="http://www.w3.org/2000/svg" style="font-family: var(--font-mono); font-size: 13px;">
+  <g fill="var(--color-surface)" stroke="var(--color-border)">
+    <rect x="10"  y="190" width="128" height="40" rx="8"/>
+    <rect x="152" y="150" width="128" height="80" rx="8"/>
+    <rect x="294" y="110" width="128" height="120" rx="8"/>
+    <rect x="436" y="70"  width="128" height="160" rx="8"/>
+    <rect x="578" y="30"  width="128" height="200" rx="8" stroke="var(--color-accent)"/>
+  </g>
+  <g fill="var(--color-fg)" text-anchor="middle">
+    <text x="74"  y="214">tokens</text>
+    <text x="216" y="174">custom.css</text>
+    <text x="358" y="134">overlay</text>
+    <text x="500" y="94">eject</text>
+    <text x="642" y="54" fill="var(--color-accent)">new theme</text>
+  </g>
+  <g fill="var(--color-muted)" font-size="11px" text-anchor="middle">
+    <text x="74"  y="230">one config line</text>
+    <text x="216" y="190">one CSS file</text>
+    <text x="358" y="150">one template</text>
+    <text x="500" y="110">that file's future</text>
+    <text x="642" y="70">everything, deliberately</text>
+    <text x="360" y="16" font-size="12px">ownership you take on →</text>
+  </g>
+</svg>
+</div>
+
+**Rung 1: tokens.** Every theme publishes its tokens as an API. List them, then override from config or the CLI:
+
+```text
+$ cherry theme.tokens
+tokens of theme default:
+  --color-bg             light-dark(#ffffff, #15171b)
+                         Page background.
+  --color-accent         light-dark(#b3173e, #f4718c)
+                         Links and interactive accents.
+  ...
+
+$ cherry config tokens.--color-accent "light-dark(#7c3aed, #a78bfa)"
+```
+
+The override lands in every page head, the 404 included. A typo is an error with a suggestion, not a silently dead line. After the write, `theme.tokens` shows the merged view:
+
+```text
+  --color-accent         light-dark(#7c3aed, #a78bfa) (override; default #b3173e)
+```
+
+**Rung 2: custom.css.** Drop `assets/custom.css` in your site and it links after the tokens block on every page. Official theme CSS lives in a `theme` cascade layer, so your unlayered rules always win: no specificity fights, no `!important`.
+
+**Rung 3: overlay.** Write one template into `themes/THEME/templates/` and it shadows just that template, in EEx or HEEx, your choice.
+
+**Rung 4: eject.** `cherry theme.eject post_list` copies the original into your overlay directory with a provenance header (theme, version, content hash). Now it is yours, and upgrades stay mergeable; see provenance below.
+
+**Rung 5: a theme of your own.** `cherry gen.theme neon --from cherrybomb` scaffolds the complete theme into `themes/neon/`: manifest, templates, stylesheet, islands. The [theme guide](/guides/creating-a-theme/) walks the whole rung.
+
+### Light and dark are one value
+
+Every color token in an official theme is a `light-dark()` pair: the light value and the dark value in one declaration, picked by the browser's `color-scheme`. The consequences are pleasant everywhere:
+
+- The theme toggle flips a single `color-scheme` property. No duplicate stylesheets, no class soup, no flash.
+- Your overrides carry both renditions in one line, or one value for both.
+- Print always gets the complete light rendition, even from a page forced dark, syntax highlighting included.
+- Engines without `light-dark()` support get the full light rendition as a fallback, never broken colors.
+
+### The lookup chain
+
+When Cherry renders a page it looks for the template in three places, most specific first, and in two languages per level. The first file that exists renders; `theme.which` shows you exactly which:
+
+```text
+$ cherry theme.which post_list
+post_list:
+  site_overlay  themes/default/templates/post_list.html.heex ← renders
+  site_overlay  themes/default/templates/post_list.html.eex
+  theme         priv/themes/default/templates/post_list.html.heex (missing)
+  theme         priv/themes/default/templates/post_list.html.eex
+  framework     priv/themes/default/templates/post_list.html.heex (missing)
+  framework     priv/themes/default/templates/post_list.html.eex
+```
+
+### Two template languages
+
+EEx or HEEx is not a configuration choice; it is a file extension, and `.heex` outranks `.eex` at the same level. Official themes are EEx. The HEEx lane is for overlays, rewrites, and themes of your own, and it brings the full Phoenix feel:
+
+- Interpolation escapes by default; `raw(@doc.html)` is the explicit door for rendered markdown.
+- `:for` and `:if` attributes, and compile-checked markup: a malformed template fails the build with file, line:column, and a caret.
+- **Function components.** Drop a `components.exs` in your theme defining modules with `use Phoenix.Component`, and `<.card title={@title}>` resolves in that theme's templates the way a Phoenix developer expects. It is runtime-compiled like every other `.exs` escape hatch, so the standalone binary renders it identically to a mix project.
+
+### Provenance, kept honest
+
+`theme.diff` reports the state of every template you have taken:
+
+```text
+$ cherry theme.diff
+default 0.1.0 overlays:
+  post_list            rewritten
+  post_list            shadowed — the .heex rewrite renders; this file is inert
+```
+
+| status | meaning |
+|---|---|
+| `current` | your copy matches the theme version it came from |
+| `auto_updatable` | upstream moved, you did not touch it; `--apply` re-ejects safely |
+| `conflict` | both moved; resolve by hand, then `theme.eject --force` |
+| `untracked` | a hand copy with no provenance header, which nothing can manage |
+| `rewritten` | a `.heex` rewrite: another language, yours outright |
+| `shadowed` | an `.eex` copy a `.heex` rewrite outranks; it no longer renders |
+
+The tool refuses to help you fool yourself. Eject a template that you have already rewritten in HEEx and it declines, naming the file to edit instead:
+
+```text
+$ cherry theme.eject post_list
+error: post_list is rewritten as HEEx at themes/default/templates/post_list.html.heex,
+which wins the lookup — an ejected EEx copy would be shadowed; edit the .heex file
+```
+
+:::important{title="Never hand-copy a theme file"}
+The provenance header is what lets `theme.diff` three-way-merge upgrades later. A hand copy reports as `untracked`, and from there Cherry can only warn.
+:::
