@@ -157,6 +157,25 @@ renames it. Point `cherry.exs` at it with `theme: "themes/NAME"` and
 every file is yours; the swap contract keeps the site building
 throughout.
 
+## cherry new
+
+Flags: `--today VALUE` — plus the global flags.
+
+Scaffolds a new Cherry site: content directories, config, a first
+post, `AGENTS.md` documenting the agent workflow, and a `.claude`
+publish skill.
+
+### Usage
+
+    cherry new PATH [--json]
+
+This is the standalone binary's front door — the scaffold speaks
+`cherry <verb>` and carries no mix project. Elixir-toolchain users
+scaffold with the `cherry_new` archive instead (`mix cherry.new`),
+which writes the same site plus `mix.exs` and `config/config.exs`;
+for that reason this verb deliberately has no `mix cherry.new` twin
+in core — the archive owns that name.
+
 ## cherry publish
 
 Flags: `--source VALUE`, `--today VALUE` — plus the global flags.

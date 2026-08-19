@@ -5,7 +5,7 @@ description: Author, build, verify, theme, and deploy Cherry static sites throug
 
 # Cherry
 
-Use the `cherry` CLI for deterministic, structured control of a Cherry site. Every verb behaves identically under the standalone binary (`cherry VERB`) and mix (`mix cherry.VERB`) — both are thin wrappers around one seam, so pick whichever the environment provides and never assume they differ.
+Use the `cherry` CLI for deterministic, structured control of a Cherry site. Every verb behaves identically under the standalone binary (`cherry VERB`) and mix (`mix cherry.VERB`) — both are thin wrappers around one seam, so pick whichever the environment provides and never assume they differ. The one asymmetry is scaffolding: `cherry new PATH` exists only in the binary, because the mix lane scaffolds with the `cherry_new` archive (`mix cherry.new`), which owns that task name and additionally writes the mix project files.
 
 ## Start safely
 
@@ -16,7 +16,7 @@ Use the `cherry` CLI for deterministic, structured control of a Cherry site. Eve
 
 ## Follow the operating loop
 
-This is the loop the scaffolded site `AGENTS.md` teaches; keep to it:
+Starting from nothing, `cherry new PATH` plants the site first — config, first post, `AGENTS.md`, and a publish skill; it refuses a non-empty directory. From there, this is the loop the scaffolded site `AGENTS.md` teaches; keep to it:
 
 1. **Author** — `cherry gen.post "Title"` creates a draft; `cherry gen.project` and `cherry gen.talk` scaffold portfolio entries with valid frontmatter. Capture `data.path` from the envelope and edit that file. Markdown is GFM plus three framework-level content components in remark-directive syntax: `::figure{src="…" alt="…" caption="…"}` (alt is required), `::video{youtube="ID" title="…"}` (renders a zero-request facade; `src=` plays a local file), and `:::note{title="…"} … :::` containers for the five alert types. They are theme-independent by design; misuse is a `component` diagnostic in `cherry check`, never a broken build.
 2. **Build** — `cherry build` emits the site to `_site/`. Treat a failing build as the first diagnostic, not an obstacle.
