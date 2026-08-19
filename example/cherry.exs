@@ -6,5 +6,8 @@
   theme: "cherrybomb",
   search: "pagefind",
   social_image: "og-card.png",
-  nav: [[label: "Guides", href: "guides/", position: :start]]
+  nav: [
+    [label: "Guides", href: "guides/", position: :start],
+    [label: "Docs", href: "docs/", position: :start]
+  ]
 ]

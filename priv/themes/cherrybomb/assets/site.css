@@ -818,6 +818,23 @@ pre.lumis {
   color: var(--color-muted);
 }
 
+/* ---------- diagrams ---------- */
+
+/* Inline SVG diagrams inherit the theme's tokens, so they re-render
+   in light, dark, and print like everything else on the page. */
+.diagram {
+  margin: 2rem 0;
+  overflow-x: auto;
+}
+
+/* Below min-width the labels become unreadable; scroll instead of shrink. */
+.diagram svg {
+  display: block;
+  width: 100%;
+  min-width: 34rem;
+  height: auto;
+}
+
 /* ---------- content components ---------- */
 
 /* ::figure — an image that owns its caption. */
