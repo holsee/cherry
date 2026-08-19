@@ -7,6 +7,9 @@ Entries are terse one-liners linked to their PR: `- Thing that changed. (#12)`
 
 ## [Unreleased]
 
+### Changed
+- Both official themes moved to `light-dark()` tokens: every color token is one pair instead of three synchronized blocks (light, dark-via-media, dark-via-toggle), the toggle forces a rendition by flipping `color-scheme` alone, and printing from a forced-dark page now gets the full light rendition — syntax palette included, which the old print block could not reach. Engines without `light-dark()` get the complete light rendition (the pairs live behind `@supports`) and the toggle stays hidden there. Token manifests now declare the pair (`default:` light, `dark:`), gate-enforced against the CSS, and `theme.tokens`/`theme.list` report it. (#52)
+
 ### Added
 - The customization ladder's middle rungs are real: `tokens: ["--color-accent": "#7c3aed"]` in `cherry.exs` overrides any token the theme's manifest declares (a typo errors with the nearest real name), and `assets/custom.css` loads last, always. Both ride the framework-owned head, so every theme honors them without cooperating; official theme CSS now lives in `@layer theme`, so site overrides win by cascade-layer rules rather than specificity fights. (#51)
 - `cherry theme.tokens`: the theme's styling API as a command — every token with its default, doc, and any site override, merged. (#51)

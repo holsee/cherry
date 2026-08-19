@@ -44,14 +44,16 @@ defmodule Cherry.Commands.ThemeTokens do
         Enum.map(theme.tokens, fn {token, spec} ->
           name = Atom.to_string(token)
           default = Keyword.get(spec, :default)
+          dark = Keyword.get(spec, :dark)
           override = Map.get(overrides, name)
 
           %{
             name: name,
             default: default,
+            dark: dark,
             doc: Keyword.get(spec, :doc),
             override: override,
-            effective: override || default
+            effective: override || effective_default(default, dark)
           }
         end)
 
@@ -74,6 +76,11 @@ defmodule Cherry.Commands.ThemeTokens do
 
     Enum.join(["tokens of theme #{theme}:"] ++ lines, "\n")
   end
+
+  # A paired token's effective default is the pair itself — exactly the
+  # value a site would write to reproduce it.
+  defp effective_default(default, nil), do: default
+  defp effective_default(default, dark), do: "light-dark(#{default}, #{dark})"
 
   defp load_site(source) do
     case Cherry.Site.load(source) do

@@ -47,9 +47,10 @@ defmodule Cherry.DemoTest do
     assert home =~ ~s(data-search="/search/index.json"), "the search section claims this is wired"
 
     # The theming section claims the demo's accent moved to violet through
-    # `cherry config tokens.--color-accent` — the ladder's rung 2.
+    # `cherry config tokens.--color-accent` — the ladder's rung 2, one
+    # light-dark() pair carrying both renditions.
     assert home =~ ~s(<style id="cherry-tokens">)
-    assert home =~ "--color-accent: #7c3aed;"
+    assert home =~ "--color-accent: light-dark(#7c3aed, #a78bfa);"
 
     # The guide's theming section shows the ejected post_list grouping by year.
     blog = File.read!(Path.join(out, "blog/index.html"))

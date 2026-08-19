@@ -59,6 +59,7 @@ defmodule Cherry.Commands.ThemeList do
              %{
                name: Atom.to_string(token),
                default: Keyword.get(spec, :default),
+               dark: Keyword.get(spec, :dark),
                doc: Keyword.get(spec, :doc)
              }
            end)
