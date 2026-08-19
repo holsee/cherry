@@ -239,7 +239,9 @@ defmodule Cherry.Check do
   defp overlay_drift(build) do
     case Theme.load_active(build.site) do
       {:ok, theme} ->
-        for entry <- Drift.entries(build.site, theme), entry.status != :current do
+        # :rewritten is a deliberate HEEx rewrite — owned outright, not drift.
+        for entry <- Drift.entries(build.site, theme),
+            entry.status not in [:current, :rewritten] do
           %Diagnostic{
             file: entry.overlay |> Path.relative_to(build.site.root) |> String.replace("\\", "/"),
             rule: drift_rule(entry.status),

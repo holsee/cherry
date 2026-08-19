@@ -47,6 +47,9 @@ defmodule Cherry.MixProject do
       {:lumis, "~> 0.1"},
       {:mdex, "~> 0.13"},
       {:nimble_options, "~> 1.1"},
+      # HEEx templates (runtime-compiled, ADR 0002/0004): the engine lives
+      # in phoenix_live_view; ~5MB of libs in the release, spike-measured.
+      {:phoenix_live_view, "~> 1.1"},
       {:yaml_elixir, "~> 2.12"},
       {:burrito, "~> 1.6", only: [:dev, :prod], runtime: false},
       {:credo, "~> 1.7", only: [:dev, :test], runtime: false},

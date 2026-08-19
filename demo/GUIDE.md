@@ -584,6 +584,36 @@ A theme that lives inside your site is yours outright: it has no overlay level,
 so `theme.diff` reports nothing to drift and `theme.eject` refuses, pointing you
 at the file to edit directly.
 
+### Templates speak two languages
+
+Every template above is classic EEx. Since 0.2.0 the lookup also accepts
+**HEEx** — the same `<name>.html.heex` file name, and it wins over the `.eex`
+twin at the same level. HEEx is the template language Phoenix developers
+already know: interpolation is `{@doc.meta.title}` and **escapes by default**
+(`raw/1` is the explicit door for rendered markdown), iteration is an
+attribute, and components are tags:
+
+```heex
+<ul>
+  <li :for={post <- @posts}>
+    <time>{format_date(post.meta.date)}</time>
+    <a href={post.url}>{post.meta.title}</a>
+  </li>
+</ul>
+```
+
+A theme can also ship a `components.exs` at its root — a module of
+`Phoenix.Component` function components every HEEx template in that theme can
+call as `<.card title={...}>`. It is runtime-compiled like `theme.exs`, so the
+standalone binary renders it identically to a mix project.
+
+Rewriting an ejected template as `.heex` takes it out of provenance on
+purpose: a rewrite is a different language, so no three-way merge against the
+EEx upstream is possible. `theme.diff` reports it as `rewritten` — owned, not
+drift — and `theme.eject` refuses to write an `.eex` copy that would be
+shadowed. A malformed HEEx template fails the build with the file, line,
+column, and a caret pointing at the problem.
+
 ## 11. Icons and static files
 
 Everything in `static/` is copied to the site root. Three names are special —

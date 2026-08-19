@@ -46,14 +46,24 @@ defmodule Cherry.Theme.Resolver do
   @doc """
   The full lookup chain for a template: `{level, path, exists?}` in
   priority order. The first existing entry wins.
+
+  Each level offers two candidates — `<name>.html.heex`, then
+  `<name>.html.eex` — so a HEEx rewrite wins over the EEx original at
+  the same level, and a site overlay in either language beats the theme.
   """
   @spec chain(Site.t(), Theme.t(), atom()) :: [{atom(), Path.t(), boolean()}]
   def chain(%Site{} = site, %Theme{} = theme, name) do
-    @levels
-    |> Enum.map(fn level -> {level, level_path(level, site, theme, name)} end)
-    |> Enum.reject(fn {_level, path} -> is_nil(path) end)
-    |> Enum.map(fn {level, path} -> {level, path, File.exists?(path)} end)
+    for level <- @levels,
+        base = level_path(level, site, theme, name),
+        not is_nil(base),
+        path <- [heex_variant(base), base] do
+      {level, path, File.exists?(path)}
+    end
   end
+
+  @doc "The `.html.heex` twin of an `.html.eex` template path."
+  @spec heex_variant(Path.t()) :: Path.t()
+  def heex_variant(path), do: String.replace_suffix(path, ".html.eex", ".html.heex")
 
   @doc "Resolves a template to the winning `{level, path}`."
   @spec resolve(Site.t(), Theme.t(), atom()) :: {:ok, {atom(), Path.t()}} | {:error, String.t()}
