@@ -10,7 +10,7 @@ defmodule Cherry.Check do
 
   alias Cherry.Build
   alias Cherry.Check.Diagnostic
-  alias Cherry.Content.{Document, Page}
+  alias Cherry.Content.{Components, Document, Page}
   alias Cherry.Theme
   alias Cherry.Theme.Drift
 
@@ -23,9 +23,22 @@ defmodule Cherry.Check do
         unfilled_scaffolds(build) ++
         missing_alt(build) ++
         duplicate_titles(build) ++
+        component_problems(build) ++
         feed_sanity(build) ++
         overlay_drift(build)
     )
+  end
+
+  # --- content components ----------------------------------------------
+
+  # The renderer leaves a bad directive verbatim in the output rather
+  # than failing the build; this rule is where it gets named precisely.
+  defp component_problems(build) do
+    for %Document{raw?: false} = doc <- build.documents,
+        Path.extname(doc.source) == ".md",
+        diagnostic <- Components.diagnose(doc.body, doc.source) do
+      diagnostic
+    end
   end
 
   # --- broken internal links -------------------------------------------

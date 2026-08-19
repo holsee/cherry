@@ -24,7 +24,21 @@
 &lt;p class="markdown-alert-title"&gt;Note&lt;/p&gt;
 &lt;p&gt;Alerts render as GitHub-style callouts — this one bakes the markup
 into the goldens.&lt;/p&gt;
-&lt;/div&gt;</content>
+&lt;/div&gt;
+&lt;h2 id="components"&gt;Components&lt;a href="#components" aria-label="Link to heading 'Components'" data-heading-content="Components" class="anchor"&gt;&lt;/a&gt;&lt;/h2&gt;
+&lt;figure&gt;
+&lt;img src="/images/orchard.svg" alt="Rows of cherry trees"&gt;
+&lt;figcaption&gt;The orchard, mapped.&lt;/figcaption&gt;
+&lt;/figure&gt;
+&lt;div class="markdown-alert markdown-alert-tip"&gt;
+&lt;p class="markdown-alert-title"&gt;Pick early&lt;/p&gt;
+&lt;p&gt;Container callouts take &lt;strong&gt;markdown&lt;/strong&gt; and a custom title — this one bakes
+the directive expansion into the goldens.&lt;/p&gt;
+&lt;/div&gt;
+&lt;a class="video-embed" href="https://www.youtube.com/watch?v=dQw4w9WgXcQ" data-video-embed="dQw4w9WgXcQ"&gt;
+&lt;span class="video-embed-play" aria-hidden="true"&gt;&lt;/span&gt;
+&lt;span class="video-embed-title"&gt;Picking, the technique&lt;/span&gt;
+&lt;/a&gt;</content>
 </entry>
 <entry>
 <title>Hello, world</title>

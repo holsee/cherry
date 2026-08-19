@@ -69,6 +69,13 @@ mutable structures, no threads you spawn yourself, no callbacks back into
 Elixir. Everything that needs supervision, retries, or lifecycle belongs on the
 BEAM side where those things already work.
 
+::figure{src="/images/nif-boundary.svg" alt="Two boxes: the BEAM side holds supervision, retries and state; the Rust side holds one stateless computation" caption="The whole architecture, honestly."}
+
+:::tip{title="Where the fear lives"}
+Every NIF horror story is a violation of one of the three rules. Check the
+story against the rules before checking your code against the story.
+:::
+
 Three rules, and the fear mostly goes away. What is left is a normal
 engineering tradeoff: a build dependency and a compile step, in exchange for
 two orders of magnitude.

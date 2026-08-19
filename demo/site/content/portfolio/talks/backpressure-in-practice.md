@@ -19,3 +19,5 @@ happen when you cannot keep up.
 
 Live-demoed a Broadway pipeline under a synthetic burst, showing each of the
 four strategies in turn and what each one does to the dependency downstream.
+
+::video{youtube="q6Yr9DkTn2k" title="Backpressure in Practice — ElixirConf EU 2025"}
