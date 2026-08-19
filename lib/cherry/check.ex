@@ -241,7 +241,7 @@ defmodule Cherry.Check do
       {:ok, theme} ->
         # :rewritten is a deliberate HEEx rewrite — owned outright, not drift.
         for entry <- Drift.entries(build.site, theme),
-            entry.status not in [:current, :rewritten] do
+            entry.status not in [:current, :rewritten, :shadowed] do
           %Diagnostic{
             file: entry.overlay |> Path.relative_to(build.site.root) |> String.replace("\\", "/"),
             rule: drift_rule(entry.status),

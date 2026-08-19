@@ -12,6 +12,7 @@ defmodule Cherry.Theme.Drift do
   | `:conflict` | both moved — a human (or agent) resolves |
   | `:untracked` | no provenance header — a hand copy we cannot manage |
   | `:rewritten` | a `.heex` rewrite — a different language, yours outright; no three-way merge is possible or expected |
+  | `:shadowed` | an `.eex` overlay a `.heex` rewrite outranks — inert until the rewrite is removed |
   """
 
   alias Cherry.Site
@@ -24,7 +25,7 @@ defmodule Cherry.Theme.Drift do
     @enforce_keys [:template, :overlay, :status]
     defstruct [:template, :overlay, :status]
 
-    @type status :: :current | :auto_updatable | :conflict | :untracked | :rewritten
+    @type status :: :current | :auto_updatable | :conflict | :untracked | :rewritten | :shadowed
 
     @type t :: %__MODULE__{
             template: atom(),
@@ -55,9 +56,19 @@ defmodule Cherry.Theme.Drift do
     end
   end
 
+  # An `.eex` overlay sitting under a `.heex` rewrite never renders —
+  # its drift against upstream is moot, and reporting it as `current`
+  # would suggest otherwise.
   defp eex_entry(overlay, theme, name) do
-    if File.exists?(overlay) do
-      %Entry{template: name, overlay: overlay, status: status(overlay, theme, name)}
+    cond do
+      not File.exists?(overlay) ->
+        nil
+
+      File.exists?(Resolver.heex_variant(overlay)) ->
+        %Entry{template: name, overlay: overlay, status: :shadowed}
+
+      true ->
+        %Entry{template: name, overlay: overlay, status: status(overlay, theme, name)}
     end
   end
 

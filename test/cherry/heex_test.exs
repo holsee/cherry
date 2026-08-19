@@ -10,7 +10,7 @@ defmodule Cherry.HeexTest do
   """
 
   alias Cherry.CLI.{Context, Error}
-  alias Cherry.Commands.ThemeEject
+  alias Cherry.Commands.{ThemeEject, ThemeWhich}
   alias Cherry.Theme.{Drift, Resolver}
 
   @moduletag :tmp_dir
@@ -72,6 +72,25 @@ defmodule Cherry.HeexTest do
         end)
 
       assert heex_at < eex_at, ".heex must outrank .eex within a level"
+    end
+
+    test "theme.which arrows only the file that renders", %{tmp_dir: tmp} do
+      source = fixture(tmp)
+      overlay_dir = Path.join(source, "themes/default/templates")
+      File.mkdir_p!(overlay_dir)
+      File.write!(Path.join(overlay_dir, "post.html.heex"), "<p>{@doc.meta.title}</p>")
+      File.write!(Path.join(overlay_dir, "post.html.eex"), "<p><%= @doc.meta.title %></p>")
+
+      context = %Context{verb: "theme.which", args: ["post"], opts: [source: source]}
+      assert {:ok, data} = ThemeWhich.run(context)
+
+      assert String.ends_with?(data.renders, "post.html.heex")
+
+      output = data |> ThemeWhich.human() |> IO.iodata_to_binary()
+      arrowed = output |> String.split("\n") |> Enum.filter(&(&1 =~ "← renders"))
+
+      assert [line] = arrowed, "exactly one file renders"
+      assert line =~ "post.html.heex"
     end
   end
 
@@ -207,6 +226,26 @@ defmodule Cherry.HeexTest do
 
       assert [%{template: :post, status: :rewritten}] = Drift.entries(site, theme)
 
+      {:ok, _build, diagnostics} = Cherry.check(source: source, today: @today)
+      refute Enum.any?(diagnostics, &(&1.rule in ["stale-overlay", "untracked-overlay"]))
+    end
+
+    test "an .eex overlay under a .heex rewrite is :shadowed, never :current", %{tmp_dir: tmp} do
+      source = fixture(tmp)
+      overlay_dir = Path.join(source, "themes/default/templates")
+      File.mkdir_p!(overlay_dir)
+      File.write!(Path.join(overlay_dir, "post.html.heex"), "<p>{@doc.meta.title}</p>")
+      File.write!(Path.join(overlay_dir, "post.html.eex"), "<p>hand copy, no provenance</p>")
+
+      {:ok, site} = Cherry.Site.load(source)
+      {:ok, theme} = Cherry.Theme.load_active(site)
+
+      assert [
+               %{template: :post, status: :rewritten},
+               %{template: :post, status: :shadowed}
+             ] = Drift.entries(site, theme)
+
+      # Shadowed files are inert — check never warns about their drift.
       {:ok, _build, diagnostics} = Cherry.check(source: source, today: @today)
       refute Enum.any?(diagnostics, &(&1.rule in ["stale-overlay", "untracked-overlay"]))
     end

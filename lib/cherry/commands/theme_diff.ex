@@ -9,8 +9,10 @@ defmodule Cherry.Commands.ThemeDiff do
   Statuses: `current` (upstream unchanged), `auto_updatable` (upstream
   moved, your copy untouched — `--apply` re-ejects it with fresh
   provenance), `conflict` (both moved; resolve by hand or re-eject with
-  `theme.eject --force`), `untracked` (no provenance header). This is
-  the managed-drift answer to silently frozen theme copies.
+  `theme.eject --force`), `untracked` (no provenance header),
+  `rewritten` (a `.heex` rewrite — owned outright), `shadowed` (an
+  `.eex` copy a `.heex` rewrite outranks). This is the managed-drift
+  answer to silently frozen theme copies.
   """
 
   @moduledoc @doc_text
@@ -81,6 +83,7 @@ defmodule Cherry.Commands.ThemeDiff do
   defp hint("auto_updatable"), do: " — run with --apply to re-eject"
   defp hint("conflict"), do: " — both changed; resolve, then theme.eject --force"
   defp hint("untracked"), do: " — no provenance; re-eject to enable managed upgrades"
+  defp hint("shadowed"), do: " — the .heex rewrite renders; this file is inert"
   defp hint(_status), do: ""
 
   defp select(entries, []), do: {:ok, entries}
