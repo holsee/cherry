@@ -438,7 +438,49 @@ deliberately; the demo uses the built-in one to keep the toolchain at one tool.
 
 ## 10. Themes, by provenance
 
-Start by looking:
+Most restyles never need a template. Climb this ladder and stop at the first
+rung that does the job:
+
+1. **Pick a theme** — `theme: "cherrybomb"` in `cherry.exs`.
+2. **Override tokens** — the theme's public styling API.
+3. **Append CSS** — `assets/custom.css`, loaded last, always.
+4. **Eject a template** — with provenance, shown below.
+5. **Own the theme** — `cherry gen.theme`.
+
+Rung 2 starts with looking. Every token the theme declares, with its default,
+what it does, and any override you have in place:
+
+```console
+$ cherry theme.tokens
+tokens of theme default:
+  --color-bg             #ffffff
+                         Page background.
+  --color-accent         #b3173e
+                         Links and interactive accents.
+  --measure              42rem
+                         Reading column width (~66ch).
+  …
+```
+
+Overriding one is a config write, not a CSS file:
+
+```console
+$ cherry config tokens.--color-accent "#7c3aed" --json
+{"command":"config","data":{"key":"tokens.--color-accent","path":"cherry.exs","previous":null,"value":"#7c3aed"},"ok":true}
+```
+
+The name must exist in `theme.tokens` — a typo is refused here, with the
+nearest real token named, instead of becoming a dead line in `cherry.exs`. A
+value applies to both the light and dark renditions unless you write it as
+`light-dark(a, b)`. The demo site runs with its accent moved to violet this
+way.
+
+Rung 3 is a file: anything in `assets/custom.css` ships as
+`/assets/custom.css` and loads after everything else. Theme CSS lives inside
+`@layer theme`, and your overrides — tokens and custom.css both — are
+unlayered, so yours win by declaration, never by specificity fights.
+
+When a restyle really is structural, continue to rung 4. Start by looking:
 
 ```console
 $ cherry theme.list
@@ -602,6 +644,7 @@ Point your agent at either and it will follow this same loop.
 | `cherry check [--strict]` | verify without writing |
 | `cherry serve [--port N]` | dev server with live reload |
 | `cherry theme.list` | active theme, templates, tokens |
+| `cherry theme.tokens` | the styling API: tokens, defaults, overrides |
 | `cherry theme.which TEMPLATE` | resolution chain for one template |
 | `cherry theme.eject TEMPLATE` | take ownership, with provenance |
 | `cherry theme.diff` | drift status of every overlay |

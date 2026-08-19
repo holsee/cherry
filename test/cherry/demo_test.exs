@@ -46,6 +46,11 @@ defmodule Cherry.DemoTest do
     assert home =~ ~s(rel="icon"), "the icon convention section claims this is automatic"
     assert home =~ ~s(data-search="/search/index.json"), "the search section claims this is wired"
 
+    # The theming section claims the demo's accent moved to violet through
+    # `cherry config tokens.--color-accent` — the ladder's rung 2.
+    assert home =~ ~s(<style id="cherry-tokens">)
+    assert home =~ "--color-accent: #7c3aed;"
+
     # The guide's theming section shows the ejected post_list grouping by year.
     blog = File.read!(Path.join(out, "blog/index.html"))
     assert blog =~ "<h2>2025</h2>" and blog =~ "<h2>2026</h2>"

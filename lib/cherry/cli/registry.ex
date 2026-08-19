@@ -21,6 +21,7 @@ defmodule Cherry.CLI.Registry do
     "theme.diff" => Cherry.Commands.ThemeDiff,
     "theme.eject" => Cherry.Commands.ThemeEject,
     "theme.list" => Cherry.Commands.ThemeList,
+    "theme.tokens" => Cherry.Commands.ThemeTokens,
     "theme.which" => Cherry.Commands.ThemeWhich,
     "upgrade" => Cherry.Commands.Upgrade,
     "version" => Cherry.Commands.Version

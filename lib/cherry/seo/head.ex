@@ -50,9 +50,38 @@ defmodule Cherry.SEO.Head do
       ~s(<meta property="og:url" content="#{canonical}">\n),
       ~s(<meta property="og:site_name" content="#{escape(site.title)}">\n),
       social_image(site),
-      ~s(<meta name="twitter:card" content="#{twitter_card(site)}">\n)
+      ~s(<meta name="twitter:card" content="#{twitter_card(site)}">\n),
+      styling(site)
     ]
     |> IO.iodata_to_binary()
+  end
+
+  @doc """
+  Rungs 2 and 3 of the customization ladder — the `tokens:` override
+  block and the `assets/custom.css` link — ride the framework-owned
+  head, so every theme honors them without cooperating. Theme CSS lives
+  in `@layer theme`; these are unlayered, so they win the cascade no
+  matter where the theme links its stylesheet. custom.css comes after
+  the tokens block: the hand-written escalation beats the config knob.
+
+  Part of `common/4`; public for the pages that carry no SEO head (404).
+  """
+  @spec styling(Site.t()) :: String.t()
+  def styling(%Site{} = site) do
+    IO.iodata_to_binary([tokens_style(site), custom_css_link(site)])
+  end
+
+  defp tokens_style(%Site{tokens: []}), do: []
+
+  defp tokens_style(%Site{tokens: tokens}) do
+    declarations = Enum.map_join(tokens, " ", fn {name, value} -> "#{name}: #{value};" end)
+    ~s(<style id="cherry-tokens">:root { #{declarations} }</style>\n)
+  end
+
+  defp custom_css_link(%Site{custom_css: nil}), do: []
+
+  defp custom_css_link(%Site{custom_css: rel} = site) do
+    ~s(<link rel="stylesheet" href="#{Site.href(site, rel)}">\n)
   end
 
   defp icon_links(%Site{icons: %Icons{} = icons} = site) do

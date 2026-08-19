@@ -22,7 +22,13 @@
  * rules never carry a literal color (gate-enforced). Light is defined on
  * :root; dark redefines the same tokens under prefers-color-scheme and
  * under an explicit [data-theme] set by the toggle, which always wins.
+ *
+ * Everything lives in `@layer theme`, so the site's own overrides — the
+ * `tokens:` config block and `assets/custom.css`, both unlayered — win
+ * the cascade by declaration, never by specificity arithmetic.
  */
+
+@layer theme {
 
 :root {
   --color-bg: #fbf6f8;
@@ -1399,3 +1405,5 @@ pre.lumis {
     display: none;
   }
 }
+
+} /* @layer theme */

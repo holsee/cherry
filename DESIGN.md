@@ -261,8 +261,8 @@ Swapping: `theme: {:hex, :cherry_theme_dusk}` → `theme: {:hex, :cherry_theme_i
 ### The customization ladder (shallow → deep, each rung explicit)
 
 1. **Config** — title, nav, accent color, fonts. No files touched.
-2. **Tokens** — override any manifest token (site `tokens.css` or config). Colors, type scale, spacing, radius. Most users never leave this rung; light/dark both derive from it.
-3. **CSS append** — `assets/custom.css` loads last, always. The "I just want to tweak it" pressure valve.
+2. **Tokens** — override any manifest token: `tokens: ["--color-accent": "#7c3aed"]` in `cherry.exs`, written by hand or via `cherry config tokens.NAME VALUE`; `cherry theme.tokens` lists the API. Names are validated against the manifest — a typo errors with the nearest real token. Most users never leave this rung; light/dark both derive from it.
+3. **CSS append** — `assets/custom.css` loads last, always. The "I just want to tweak it" pressure valve. Theme CSS lives in `@layer theme`; rungs 2–3 are unlayered and ride the framework-owned head, so they beat the theme by cascade-layer rules in any theme, with no specificity arithmetic.
 4. **Shadow with provenance** — `mix cherry.theme.eject post.html.eex` copies the template into the site's theme overlay *with a recorded lineage* (theme name, version, content hash). Never hand-copy; the task records where the file came from.
 5. **Own the theme** — `mix cherry.theme.eject --all` vendors everything; `mix cherry.gen.theme` scaffolds a fresh contract-conforming theme (this is also how the default theme is just "theme #1," not privileged code).
 

@@ -68,6 +68,15 @@ defmodule Cherry.Site do
                   "after the built-ins (Blog, then Portfolio/CV when present); " <>
                   "`position: :start` places it before them. `href` is site-relative " <>
                   "(\"guides/\" — base_path is applied) or absolute (http…), passed verbatim."
+            ],
+            tokens: [
+              type: {:custom, __MODULE__, :validate_tokens, []},
+              default: [],
+              doc:
+                ~s(Theme token overrides, e.g. `tokens: ["--color-accent": "#7c3aed"]`. ) <>
+                  "Every key must exist in the active theme's token manifest " <>
+                  "(`cherry theme.tokens` lists them); a value applies to both the " <>
+                  "light and dark renditions unless written as `light-dark(a, b)`."
             ]
           )
 
@@ -86,6 +95,8 @@ defmodule Cherry.Site do
     :root,
     :output,
     nav: [],
+    tokens: [],
+    custom_css: nil,
     icons: %Icons{}
   ]
 
@@ -101,6 +112,8 @@ defmodule Cherry.Site do
           author: String.t(),
           social_image: String.t() | nil,
           nav: [nav_entry()],
+          tokens: [{String.t(), String.t()}],
+          custom_css: String.t() | nil,
           icons: Icons.t(),
           root: Path.t(),
           output: Path.t()
@@ -159,6 +172,8 @@ defmodule Cherry.Site do
            author: Keyword.get(validated, :author, validated[:title]),
            social_image: validated[:social_image],
            nav: Enum.map(validated[:nav], &Map.new/1),
+           tokens: validated[:tokens],
+           custom_css: detect_custom_css(root),
            icons: Icons.detect(root),
            root: root,
            output: Keyword.get(opts, :output, Path.join(root, "_site"))
@@ -167,6 +182,45 @@ defmodule Cherry.Site do
       {:error, %NimbleOptions.ValidationError{} = error} ->
         {:error, "#{@config_file}: #{Exception.message(error)}"}
     end
+  end
+
+  @doc false
+  # NimbleOptions custom validator: a keyword list of quoted-atom token
+  # names (`"--color-accent": "#7c3aed"`) mapping to string values. Kept
+  # as ordered `{name, value}` string pairs; whether each name exists is
+  # the active theme's call, checked when the theme is loaded.
+  @spec validate_tokens(term()) :: {:ok, [{String.t(), String.t()}]} | {:error, String.t()}
+  def validate_tokens(value) do
+    cond do
+      not (is_list(value) and Keyword.keyword?(value)) ->
+        {:error, "expected a keyword list like [\"--color-accent\": \"#7c3aed\"]"}
+
+      bad = Enum.find(value, fn {k, _v} -> not valid_token_name?(k) end) ->
+        {name, _value} = bad
+        {:error, "#{inspect(name)} is not a token name — token names start with `--`"}
+
+      bad = Enum.find(value, fn {_k, v} -> not (is_binary(v) and String.trim(v) != "") end) ->
+        {name, _value} = bad
+        {:error, "#{name} needs a non-empty string value"}
+
+      bad = Enum.find(value, fn {_k, v} -> String.match?(v, ~r/[<>{};]/) end) ->
+        {name, _value} = bad
+        {:error, "#{name} carries CSS structure characters (<>{};) — a value only"}
+
+      true ->
+        {:ok, Enum.map(value, fn {k, v} -> {Atom.to_string(k), String.trim(v)} end)}
+    end
+  end
+
+  defp valid_token_name?(key) when is_atom(key) do
+    key |> Atom.to_string() |> String.match?(~r/^--[a-zA-Z][\w-]*$/)
+  end
+
+  # Rung 3 of the customization ladder: `assets/custom.css` in the site
+  # root loads after everything else, always. Detection here (like icons)
+  # so themes and stages just read the struct.
+  defp detect_custom_css(root) do
+    if File.regular?(Path.join([root, "assets", "custom.css"])), do: "assets/custom.css"
   end
 
   # "/repo" and "repo/" both mean "/repo/"; "" and "/" both mean "/".
