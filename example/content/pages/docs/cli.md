@@ -48,7 +48,7 @@ build failed (still serving the last good output):
 validate: content/pages/about.md: required :title option not found
 ```
 
-`--port 0` binds a free ephemeral port and reports it in the banner and envelope, which is exactly what you want in scripts and CI where port 4000 may be taken. [How the server works inside](/blog/the-embedded-server/) is a story of its own.
+`--port 0` binds a free ephemeral port and reports it in the banner and envelope, which is exactly what you want in scripts and CI where port 4000 may be taken. [How the server works inside](/the-embedded-server/) is a story of its own.
 
 #### cherry build
 

@@ -4,7 +4,7 @@ description: The nine stages between your markdown and _site/, and why builds ar
 ---
 ## The build pipeline
 
-A build is a token passed through nine ordered stages. Each stage either enriches the build or halts it with a diagnostic naming the file at fault; there is no partial output. The whole thing is one Elixir pipeline, and [you can drive it programmatically](/blog/cherry-from-elixir/) if the CLI is not enough.
+A build is a token passed through nine ordered stages. Each stage either enriches the build or halts it with a diagnostic naming the file at fault; there is no partial output. The whole thing is one Elixir pipeline, and [you can drive it programmatically](/cherry-from-elixir/) if the CLI is not enough.
 
 <div class="diagram" role="img" aria-label="The nine pipeline stages: Load, Validate, Transform, Layout, Feeds, then Machine, Search, Emit, Post.">
 <svg viewBox="0 0 720 200" xmlns="http://www.w3.org/2000/svg" style="font-family: var(--font-mono); font-size: 14px;">

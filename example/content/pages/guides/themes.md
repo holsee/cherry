@@ -37,7 +37,7 @@ cherry config tokens.--color-accent "#7c3aed"
 
 That lands as `tokens: ["--color-accent": "#7c3aed"]` in `cherry.exs`, and the whole world (code blocks included) follows your palette. The name is validated against the theme's manifest, so a typo is refused with the nearest real token named instead of becoming a dead line in your config. A value applies to both renditions unless you write it as `light-dark(a, b)`.
 
-When a token is not enough, `assets/custom.css` is the pressure valve: it loads after everything else, always. Theme CSS lives inside `@layer theme` and your overrides are unlayered, so yours win by declaration — no `!important`, no specificity fights.
+When a token is not enough, `assets/custom.css` is the pressure valve: it loads after everything else, always. Theme CSS lives inside `@layer theme` and your overrides are unlayered, so yours win by declaration: no `!important`, no specificity fights.
 
 ## Take ownership of a template
 
