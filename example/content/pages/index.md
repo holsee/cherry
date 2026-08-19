@@ -11,6 +11,25 @@ description: Cherry is a static site generator for hackers. Typed content, deter
 <div class="cmd" data-copy><span class="cmd-os">Windows</span><code>irm https://cherrybomb.dev/install.ps1 | iex</code></div>
 </section>
 
+<section class="checklist">
+
+<ul class="checks">
+<li><strong>One binary.</strong> No runtime to install; <code>cherry upgrade</code> swaps itself, checksum-verified. <code>cherry new</code> scaffolds a site in one command.</li>
+<li><strong>Typed content.</strong> Collections publish schemas; unknown frontmatter is a build error, not a mystery.</li>
+<li><strong>Deterministic builds.</strong> Same tree in, same bytes out, gated in CI. Diffs mean something.</li>
+<li><strong>A real verifier.</strong> <code>cherry check --strict</code> returns structured diagnostics, not vibes.</li>
+<li><strong>Themes that survive upgrades.</strong> Tokens are the styling API; ejected templates carry provenance, so upgrades merge instead of freezing.</li>
+<li><strong>Light and dark as one value.</strong> Colour tokens are <code>light-dark()</code> pairs; the toggle flips <code>color-scheme</code> and print stays clean.</li>
+<li><strong>Content components.</strong> Figures, privacy-preserving video facades, and callouts as directives; misuse is a diagnostic, never a broken build.</li>
+<li><strong>Two template languages.</strong> EEx or HEEx, decided by file extension; HEEx brings escaping by default and Phoenix-style function components, inside a static binary.</li>
+<li><strong>Developer timeline + CV.</strong> Portfolio collections render a timeline, story pages, and a print-ready CV with JSON Resume output.</li>
+<li><strong>SEO you can't forget.</strong> Canonical, Open Graph, JSON-LD, Atom + JSON feeds, sitemap: default-on in every theme.</li>
+<li><strong>Markdown all the way out.</strong> Every route ships its markdown twin, plus <a href="/llms.txt">/llms.txt</a>. Curl it, grep it.</li>
+<li><strong>AI-agent-friendly CLI.</strong> Every verb has a <code>--json</code> envelope, and the <a href="/guides/agents/">shipped skill</a> teaches an agent the whole loop.</li>
+</ul>
+
+</section>
+
 <section class="loop">
 
 ## From nothing
@@ -145,27 +164,6 @@ Every theme publishes its tokens as an API (`cherry theme.tokens` lists them, do
 ## Not just a blog
 
 The same content tree that builds your posts can carry your whole developer story. Portfolio collections (positions, projects, talks, open source, education) render a **timeline** at `/portfolio/`, **story pages** that cross-link everything sharing a tag, and a **`/cv`** shaped for employers: curated bullets, evidence-backed skills, a print stylesheet that produces a clean one-pager, and a machine-readable `cv.json` in JSON Resume format. All of it static, all of it typed, all of it checked by the same verifier as the blog. [Build yours in one guide.](/guides/portfolio-and-cv/)
-
-</section>
-
-<section class="checklist">
-
-## The top twelve
-
-<ul class="checks">
-<li><strong>One binary.</strong> No runtime to install; <code>cherry upgrade</code> swaps itself, checksum-verified. <code>cherry new</code> scaffolds a site in one command.</li>
-<li><strong>Typed content.</strong> Collections publish schemas; unknown frontmatter is a build error, not a mystery.</li>
-<li><strong>Deterministic builds.</strong> Same tree in, same bytes out, gated in CI. Diffs mean something.</li>
-<li><strong>A real verifier.</strong> <code>cherry check --strict</code> returns structured diagnostics, not vibes.</li>
-<li><strong>Themes that survive upgrades.</strong> Tokens are the styling API; ejected templates carry provenance, so upgrades merge instead of freezing.</li>
-<li><strong>Light and dark as one value.</strong> Colour tokens are <code>light-dark()</code> pairs; the toggle flips <code>color-scheme</code> and print stays clean.</li>
-<li><strong>Content components.</strong> Figures, privacy-preserving video facades, and callouts as directives; misuse is a diagnostic, never a broken build.</li>
-<li><strong>Two template languages.</strong> EEx or HEEx, decided by file extension; HEEx brings escaping by default and Phoenix-style function components, inside a static binary.</li>
-<li><strong>Developer timeline + CV.</strong> Portfolio collections render a timeline, story pages, and a print-ready CV with JSON Resume output.</li>
-<li><strong>SEO you can't forget.</strong> Canonical, Open Graph, JSON-LD, Atom + JSON feeds, sitemap: default-on in every theme.</li>
-<li><strong>Markdown all the way out.</strong> Every route ships its markdown twin, plus <a href="/llms.txt">/llms.txt</a>. Curl it, grep it.</li>
-<li><strong>AI-agent-friendly CLI.</strong> Every verb has a <code>--json</code> envelope, and the <a href="/guides/agents/">shipped skill</a> teaches an agent the whole loop.</li>
-</ul>
 
 </section>
 

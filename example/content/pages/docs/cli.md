@@ -42,7 +42,7 @@ Verbs are identical under the standalone binary (`cherry build`) and the Elixir 
 
 #### cherry new
 
-```text
+```sh
 cherry new PATH [--json]
 ```
 
@@ -52,7 +52,7 @@ This is the one verb without a `mix cherry.new` twin in core: the mix lane scaff
 
 #### cherry serve
 
-```text
+```sh
 cherry serve [--source DIR] [--out DIR] [--port N] [--json]
 ```
 
@@ -68,7 +68,7 @@ validate: content/pages/about.md: required :title option not found
 
 #### cherry build
 
-```text
+```sh
 cherry build [--source DIR] [--out DIR] [--drafts] [--future] [--json]
 ```
 
@@ -76,7 +76,7 @@ The production build, into `_site/` by default. `--drafts` includes posts marked
 
 #### cherry check
 
-```text
+```sh
 cherry check [--source DIR] [--strict] [--drafts] [--future] [--json]
 ```
 
@@ -92,7 +92,7 @@ Checked 34 page(s): all clear.
 
 #### cherry gen.post
 
-```text
+```sh
 cherry gen.post "Post title" [--source DIR] [--json]
 ```
 
@@ -112,7 +112,7 @@ One file in `content/posts/` named `YYYY-MM-DD-slug.md`, valid frontmatter, `dra
 
 #### cherry publish
 
-```text
+```sh
 cherry publish SLUG [--source DIR] [--json]
 cherry publish content/posts/2026-08-14-my-draft.md [--source DIR] [--json]
 ```
@@ -133,7 +133,7 @@ Turns a draft into a published post: removes the `draft:` line and renames the f
 
 #### cherry gen.project and cherry gen.talk
 
-```text
+```sh
 cherry gen.project "Project name" [--source DIR] [--json]
 cherry gen.talk "Talk title" [--source DIR] [--today DATE] [--json]
 ```
@@ -142,7 +142,7 @@ Scaffold [portfolio](/guides/portfolio-and-cv/) entries with valid frontmatter: 
 
 #### cherry schema
 
-```text
+```sh
 cherry schema COLLECTION [--json]
 ```
 
@@ -163,7 +163,7 @@ posts frontmatter:
 
 #### cherry config
 
-```text
+```sh
 cherry config [KEY [VALUE]] [--source DIR] [--json]
 ```
 
@@ -202,7 +202,7 @@ The five `theme.*` verbs and `gen.theme` are covered in depth in [Theming](/docs
 
 #### cherry gen.action
 
-```text
+```sh
 cherry gen.action [--source DIR] [--branch NAME] [--force] [--json]
 ```
 
@@ -210,7 +210,7 @@ Writes `.github/workflows/pages.yml`: on push to `--branch` (default `main`), in
 
 #### cherry upgrade
 
-```text
+```sh
 cherry upgrade [--check] [--version vX.Y.Z] [--json]
 ```
 
@@ -233,7 +233,7 @@ Mix users upgrade with `mix deps.update cherry` as ever.
 
 #### cherry version
 
-```text
+```sh
 cherry version [--json]
 ```
 
