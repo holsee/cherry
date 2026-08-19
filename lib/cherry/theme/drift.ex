@@ -11,6 +11,7 @@ defmodule Cherry.Theme.Drift do
   | `:auto_updatable` | upstream moved, you didn't touch it — safe to re-eject |
   | `:conflict` | both moved — a human (or agent) resolves |
   | `:untracked` | no provenance header — a hand copy we cannot manage |
+  | `:rewritten` | a `.heex` rewrite — a different language, yours outright; no three-way merge is possible or expected |
   """
 
   alias Cherry.Site
@@ -23,7 +24,7 @@ defmodule Cherry.Theme.Drift do
     @enforce_keys [:template, :overlay, :status]
     defstruct [:template, :overlay, :status]
 
-    @type status :: :current | :auto_updatable | :conflict | :untracked
+    @type status :: :current | :auto_updatable | :conflict | :untracked | :rewritten
 
     @type t :: %__MODULE__{
             template: atom(),
@@ -38,8 +39,25 @@ defmodule Cherry.Theme.Drift do
     for spec <- theme.templates,
         overlay = Resolver.overlay_path(site, theme, spec.name),
         not is_nil(overlay),
-        File.exists?(overlay) do
-      %Entry{template: spec.name, overlay: overlay, status: status(overlay, theme, spec.name)}
+        entry <- [heex_entry(overlay, spec.name), eex_entry(overlay, theme, spec.name)],
+        not is_nil(entry) do
+      entry
+    end
+  end
+
+  # A HEEx overlay is a rewrite, not a copy: no provenance can tie it to
+  # the EEx upstream, so it is reported honestly as owned.
+  defp heex_entry(overlay, name) do
+    heex = Resolver.heex_variant(overlay)
+
+    if File.exists?(heex) do
+      %Entry{template: name, overlay: heex, status: :rewritten}
+    end
+  end
+
+  defp eex_entry(overlay, theme, name) do
+    if File.exists?(overlay) do
+      %Entry{template: name, overlay: overlay, status: status(overlay, theme, name)}
     end
   end
 

@@ -8,6 +8,7 @@ Entries are terse one-liners linked to their PR: `- Thing that changed. (#12)`
 ## [Unreleased]
 
 ### Added
+- HEEx templates: the three-level lookup now accepts `<name>.html.heex` beside `<name>.html.eex`, and HEEx wins at the same level. Interpolation escapes by default (`raw/1` is the explicit door), `:for`/`:if` and `<.component>` calls work, and a theme-root `components.exs` (`use Phoenix.Component`, runtime-compiled like every `.exs` escape hatch, binary included) defines function components for that theme's templates. A `.heex` overlay is `rewritten` in `theme.diff` — owned outright, since no three-way merge against an EEx upstream is possible — and `theme.eject` refuses to write an `.eex` copy a rewrite would shadow. Malformed templates fail the build with file, line:column, and a caret. Official themes stay EEx. (#54)
 - Content components, framework-level so theme swaps survive them: `::figure{src alt caption}` (alt required), `::video{youtube title}` — a facade link that makes zero third-party requests until clicked, upgraded in place to a youtube-nocookie embed by a new ~500-byte island, or `src=` for a native local player — and `:::note{title} … :::` containers for the five alert types, in the remark-directive syntax Docusaurus and VitePress authors already know. Directives inside code fences are shown, not expanded; misuse never breaks a build — the line stays visible and `cherry check` gains a `component` rule naming the file, line, and problem. (#53)
 
 ### Changed

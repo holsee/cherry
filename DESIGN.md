@@ -247,7 +247,7 @@ Cherry ships one excellent default theme — and a theme *system* designed so th
 
 ### The theme contract (what makes swapping real)
 
-A theme is a package — a hex dep in project mode, a plain directory in binary mode (EEx evaluates at runtime, so binary-mode sites get full themes, not a reduced tier). Every theme carries a `theme.exs` manifest declaring:
+A theme is a package — a hex dep in project mode, a plain directory in binary mode (templates evaluate at runtime — classic EEx or HEEx, the extension decides — so binary-mode sites get full themes, not a reduced tier). Every theme carries a `theme.exs` manifest declaring:
 
 - **Contract version** (`cherry_contract: "1.x"`) — the framework's theme API is versioned; `cherry.check` fails loudly on mismatch instead of half-rendering.
 - **Template inventory** — the named templates the contract requires (`layout`, `post`, `page`, `post_list`, `tag`, `portfolio_timeline`, `cv`, `404`, …) and the assigns each receives. Fixed names + fixed assigns are *why* swap works.
@@ -333,8 +333,8 @@ Portfolio collections + schemas (incl. `education`), `portfolio.yaml` profile, t
 | Decision | Lean | Why it can wait |
 |---|---|---|
 | Package/repo naming: `cherry` vs `cherry_ssg` for the hex package | `cherry` (it's free) | Claim it early, decide branding later |
-| EEx vs HEEx for layouts | EEx (no Phoenix dep) | Theme work will settle it; HEEx needs `phoenix_live_view` as a dep, which is heavy for an SSG |
-| Shortcodes/components in markdown (Zola-style `{{ youtube(id) }}`) | Yes, small set | Transform-stage feature; can land in Phase 2 |
+| ~~EEx vs HEEx for layouts~~ | **Settled (0.2.0): both — the file extension decides.** `.html.heex` renders with HTML-aware escaping and function components (runtime-compiled, so the binary gets it too; a 0.2.0 spike measured ~0.5ms/render and ~5MB of release weight for the `phoenix_live_view` chain) and wins over the `.eex` twin at the same lookup level. Official themes stay EEx; HEEx is the overlay/rewrite lane, and a `.heex` overlay reports as `rewritten` — owned, outside provenance. Themes may ship `components.exs` (`use Phoenix.Component`) for `<.card>`-style composition. | — |
+| ~~Shortcodes/components in markdown (Zola-style `{{ youtube(id) }}`)~~ | **Settled (0.2.0): shipped, remark-directive syntax** — `::figure`, `::video` (zero-request facade), `:::note…:::` containers; framework-level so theme swaps survive; misuse is a `component` check diagnostic, never a broken build. | — |
 | Generated OG card images | v3, via `vix`/libvips or resvg | Static fallback is fine initially |
 | Incremental builds | serve-mode only at first | Full builds are fast enough at blog scale; don't buy complexity early |
 | Binary release channel | GitHub Releases + `brew`/`scoop` manifests | Only matters once the binary ships in Phase 3 |
