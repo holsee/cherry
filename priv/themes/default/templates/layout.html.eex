@@ -4,7 +4,8 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title><%= h(@page_title) %> · <%= h(@site.title) %></title>
-<%= @head_extra %><%= if @search == "pagefind" do %><link rel="stylesheet" href="<%= href(@site, "pagefind/pagefind-ui.css") %>">
+<%!-- Layered so the theme's own drawer/mark styling outranks it: an
+     unlayered vendor stylesheet would beat everything in @layer theme. --%><%= @head_extra %><%= if @search == "pagefind" do %><style>@import url("<%= href(@site, "pagefind/pagefind-ui.css") %>") layer(pagefind);</style>
 <% end %><link rel="stylesheet" href="<%= href(@site, "assets/site.css") %>">
 <script>
 /* No-flash: apply the stored theme before first paint. */

@@ -15,18 +15,34 @@ Nineteen verbs, one contract. Every command accepts `--json` for a machine-reada
 Verbs are identical under the standalone binary (`cherry build`) and the Elixir dependency (`mix cherry.build`), with one exception noted under [`new`](#cherry-new). Envelopes always have the same shape:
 
 ```json
-{"ok": true, "command": "build", "data": {"output": "_site", "pages": 12, "assets": 4}}
+{
+  "ok": true,
+  "command": "build",
+  "data": {
+    "output": "_site",
+    "pages": 12,
+    "assets": 4
+  }
+}
 ```
 
 ```json
-{"ok": false, "command": "config", "error": {"code": "usage", "message": "...", "details": {}}}
+{
+  "ok": false,
+  "command": "config",
+  "error": {
+    "code": "usage",
+    "message": "...",
+    "details": {}
+  }
+}
 ```
 
 ### Everyday
 
 #### cherry new
 
-```text
+```sh
 cherry new PATH [--json]
 ```
 
@@ -36,7 +52,7 @@ This is the one verb without a `mix cherry.new` twin in core: the mix lane scaff
 
 #### cherry serve
 
-```text
+```sh
 cherry serve [--source DIR] [--out DIR] [--port N] [--json]
 ```
 
@@ -52,7 +68,7 @@ validate: content/pages/about.md: required :title option not found
 
 #### cherry build
 
-```text
+```sh
 cherry build [--source DIR] [--out DIR] [--drafts] [--future] [--json]
 ```
 
@@ -60,7 +76,7 @@ The production build, into `_site/` by default. `--drafts` includes posts marked
 
 #### cherry check
 
-```text
+```sh
 cherry check [--source DIR] [--strict] [--drafts] [--future] [--json]
 ```
 
@@ -76,19 +92,27 @@ Checked 34 page(s): all clear.
 
 #### cherry gen.post
 
-```text
+```sh
 cherry gen.post "Post title" [--source DIR] [--json]
 ```
 
 One file in `content/posts/` named `YYYY-MM-DD-slug.md`, valid frontmatter, `draft: true`. The envelope carries the path and the slug:
 
 ```json
-{"ok": true, "command": "gen.post", "data": {"date": "2026-08-19", "path": "content/posts/2026-08-19-sweep-post.md", "slug": "sweep-post"}}
+{
+  "ok": true,
+  "command": "gen.post",
+  "data": {
+    "date": "2026-08-19",
+    "path": "content/posts/2026-08-19-sweep-post.md",
+    "slug": "sweep-post"
+  }
+}
 ```
 
 #### cherry publish
 
-```text
+```sh
 cherry publish SLUG [--source DIR] [--json]
 cherry publish content/posts/2026-08-14-my-draft.md [--source DIR] [--json]
 ```
@@ -96,12 +120,20 @@ cherry publish content/posts/2026-08-14-my-draft.md [--source DIR] [--json]
 Turns a draft into a published post: removes the `draft:` line and renames the file to today's date, because the filename is the source of truth for a post's date. Name the draft by path or by the slug `gen.post` returned:
 
 ```json
-{"ok": true, "command": "publish", "data": {"date": "2026-08-19", "from": "content/posts/2026-01-01-drafty.md", "to": "content/posts/2026-08-19-drafty.md"}}
+{
+  "ok": true,
+  "command": "publish",
+  "data": {
+    "date": "2026-08-19",
+    "from": "content/posts/2026-01-01-drafty.md",
+    "to": "content/posts/2026-08-19-drafty.md"
+  }
+}
 ```
 
 #### cherry gen.project and cherry gen.talk
 
-```text
+```sh
 cherry gen.project "Project name" [--source DIR] [--json]
 cherry gen.talk "Talk title" [--source DIR] [--today DATE] [--json]
 ```
@@ -110,7 +142,7 @@ Scaffold [portfolio](/guides/portfolio-and-cv/) entries with valid frontmatter: 
 
 #### cherry schema
 
-```text
+```sh
 cherry schema COLLECTION [--json]
 ```
 
@@ -131,7 +163,7 @@ posts frontmatter:
 
 #### cherry config
 
-```text
+```sh
 cherry config [KEY [VALUE]] [--source DIR] [--json]
 ```
 
@@ -170,7 +202,7 @@ The five `theme.*` verbs and `gen.theme` are covered in depth in [Theming](/docs
 
 #### cherry gen.action
 
-```text
+```sh
 cherry gen.action [--source DIR] [--branch NAME] [--force] [--json]
 ```
 
@@ -178,21 +210,30 @@ Writes `.github/workflows/pages.yml`: on push to `--branch` (default `main`), in
 
 #### cherry upgrade
 
-```text
+```sh
 cherry upgrade [--check] [--version vX.Y.Z] [--json]
 ```
 
 Upgrades the binary in place, rustup style: resolves the latest stable GitHub release, downloads this platform's binary, verifies it against the release's `SHA256SUMS`, and swaps the running executable. `--check` only reports:
 
 ```json
-{"ok": true, "command": "upgrade", "data": {"status": "up_to_date", "current": "0.2.0", "target": "v0.2.0", "asset": "cherry-linux-x86_64"}}
+{
+  "ok": true,
+  "command": "upgrade",
+  "data": {
+    "status": "up_to_date",
+    "current": "0.2.0",
+    "target": "v0.2.0",
+    "asset": "cherry-linux-x86_64"
+  }
+}
 ```
 
 Mix users upgrade with `mix deps.update cherry` as ever.
 
 #### cherry version
 
-```text
+```sh
 cherry version [--json]
 ```
 

@@ -117,10 +117,24 @@ The generators write valid frontmatter so you do not have to remember it:
 
 ```text
 $ cherry gen.project "Cider Press" --json
-{"ok":true,"command":"gen.project","data":{"path":"content/portfolio/projects/cider-press.md","slug":"cider-press"}}
+{
+  "ok": true,
+  "command": "gen.project",
+  "data": {
+    "path": "content/portfolio/projects/cider-press.md",
+    "slug": "cider-press"
+  }
+}
 
 $ cherry gen.talk "Backpressure in practice" --json
-{"ok":true,"command":"gen.talk","data":{"path":"content/portfolio/talks/backpressure-in-practice.md","slug":"backpressure-in-practice"}}
+{
+  "ok": true,
+  "command": "gen.talk",
+  "data": {
+    "path": "content/portfolio/talks/backpressure-in-practice.md",
+    "slug": "backpressure-in-practice"
+  }
+}
 ```
 
 Fill in what the scaffold left empty. Projects carry `status:` (`active`, `paused`, `archived`) and `links:`; talks carry `event:`, `date:`, and optionally `video:` and `slides:`. A talk with a recording can embed it right in the body with a [video component](/docs/components/), facade and all:

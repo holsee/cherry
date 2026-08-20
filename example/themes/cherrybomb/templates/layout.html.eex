@@ -1,3 +1,4 @@
+<%!-- cherry:eject theme=cherrybomb version=0.1.0 sha256=d1d200440e383d716a5e42c760022e875b78b0d4b2af16ab56815f56737f4407 --%>
 <% import Cherry.Theme.Helpers %><!doctype html>
 <html lang="en">
 <head>
@@ -44,7 +45,7 @@
 </main>
 <footer class="site-footer">
 <div class="wrap">
-<span>© <%= h(@site.title) %></span>
+<span><%= h(@site.title) %> by <a href="https://x.com/holsee" rel="me">@holsee</a></span>
 <a href="<%= href(@site, "feed.xml") %>">RSS</a>
 </div>
 </footer>

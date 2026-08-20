@@ -30,7 +30,10 @@ defmodule Cherry.SearchTest do
     {:ok, build, diagnostics} = Cherry.check(source: source, today: @today)
 
     page = Enum.find(build.pages, &(&1.path == "hello-world/index.html"))
-    assert page.content =~ ~s(<link rel="stylesheet" href="/pagefind/pagefind-ui.css">)
+
+    assert page.content =~
+             ~s[<style>@import url("/pagefind/pagefind-ui.css") layer(pagefind);</style>]
+
     assert page.content =~ ~s(<div id="search" class="site-search">)
     assert page.content =~ "new PagefindUI"
 
