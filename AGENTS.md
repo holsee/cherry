@@ -22,8 +22,7 @@ or file an ADR **in the same PR** — the doc is never allowed to go stale.
 |---|---|
 | `DESIGN.md` | The constitution: vision, pillars, architecture, theme contract, phases |
 | `docs/adr/` | Architecture decision records — one per decided question; read before re-opening any settled debate |
-| `DO_NEXT.md` | Ordered backlog of agent-sized vertical slices, each with acceptance criteria |
-| `LATER.md` | Parked ideas and later-phase work — park it, don't lose it, don't do it now |
+| GitHub issues + milestones | The backlog: features, bugs, and parked ideas — `backlog` label for parked, milestones for releases |
 | `CHANGELOG.md` | Keep-a-Changelog format; terse, clear entries linked to their PR; every user-visible change lands under Unreleased in the same PR |
 | `AGENTS.md` | This file — the portable, vendor-neutral agent constitution. `CLAUDE.md` is an uncommitted `@AGENTS.md` include (gitignored). Elixir usage rules get appended via `usage_rules` when the mix project lands |
 | `test/fixtures/sites/` | Golden fixture sites + committed expected output (created in Phase 1) |
@@ -86,7 +85,7 @@ Windows; path bugs are first-party bugs.
 
 ## Working practices
 
-- **Vertical slices**: every DO_NEXT item is one agent-session-sized slice that
+- **Vertical slices**: every issue picked up is one agent-session-sized slice that
   ships something visible (task + test + doc), never a horizontal layer.
 - **Gitflow**: `main` holds tagged releases; work merges to `develop` via short-lived
   `feature/*` branches (plus `release/*` / `hotfix/*` when the time comes). `develop`

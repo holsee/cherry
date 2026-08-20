@@ -2,7 +2,7 @@ defmodule Cherry.BasePathTest do
   use ExUnit.Case, async: true
 
   @moduledoc """
-  The base-path matrix (DO_NEXT slice 8): the same fixture built at the
+  The base-path matrix: the same fixture built at the
   root and under a project-pages subpath, asserting every emitted URL —
   hrefs, srcs, canonicals, feed and sitemap locations — respects
   `base_path`. No template or stage may concatenate URL strings itself.
