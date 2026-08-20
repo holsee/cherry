@@ -73,7 +73,7 @@ defmodule Cherry.ExampleTest do
     assert index =~ ~s(class="checks")
     assert index =~ "AI-agent-friendly CLI"
     assert index =~ "JSON Resume"
-    assert index =~ "From nothing"
+    assert index =~ "One CLI to rule them all"
     assert index =~ "junovale"
 
     # Docs joined the nav.
