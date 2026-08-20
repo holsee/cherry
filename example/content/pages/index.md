@@ -4,8 +4,8 @@ description: Cherry is a static site generator for hackers. Typed content, deter
 ---
 <section class="hero">
 <img class="hero-mark" src="/brand/cherrybomb-mark.webp" alt="CherryBomb: two cherries with a lit fuse and sunglasses" width="320" height="320">
-<h1>A static site generator<br>for <em>hackers</em></h1>
-<p class="hero-tagline">A modern take on Octopress: typed content, deterministic builds, themes that survive upgrades. One binary, fuse lit.</p>
+<h1>A static site generator<br>for all the <em>hackers</em></h1>
+<p class="hero-tagline">A modern take on static site generation: typed content, deterministic builds, themes that survive upgrades. One binary, fuse lit.</p>
 <p class="hero-actions"><a class="button" href="/guides/quick-start/">Quick-start</a> <a class="button button-ghost" href="/docs/">Docs</a> <a class="button button-ghost" href="https://github.com/holsee/cherry">GitHub</a></p>
 <div class="cmd" data-copy><span class="cmd-os">macOS / Linux</span><code>curl -fsSL https://cherrybomb.dev/install.sh | sh</code></div>
 <div class="cmd" data-copy><span class="cmd-os">Windows</span><code>irm https://cherrybomb.dev/install.ps1 | iex</code></div>
@@ -32,7 +32,7 @@ description: Cherry is a static site generator for hackers. Typed content, deter
 
 <section class="loop">
 
-## From nothing
+## One CLI to rule them all
 
 No Node, no bundler, no config safari. Install the binary, then watch how far four commands go. Real output throughout, because this site is built by the same tool it describes.
 
@@ -151,8 +151,14 @@ Styling is a ladder, and the first rung is one command:
 cherry config tokens.--color-accent "#7c3aed"
 ```
 
-```text
+```sh
 tokens.--color-accent: light-dark(#b3173e, #f4718c) → #7c3aed (written to cherry.exs)
+```
+
+The write is surgical: comments and layout in `cherry.exs` survive byte-for-byte, and the override lands as one entry in the keyword list:
+
+```elixir
+tokens: ["--color-accent": "#7c3aed"]
 ```
 
 Every theme publishes its tokens as an API (`cherry theme.tokens` lists them, documented). Light and dark are one value: tokens are `light-dark()` pairs, so the theme toggle flips a single `color-scheme` property and print always comes out clean. Need more than tokens? Drop an `assets/custom.css` that always wins, overlay a single template in EEx or HEEx, or `cherry theme.eject` with provenance recorded so upgrades merge instead of freezing. Each rung costs exactly as much ownership as you take.
@@ -161,7 +167,7 @@ Every theme publishes its tokens as an API (`cherry theme.tokens` lists them, do
 
 <section class="beyond">
 
-## Not just a blog
+## More than a blog roll
 
 The same content tree that builds your posts can carry your whole developer story. Portfolio collections (positions, projects, talks, open source, education) render a **timeline** at `/portfolio/`, **story pages** that cross-link everything sharing a tag, and a **`/cv`** shaped for employers: curated bullets, evidence-backed skills, a print stylesheet that produces a clean one-pager, and a machine-readable `cv.json` in JSON Resume format. All of it static, all of it typed, all of it checked by the same verifier as the blog. [Build yours in one guide.](/guides/portfolio-and-cv/)
 
