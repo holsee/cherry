@@ -5,24 +5,25 @@ All notable changes to Cherry are documented here. Format follows
 
 Entries are terse one-liners linked to their PR: `- Thing that changed. (#12)`
 
-## [Unreleased]
+## [0.2.0] — 2026-08-20
 
 ### Added
+- `cherry serve --verbose`: a request log at last — method, path, status, and response time per line, SSE reload subscribers included. (#62)
 - `cherry new PATH`: the binary lane can finally scaffold — config, first post, pages, `AGENTS.md`, and the `.claude` publish skill, all speaking `cherry <verb>`. Refuses a non-empty directory; the title humanizes from the directory name. Deliberately no `mix cherry.new` twin in core: the `cherry_new` archive owns that name (and adds the mix project files), so both install lanes coexist. (#57)
 - HEEx templates: the three-level lookup now accepts `<name>.html.heex` beside `<name>.html.eex`, and HEEx wins at the same level. Interpolation escapes by default (`raw/1` is the explicit door), `:for`/`:if` and `<.component>` calls work, and a theme-root `components.exs` (`use Phoenix.Component`, runtime-compiled like every `.exs` escape hatch, binary included) defines function components for that theme's templates. A `.heex` overlay is `rewritten` in `theme.diff` — owned outright, since no three-way merge against an EEx upstream is possible — and `theme.eject` refuses to write an `.eex` copy a rewrite would shadow. Malformed templates fail the build with file, line:column, and a caret. Official themes stay EEx. (#54)
 - Content components, framework-level so theme swaps survive them: `::figure{src alt caption}` (alt required), `::video{youtube title}` — a facade link that makes zero third-party requests until clicked, upgraded in place to a youtube-nocookie embed by a new ~500-byte island, or `src=` for a native local player — and `:::note{title} … :::` containers for the five alert types, in the remark-directive syntax Docusaurus and VitePress authors already know. Directives inside code fences are shown, not expanded; misuse never breaks a build — the line stays visible and `cherry check` gains a `component` rule naming the file, line, and problem. (#53)
+- The customization ladder's middle rungs are real: `tokens: ["--color-accent": "#7c3aed"]` in `cherry.exs` overrides any token the theme's manifest declares (a typo errors with the nearest real name), and `assets/custom.css` loads last, always. Both ride the framework-owned head, so every theme honors them without cooperating; official theme CSS now lives in `@layer theme`, so site overrides win by cascade-layer rules rather than specificity fights. (#51)
+- `cherry theme.tokens`: the theme's styling API as a command — every token with its default, doc, and any site override, merged. (#51)
+- `cherry config tokens.NAME VALUE`: token overrides written from the CLI, the one structured setting `config` edits — entries are distinctive enough to rewrite surgically, and the name is validated against the theme manifest before the file is touched. (#51)
 
 ### Fixed
+- `cherry serve` listens on IPv6 as well as IPv4 (a second v6-only listener on the same port — Windows cannot unset ipv6_v6only, so one dual-stack socket is not portable). `localhost` no longer stalls on hosts that resolve it to `::1` first; hosts without IPv6 keep the IPv4 listener alone. (#62)
 - Mobile tap targets: nav, footer, and post-meta links in both official themes now meet the WCAG 2.5.8 24px floor (hit area grows via padding + negative margin, zero layout shift), and the search input holds 16px at coarse pointers so iOS Safari never zooms on focus. (#55)
 - `theme.which` arrowed both the `.heex` rewrite and the shadowed `.eex` twin with `← renders`; only the file that actually renders gets the arrow now, and the JSON envelope carries it as `renders`. `theme.diff` reported that shadowed `.eex` as `current`; it is now `shadowed`, with `check` treating it as inert. (#56)
 
 ### Changed
+- `cherry new` and `mix cherry.new` scaffold `search: "cherry"` — full-text search on from the first build, no Node anywhere; delete the line to opt out. (#61)
 - Both official themes moved to `light-dark()` tokens: every color token is one pair instead of three synchronized blocks (light, dark-via-media, dark-via-toggle), the toggle forces a rendition by flipping `color-scheme` alone, and printing from a forced-dark page now gets the full light rendition — syntax palette included, which the old print block could not reach. Engines without `light-dark()` get the complete light rendition (the pairs live behind `@supports`) and the toggle stays hidden there. Token manifests now declare the pair (`default:` light, `dark:`), gate-enforced against the CSS, and `theme.tokens`/`theme.list` report it. (#52)
-
-### Added
-- The customization ladder's middle rungs are real: `tokens: ["--color-accent": "#7c3aed"]` in `cherry.exs` overrides any token the theme's manifest declares (a typo errors with the nearest real name), and `assets/custom.css` loads last, always. Both ride the framework-owned head, so every theme honors them without cooperating; official theme CSS now lives in `@layer theme`, so site overrides win by cascade-layer rules rather than specificity fights. (#51)
-- `cherry theme.tokens`: the theme's styling API as a command — every token with its default, doc, and any site override, merged. (#51)
-- `cherry config tokens.NAME VALUE`: token overrides written from the CLI, the one structured setting `config` edits — entries are distinctive enough to rewrite surgically, and the name is validated against the theme manifest before the file is touched. (#51)
 
 ## [0.1.0] — 2026-08-17
 

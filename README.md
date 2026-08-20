@@ -60,12 +60,12 @@ mix cherry.new mysite
 The scaffold is a complete site: content directories, a `cherry.exs` config, a first
 post, a GitHub Pages deploy workflow, an `AGENTS.md` describing the publish loop, and
 a `mix.exs` that depends on the cherry release matching the installer — from there
-the site's own `{:cherry, "~> 0.1.0"}` dependency pulls the real framework:
+the site's own `{:cherry, "~> 0.2.0"}` dependency pulls the real framework:
 
 ```elixir
 def deps do
   [
-    {:cherry, "~> 0.1.0"}
+    {:cherry, "~> 0.2.0"}
   ]
 end
 ```
@@ -161,9 +161,12 @@ Builds are deterministic by contract: same input, byte-identical output.
 
 ## Status
 
-**v0.1.0 is out**, the first stable release: five release binaries with provenance
-attestation, the full authoring loop, the verifier, both themes, the portfolio/CV
-views, built-in search, self-upgrade, and the agent skill. The CLI is complete
+**v0.2.0 is out**: `cherry new` scaffolding, HEEx templates beside EEx, content
+components (figures, video facades, callouts), `light-dark()` theme tokens with
+the customization ladder (`tokens:` overrides, `custom.css`, ejects with
+provenance), pure-Elixir search as the scaffold default, and a dual-stack dev
+server with a `--verbose` request log — on top of 0.1.0's binaries, verifier,
+portfolio/CV views, self-upgrade, and agent skill. The CLI is complete
 enough to run a site end to end without an editor —
 [demo/GUIDE.md](https://github.com/holsee/cherry/blob/main/demo/GUIDE.md) proves it,
 command by command. [cherrybomb.dev](https://cherrybomb.dev) is Cherry's own dogfood,
