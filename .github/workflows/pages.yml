@@ -36,14 +36,6 @@ jobs:
           key: ${{ runner.os }}-mix-${{ hashFiles('mix.lock') }}
           restore-keys: ${{ runner.os }}-mix-
 
-      # The Post stage shells `npx pagefind` (search: "pagefind" in
-      # example/cherry.exs); npm ci pins the version from package.json.
-      - uses: actions/setup-node@v7
-        with:
-          node-version: "22"
-          cache: npm
-      - run: npm ci
-
       - run: mix deps.get
       - run: mix cherry.build --source example --out _site
       - run: touch _site/.nojekyll
