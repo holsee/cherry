@@ -67,6 +67,13 @@ Rules:
 - `mix hex.publish` shows the file list and metadata before asking for
   confirmation; read it (the `files:` list keeps dialyzer PLTs out of
   the package). Docs build and publish to hexdocs.pm in the same step.
+- **ExDoc warnings are stop signs.** "documentation references file …
+  but it does not exist" means a README link is repo-relative and will
+  be dead on hexdocs — abort, make the link an absolute GitHub URL, and
+  land the fix before the release branch merges next time (a dry
+  `mix docs` during step 1 catches it early). Docs alone can be
+  refreshed later with `mix hex.publish docs`, but the goal is a clean
+  first publish.
 - A hex release can only be reverted within one hour.
 - [ ] Verify afterwards: https://hexdocs.pm/cherry resolves, and
       `mix archive.install hex cherry_new` pulls the new version.
