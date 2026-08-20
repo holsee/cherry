@@ -36,29 +36,38 @@ until the packages are up to date.
 ## 3. Hex publish (manual — needs your OTP)
 
 Interactive by design: hex prompts for a one-time password, so this is
-run by a human, from the tag, once the GitHub release is out.
+run by a human, from the tag, once the GitHub release is out. The
+`cherry-hex-home` docker volume holds the maintainer's hex auth, so the
+dev container is the publish environment:
 
 ```sh
 git checkout vX.Y.Z
 
 # main package + hexdocs
-mix deps.get
-mix hex.publish
+MSYS_NO_PATHCONV=1 docker run --rm -it \
+  -v "$(pwd -W):/workspace" \
+  -v cherry-mix-home:/opt/mix -v cherry-hex-home:/opt/hex \
+  -w /workspace cherry-dev mix hex.publish
 
-# the cherry_new scaffolding archive
-cd installer
-mix hex.publish
+# the cherry_new scaffolding archive (run `mix deps.get` in
+# installer/ first if its dev-only ex_doc is not fetched)
+MSYS_NO_PATHCONV=1 docker run --rm -it \
+  -v "$(pwd -W):/workspace" \
+  -v cherry-mix-home:/opt/mix -v cherry-hex-home:/opt/hex \
+  -w /workspace/installer cherry-dev mix hex.publish
 ```
 
 Rules:
 
-- Publish as **yourself** — if hex offers an organization, the answer
-  is always `[1] Yourself`, never an org.
+- **Order matters: cherry before cherry_new.** Scaffolds depend on the
+  matching cherry hex release — the requirement is derived at compile
+  time from the installer's own version.
+- Publish as **yourself** — at the owner prompt the answer is always
+  `[1] Yourself`, never an organization.
 - `mix hex.publish` shows the file list and metadata before asking for
-  confirmation; read it. Docs build and publish to hexdocs.pm in the
-  same step.
-- On Windows, run with a host-local build root so the container's
-  `_build` is untouched: `$env:MIX_BUILD_ROOT="$env:LOCALAPPDATA\cherry-build"`.
+  confirmation; read it (the `files:` list keeps dialyzer PLTs out of
+  the package). Docs build and publish to hexdocs.pm in the same step.
+- A hex release can only be reverted within one hour.
 - [ ] Verify afterwards: https://hexdocs.pm/cherry resolves, and
       `mix archive.install hex cherry_new` pulls the new version.
 
