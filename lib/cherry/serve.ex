@@ -29,42 +29,41 @@ defmodule Cherry.Serve do
       # :bandit application. Starting only the child spec leaves that
       # table missing, and every response logs a warning.
       {:ok, _apps} = Application.ensure_all_started(:bandit)
-      start_server(source, output, port, verbose?)
+
+      children = [
+        {Registry, keys: :duplicate, name: Reloader.registry()},
+        {Bandit, bandit_opts(output, port, verbose?, :inet)},
+        {Watcher, source: source, output: output}
+      ]
+
+      case Supervisor.start_link(children, strategy: :one_for_one) do
+        {:ok, pid} ->
+          bound = bound_port(pid)
+          add_ipv6_listener(pid, output, bound, verbose?)
+          {:ok, pid, bound}
+
+        {:error, reason} ->
+          {:error, "could not start server: #{inspect(reason)}"}
+      end
     end
   end
 
-  defp start_server(source, output, port, verbose?) do
-    case start_tree(source, output, port, verbose?, :dual_stack) do
-      {:ok, pid} ->
-        {:ok, pid, bound_port(pid)}
+  # `localhost` resolves to `::1` first on Windows and macOS, so with
+  # only an IPv4 listener every click stalls on an IPv6 connect before
+  # the browser falls back. One dual-stack socket is not portable —
+  # Windows returns :einval for `ipv6_v6only: false` — so a second,
+  # v6-only listener joins the tree on the same port. A host without
+  # usable IPv6 keeps just the IPv4 listener, the old behaviour.
+  defp add_ipv6_listener(supervisor, output, port, verbose?) do
+    spec =
+      Supervisor.child_spec({Bandit, bandit_opts(output, port, verbose?, :inet6)},
+        id: :bandit_ipv6
+      )
 
-      # A host with IPv6 disabled cannot bind `::` at all; IPv4-only is
-      # the useful floor there. A port conflict fails here too and gets
-      # reported from the retry, which fails the same way.
-      {:error, _dual_stack} ->
-        case start_tree(source, output, port, verbose?, :inet) do
-          {:ok, pid} -> {:ok, pid, bound_port(pid)}
-          {:error, reason} -> {:error, "could not start server: #{inspect(reason)}"}
-        end
+    case Supervisor.start_child(supervisor, spec) do
+      {:ok, _pid} -> :ok
+      {:error, _reason} -> :ok
     end
-  end
-
-  defp start_tree(source, output, port, verbose?, stack) do
-    children = [
-      {Registry, keys: :duplicate, name: Reloader.registry()},
-      {Bandit, bandit_opts(output, port, verbose?, stack)},
-      {Watcher, source: source, output: output}
-    ]
-
-    Supervisor.start_link(children, strategy: :one_for_one)
-  end
-
-  # `localhost` resolves to `::1` first on Windows and macOS, so an
-  # IPv4-only listener turns every click into an IPv6 connection stall
-  # before the browser falls back. One dual-stack socket answers both.
-  defp bandit_opts(output, port, verbose?, :dual_stack) do
-    bandit_opts(output, port, verbose?, :inet) ++
-      [thousand_island_options: [transport_options: [:inet6, ipv6_v6only: false]]]
   end
 
   defp bandit_opts(output, port, verbose?, :inet) do
@@ -73,6 +72,11 @@ defmodule Cherry.Serve do
       port: port,
       startup_log: false
     ]
+  end
+
+  defp bandit_opts(output, port, verbose?, :inet6) do
+    bandit_opts(output, port, verbose?, :inet) ++
+      [thousand_island_options: [transport_options: [:inet6, ipv6_v6only: true]]]
   end
 
   @doc """
