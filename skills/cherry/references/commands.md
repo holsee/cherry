@@ -226,6 +226,11 @@ and prints its diagnostics.
 handy for agents and CI, where a fixed port may already be taken; the
 port actually bound is in the banner and the `--json` envelope.
 
+The server listens on both IPv4 and IPv6 (falling back to IPv4-only
+where IPv6 is unavailable), so `localhost` never stalls on hosts that
+resolve it to `::1` first. `--verbose` logs every request: method,
+path, status, and how long the response took.
+
 When no file-watcher backend is available (on Linux this means
 inotify-tools is not installed), the site still serves — just without
 live reload. The banner says so and the envelope carries

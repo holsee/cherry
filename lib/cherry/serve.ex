@@ -13,14 +13,16 @@ defmodule Cherry.Serve do
   Builds the site once, then starts the server + watcher supervision tree.
 
   Options: `:source` (site root, required), `:output` (default
-  `source/_site`), `:port` (default 4000). Returns the supervisor pid and
-  the port actually bound (pass `port: 0` for an ephemeral port).
+  `source/_site`), `:port` (default 4000), `:verbose` (log every request).
+  Returns the supervisor pid and the port actually bound (pass `port: 0`
+  for an ephemeral port).
   """
   @spec start(keyword()) :: {:ok, pid(), :inet.port_number()} | {:error, String.t()}
   def start(opts) do
     source = Keyword.fetch!(opts, :source)
     output = Keyword.get(opts, :output, Path.join(source, "_site"))
     port = Keyword.get(opts, :port, 4000)
+    verbose? = Keyword.get(opts, :verbose, false)
 
     with {:ok, _build} <- Cherry.build(source: source, output: output, drafts: true) do
       # Bandit.Clock caches the Date header in an ETS table owned by the
@@ -30,15 +32,51 @@ defmodule Cherry.Serve do
 
       children = [
         {Registry, keys: :duplicate, name: Reloader.registry()},
-        {Bandit, plug: {Cherry.Serve.Plug, %{output: output}}, port: port, startup_log: false},
+        {Bandit, bandit_opts(output, port, verbose?, :inet)},
         {Watcher, source: source, output: output}
       ]
 
       case Supervisor.start_link(children, strategy: :one_for_one) do
-        {:ok, pid} -> {:ok, pid, bound_port(pid)}
-        {:error, reason} -> {:error, "could not start server: #{inspect(reason)}"}
+        {:ok, pid} ->
+          bound = bound_port(pid)
+          add_ipv6_listener(pid, output, bound, verbose?)
+          {:ok, pid, bound}
+
+        {:error, reason} ->
+          {:error, "could not start server: #{inspect(reason)}"}
       end
     end
+  end
+
+  # `localhost` resolves to `::1` first on Windows and macOS, so with
+  # only an IPv4 listener every click stalls on an IPv6 connect before
+  # the browser falls back. One dual-stack socket is not portable —
+  # Windows returns :einval for `ipv6_v6only: false` — so a second,
+  # v6-only listener joins the tree on the same port. A host without
+  # usable IPv6 keeps just the IPv4 listener, the old behaviour.
+  defp add_ipv6_listener(supervisor, output, port, verbose?) do
+    spec =
+      Supervisor.child_spec({Bandit, bandit_opts(output, port, verbose?, :inet6)},
+        id: :bandit_ipv6
+      )
+
+    case Supervisor.start_child(supervisor, spec) do
+      {:ok, _pid} -> :ok
+      {:error, _reason} -> :ok
+    end
+  end
+
+  defp bandit_opts(output, port, verbose?, :inet) do
+    [
+      plug: {Cherry.Serve.Plug, %{output: output, verbose?: verbose?}},
+      port: port,
+      startup_log: false
+    ]
+  end
+
+  defp bandit_opts(output, port, verbose?, :inet6) do
+    bandit_opts(output, port, verbose?, :inet) ++
+      [thousand_island_options: [transport_options: [:inet6, ipv6_v6only: true]]]
   end
 
   @doc """

@@ -50,6 +50,23 @@ defmodule Cherry.ServeTest do
     {200, _draft} = get(port, "/secret-draft/")
   end
 
+  test "answers on IPv6 loopback — localhost must not stall on ::1-first hosts", %{port: port} do
+    case :gen_tcp.connect({0, 0, 0, 0, 0, 0, 0, 1}, port, [:binary, active: false], 1_000) do
+      {:ok, socket} ->
+        request = "GET /hello-world/ HTTP/1.1\r\nhost: localhost\r\nconnection: close\r\n\r\n"
+        :ok = :gen_tcp.send(socket, request)
+        {:ok, response} = :gen_tcp.recv(socket, 0, 5_000)
+        :gen_tcp.close(socket)
+
+        assert response =~ "HTTP/1.1 200"
+
+      # A host without IPv6 at all exercises the IPv4-only fallback
+      # instead; nothing to prove here.
+      {:error, reason} when reason in [:eafnosupport, :enetunreach, :eaddrnotavail] ->
+        :ok
+    end
+  end
+
   test "unknown paths serve the themed 404 with status 404", %{port: port} do
     {404, body} = get(port, "/no-such-page/")
     assert body =~ "Page not found"
@@ -161,6 +178,40 @@ defmodule Cherry.ServeTest do
              "the probe file must not survive the check"
 
       Supervisor.stop(pid)
+    end
+  end
+
+  describe "with --verbose" do
+    @tag :no_server
+    test "every request logs method, path, status, and duration" do
+      tmp = Path.join(System.tmp_dir!(), "cherry-verbose-#{System.unique_integer([:positive])}")
+      site = Path.join(tmp, "site")
+      File.mkdir_p!(site)
+      on_exit(fn -> File.rm_rf!(tmp) end)
+      File.cp_r!(@fixture, site)
+      File.rm_rf!(Path.join(site, "expected"))
+
+      # The tree starts inside the capture so the request-handler
+      # processes inherit the captured group leader.
+      output =
+        ExUnit.CaptureIO.capture_io(fn ->
+          {:ok, pid, port} =
+            Cherry.Serve.start(
+              source: site,
+              output: Path.join(site, "_site"),
+              port: 0,
+              verbose: true
+            )
+
+          Application.ensure_all_started(:inets)
+          {200, _body} = get(port, "/hello-world/")
+          {404, _body} = get(port, "/no-such-page/")
+
+          Supervisor.stop(pid)
+        end)
+
+      assert output =~ ~r"GET /hello-world/ → 200 \d"
+      assert output =~ ~r"GET /no-such-page/ → 404 \d"
     end
   end
 
