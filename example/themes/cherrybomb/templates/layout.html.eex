@@ -1,4 +1,4 @@
-<%!-- cherry:eject theme=cherrybomb version=0.1.0 sha256=fe9efb286908b05cd663a20cc4c1dd0769ebb4e79530a700df761f15fa1bdf2a --%>
+<%!-- cherry:eject theme=cherrybomb version=0.1.0 sha256=d1d200440e383d716a5e42c760022e875b78b0d4b2af16ab56815f56737f4407 --%>
 <% import Cherry.Theme.Helpers %><!doctype html>
 <html lang="en">
 <head>
@@ -6,8 +6,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title><%= h(@page_title) %> · <%= h(@site.title) %></title>
 <%!-- Layered so the theme's own drawer/mark styling outranks it: an
-     unlayered vendor stylesheet would beat everything in @layer theme. --%>
-<%= @head_extra %><%= if @search == "pagefind" do %><style>@import url("<%= href(@site, "pagefind/pagefind-ui.css") %>") layer(pagefind);</style>
+     unlayered vendor stylesheet would beat everything in @layer theme. --%><%= @head_extra %><%= if @search == "pagefind" do %><style>@import url("<%= href(@site, "pagefind/pagefind-ui.css") %>") layer(pagefind);</style>
 <% end %><link rel="stylesheet" href="<%= href(@site, "assets/site.css") %>">
 <script>
 /* No-flash: apply the stored theme before first paint. */
