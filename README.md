@@ -108,9 +108,9 @@ cherry build                      # → _site/, plain files, deploy anywhere
 cherry gen.action                 # GitHub Pages workflow, done
 ```
 
-For the long version, [`demo/GUIDE.md`](demo/GUIDE.md) builds a complete blog
+For the long version, [`demo/GUIDE.md`](https://github.com/holsee/cherry/blob/main/demo/GUIDE.md) builds a complete blog
 and portfolio from nothing using only the CLI, with every command's real
-output. The site it produces is [`demo/site`](demo/site), and CI keeps the two
+output. The site it produces is [`demo/site`](https://github.com/holsee/cherry/tree/main/demo/site), and CI keeps the two
 in agreement.
 
 ## What you get
