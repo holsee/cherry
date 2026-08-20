@@ -164,7 +164,10 @@ defmodule Mix.Tasks.Cherry.New do
       # Set this to the site's real URL before deploying: canonical links,
       # feeds, and sitemap all derive from it.
       url: "https://example.com",
-      description: "A site grown with Cherry."
+      description: "A site grown with Cherry.",
+      # Full-text search built in-process, no Node required. Swap for
+      # "pagefind" if you prefer Pagefind, or delete the line for none.
+      search: "cherry"
     ]
     """
   end

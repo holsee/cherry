@@ -23,7 +23,7 @@ On every push to `main` (choose another with `--branch`), the workflow:
 It also writes `.nojekyll` (so nothing gets reprocessed) and, when your `url` is a custom domain, a `CNAME` file. One-time repo setup: Settings, then Pages, then Source: GitHub Actions.
 
 :::note{title="Pagefind needs Node in CI"}
-`search: "cherry"` needs nothing anywhere. If you chose `search: "pagefind"`, the build shells out to `npx pagefind` at the end. GitHub's Ubuntu runners ship with Node, so the generated workflow works as-is; add a `setup-node` step if you want the version pinned and the npm cache warm, which is what this repository's own workflow does.
+`search: "cherry"` needs nothing anywhere, which is why this site uses it. If you chose `search: "pagefind"`, the build shells out to `npx pagefind` at the end. GitHub's Ubuntu runners ship with Node, so the generated workflow works as-is; add a `setup-node` step if you want the version pinned and the npm cache warm.
 :::
 
 ### Custom domains
