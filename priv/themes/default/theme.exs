@@ -41,25 +41,59 @@
       doc: "The 404 page."
     ]
   ],
-  # The token manifest is the theme's public styling API. Defaults are the
-  # light rendition; the dark rendition redefines every color token.
+  # The token manifest is the theme's public styling API. `default:` is
+  # the light value; `dark:` is the dark rendition of the same token
+  # (the two halves of the light-dark() pair in site.css). Tokens
+  # without `dark:` are rendition-independent.
   tokens: [
-    "--color-bg": [default: "#ffffff", doc: "Page background."],
-    "--color-surface": [default: "#f6f6f4", doc: "Raised ground: code blocks, inline code."],
-    "--color-fg": [default: "#1f2328", doc: "Body text."],
-    "--color-muted": [default: "#59626c", doc: "Secondary text: metadata, nav, footer."],
-    "--color-border": [default: "#e4e4e1", doc: "Hairline rules and control borders."],
-    "--color-accent": [default: "#b3173e", doc: "Links and interactive accents."],
-    "--color-accent-strong": [default: "#8f1132", doc: "Hover/active accent."],
-    "--color-selection": [default: "#ffdce2", doc: "Text selection ground."],
-    "--syn-keyword": [default: "#b3173e", doc: "Syntax: keywords."],
-    "--syn-string": [default: "#0a3069", doc: "Syntax: strings and characters."],
-    "--syn-comment": [default: "#5d6570", doc: "Syntax: comments (italic)."],
-    "--syn-function": [default: "#6639ba", doc: "Syntax: functions and methods."],
-    "--syn-constant": [default: "#0550ae", doc: "Syntax: constants, numbers, booleans."],
-    "--syn-type": [default: "#953800", doc: "Syntax: types, modules, tags, attributes."],
-    "--syn-variable": [default: "#1f2328", doc: "Syntax: variables and default code text."],
-    "--syn-punct": [default: "#59626c", doc: "Syntax: punctuation and operators."],
+    "--color-bg": [default: "#ffffff", dark: "#15171b", doc: "Page background."],
+    "--color-surface": [
+      default: "#f6f6f4",
+      dark: "#1d2025",
+      doc: "Raised ground: code blocks, inline code."
+    ],
+    "--color-fg": [default: "#1f2328", dark: "#e3e1dd", doc: "Body text."],
+    "--color-muted": [
+      default: "#59626c",
+      dark: "#a2a6ad",
+      doc: "Secondary text: metadata, nav, footer."
+    ],
+    "--color-border": [
+      default: "#e4e4e1",
+      dark: "#2a2e35",
+      doc: "Hairline rules and control borders."
+    ],
+    "--color-accent": [default: "#b3173e", dark: "#f4718c", doc: "Links and interactive accents."],
+    "--color-accent-strong": [default: "#8f1132", dark: "#ff93a8", doc: "Hover/active accent."],
+    "--color-selection": [default: "#ffdce2", dark: "#4a2430", doc: "Text selection ground."],
+    "--syn-keyword": [default: "#b3173e", dark: "#f4718c", doc: "Syntax: keywords."],
+    "--syn-string": [default: "#0a3069", dark: "#a5d6ff", doc: "Syntax: strings and characters."],
+    "--syn-comment": [default: "#5d6570", dark: "#8b949e", doc: "Syntax: comments (italic)."],
+    "--syn-function": [
+      default: "#6639ba",
+      dark: "#d2a8ff",
+      doc: "Syntax: functions and methods."
+    ],
+    "--syn-constant": [
+      default: "#0550ae",
+      dark: "#79c0ff",
+      doc: "Syntax: constants, numbers, booleans."
+    ],
+    "--syn-type": [
+      default: "#953800",
+      dark: "#ffa657",
+      doc: "Syntax: types, modules, tags, attributes."
+    ],
+    "--syn-variable": [
+      default: "#1f2328",
+      dark: "#e3e1dd",
+      doc: "Syntax: variables and default code text."
+    ],
+    "--syn-punct": [
+      default: "#59626c",
+      dark: "#a2a6ad",
+      doc: "Syntax: punctuation and operators."
+    ],
     "--font-prose": [
       default: "Charter, 'Bitstream Charter', 'Sitka Text', Cambria, Georgia, serif",
       doc: "Long-form reading face (system stack, zero bytes)."

@@ -19,10 +19,19 @@
  * gate-enforced; both renditions verified by screenshot.
  *
  * Every color lives in a custom property below — templates and component
- * rules never carry a literal color (gate-enforced). Light is defined on
- * :root; dark redefines the same tokens under prefers-color-scheme and
- * under an explicit [data-theme] set by the toggle, which always wins.
+ * rules never carry a literal color (gate-enforced). Each color token is
+ * defined twice: a plain light value first (the complete fallback world
+ * for engines without light-dark()), then a light-dark() pair inside
+ * @supports. Forcing a rendition is one property — the toggle sets
+ * [data-theme], which flips color-scheme, and every token follows. No
+ * duplicated dark blocks, no drift between media query and toggle.
+ *
+ * Everything lives in `@layer theme`, so the site's own overrides — the
+ * `tokens:` config block and `assets/custom.css`, both unlayered — win
+ * the cascade by declaration, never by specificity arithmetic.
  */
+
+@layer theme {
 
 :root {
   --color-bg: #fbf6f8;
@@ -51,50 +60,36 @@
   color-scheme: light;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root:not([data-theme="light"]) {
-    --color-bg: #14090f;
-    --color-surface: #1f1016;
-    --color-fg: #f5e7ee;
-    --color-muted: #b39aa8;
-    --color-border: #3a2230;
-    --color-accent: #ff4d7d;
-    --color-accent-strong: #ff7a9e;
-    --color-selection: #5c1030;
+@supports (color: light-dark(#fff, #000)) {
+  :root {
+    --color-bg: light-dark(#fbf6f8, #14090f);
+    --color-surface: light-dark(#f3e7ed, #1f1016);
+    --color-fg: light-dark(#26141d, #f5e7ee);
+    --color-muted: light-dark(#6d5563, #b39aa8);
+    --color-border: light-dark(#e6d2dc, #3a2230);
+    --color-accent: light-dark(#c0134f, #ff4d7d);
+    --color-accent-strong: light-dark(#96063c, #ff7a9e);
+    --color-selection: light-dark(#ffd3e0, #5c1030);
 
-    --syn-keyword: #ff4d7d;
-    --syn-string: #45e0b8;
-    --syn-comment: #9a8292;
-    --syn-function: #c89bff;
-    --syn-constant: #ffb454;
-    --syn-type: #56d8ff;
-    --syn-variable: #f5e7ee;
-    --syn-punct: #b39aa8;
+    --syn-keyword: light-dark(#c0134f, #ff4d7d);
+    --syn-string: light-dark(#0b7a5e, #45e0b8);
+    --syn-comment: light-dark(#75616d, #9a8292);
+    --syn-function: light-dark(#6d3ac1, #c89bff);
+    --syn-constant: light-dark(#a55a00, #ffb454);
+    --syn-type: light-dark(#0369a1, #56d8ff);
+    --syn-variable: light-dark(#26141d, #f5e7ee);
+    --syn-punct: light-dark(#6d5563, #b39aa8);
 
+    color-scheme: light dark;
+  }
+
+  :root[data-theme="light"] {
+    color-scheme: light;
+  }
+
+  :root[data-theme="dark"] {
     color-scheme: dark;
   }
-}
-
-:root[data-theme="dark"] {
-  --color-bg: #14090f;
-  --color-surface: #1f1016;
-  --color-fg: #f5e7ee;
-  --color-muted: #b39aa8;
-  --color-border: #3a2230;
-  --color-accent: #ff4d7d;
-  --color-accent-strong: #ff7a9e;
-  --color-selection: #5c1030;
-
-  --syn-keyword: #ff4d7d;
-  --syn-string: #45e0b8;
-  --syn-comment: #9a8292;
-  --syn-function: #c89bff;
-  --syn-constant: #ffb454;
-  --syn-type: #56d8ff;
-  --syn-variable: #f5e7ee;
-  --syn-punct: #b39aa8;
-
-  color-scheme: dark;
 }
 
 /* ---------- base ---------- */
@@ -823,11 +818,141 @@ pre.lumis {
   color: var(--color-muted);
 }
 
+/* ---------- diagrams ---------- */
+
+/* Inline SVG diagrams inherit the theme's tokens, so they re-render
+   in light, dark, and print like everything else on the page. */
+.diagram {
+  margin: 2rem 0;
+  overflow-x: auto;
+}
+
+/* Below min-width the labels become unreadable; scroll instead of shrink. */
+.diagram svg {
+  display: block;
+  width: 100%;
+  min-width: 34rem;
+  height: auto;
+}
+
+/* ---------- content components ---------- */
+
+/* ::figure — an image that owns its caption. */
+figure {
+  margin: 1.75rem 0;
+}
+
+figure img {
+  display: block;
+}
+
+figcaption {
+  margin-top: 0.5rem;
+  font-family: var(--font-mono);
+  font-size: 0.8125rem;
+  color: var(--color-muted);
+}
+
+/* ::video — a facade at rest: no request leaves the page until the
+ * reader clicks. The island swaps the link for the real embed. */
+.video-embed {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  aspect-ratio: 16 / 9;
+  margin: 1.75rem 0;
+  border: 1px solid var(--color-border);
+  border-radius: 6px;
+  background: var(--color-surface);
+  text-decoration: none;
+}
+
+.video-embed:hover {
+  border-color: var(--color-accent);
+}
+
+.video-embed:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+}
+
+.video-embed-play {
+  position: relative;
+  width: 3.25rem;
+  height: 3.25rem;
+  border-radius: 999px;
+  background: var(--color-accent);
+}
+
+.video-embed-play::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-40%, -50%);
+  border-style: solid;
+  border-width: 0.55rem 0 0.55rem 0.95rem;
+  border-color: transparent transparent transparent var(--color-bg);
+}
+
+.video-embed:hover .video-embed-play {
+  background: var(--color-accent-strong);
+}
+
+.video-embed-title {
+  padding: 0 1rem;
+  font-family: var(--font-mono);
+  font-size: 0.875rem;
+  text-align: center;
+  color: var(--color-fg);
+}
+
+.video-embed-frame,
+video.video-local {
+  display: block;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  margin: 1.75rem 0;
+  border: 1px solid var(--color-border);
+  border-radius: 6px;
+}
+
+video.video-local {
+  background: var(--color-surface);
+}
+
+/* ---------- touch ---------- */
+
+/* Hit areas, not layout: padding grows the target, the negative margin
+ * gives the space back, so nothing moves and small mono links still
+ * clear the WCAG 2.5.8 floor on touch screens. */
+.site-nav a,
+.site-footer a,
+.post-meta a {
+  padding: 0.55rem 0.25rem;
+  margin: -0.55rem -0.25rem;
+}
+
+/* iOS zooms any focused input under 16px; keep the compact look on
+ * pointer-precise screens and go 16px where it matters. */
+@media (pointer: coarse) {
+  .site-search-input {
+    font-size: 1rem;
+  }
+}
+
 /* Print: black on white, no chrome, never split an entry. */
 
 @media print {
   :root,
   :root[data-theme="dark"] {
+    /* One property flips every light-dark() token to its light value —
+     * including the syntax palette, which the pre-light-dark print
+     * rendition could not reach. */
+    color-scheme: light;
+
     --color-bg: #ffffff;
     --color-fg: #000000;
     --color-muted: #444444;
@@ -838,7 +963,8 @@ pre.lumis {
 
   .site-header,
   .site-footer,
-  .theme-toggle {
+  .theme-toggle,
+  .video-embed {
     display: none;
   }
 
@@ -1051,10 +1177,19 @@ pre.lumis {
   max-width: 64rem;
 }
 
+/* One content column for the landing's story: the transcript-heavy
+   loop, the pitch paragraphs, and the closing all share 48rem, so the
+   page holds one width from hero to footer. The checklist grid is the
+   single deliberate wide moment. */
 .page-home .loop,
+.page-home .beyond,
 .page-home .closing {
-  max-width: var(--measure);
+  max-width: 48rem;
   margin: 0 auto;
+}
+
+.page-home .beyond {
+  margin-top: 4rem;
 }
 
 .hero {
@@ -1129,23 +1264,27 @@ pre.lumis {
   color: var(--color-accent-strong);
 }
 
+/* Two lines by design: platform label and copy button up top, the
+   command on its own full-width line. One shape at every width — no
+   metric-dependent wrapping, no scrollbar under the hero. */
 .cmd {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
-  gap: 0.85rem;
+  gap: 0.3rem 0.85rem;
   max-width: 33rem;
   margin: 0.6rem auto;
-  padding: 0.55rem 1.1rem;
+  padding: 0.55rem 1.1rem 0.7rem;
   background: var(--color-surface);
   border: 1px solid color-mix(in srgb, var(--color-accent) 25%, var(--color-border));
   border-radius: 8px;
   font-family: var(--font-mono);
-  font-size: 0.9375rem;
-  overflow-x: auto;
+  font-size: 0.8125rem;
+  text-align: left;
 }
 
 .cmd-os {
-  flex: none;
+  flex: 1;
   font-size: 0.6875rem;
   text-transform: uppercase;
   letter-spacing: 0.08em;
@@ -1153,10 +1292,15 @@ pre.lumis {
 }
 
 .cmd code {
+  order: 4;
+  flex-basis: 100%;
+  min-width: 0;
   background: none;
   border: 0;
   padding: 0;
-  white-space: nowrap;
+  /* Wraps at spaces on the narrowest screens; the copy button always
+     hands over the whole line. */
+  overflow-wrap: anywhere;
 }
 
 @keyframes hero-rise {
@@ -1179,11 +1323,7 @@ pre.lumis {
   }
 }
 
-/* Beyond the blog: the portfolio/CV pitch, one wide poster paragraph. */
-.beyond {
-  max-width: 52rem;
-  margin: 4rem auto 0;
-}
+/* Beyond the blog: the portfolio/CV pitch, one poster paragraph. */
 
 .beyond p {
   font-size: 1.125rem;
@@ -1399,3 +1539,5 @@ pre.lumis {
     display: none;
   }
 }
+
+} /* @layer theme */

@@ -7,7 +7,7 @@ defmodule Cherry.ThemeAssetsSyncTest do
   so a rebuild that only lands in one theme cannot ship.
   """
 
-  @islands ~w(theme-toggle.js copy-code.js)
+  @islands ~w(theme-toggle.js copy-code.js video-embed.js)
 
   for island <- @islands do
     test "#{island} is byte-identical across official themes" do

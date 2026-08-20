@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 60" role="img" aria-label="Rows of cherry trees">
+  <rect width="120" height="60" fill="#f6f6f4"/>
+  <g fill="#b3173e">
+    <circle cx="20" cy="20" r="6"/>
+    <circle cx="60" cy="20" r="6"/>
+    <circle cx="100" cy="20" r="6"/>
+    <circle cx="40" cy="42" r="6"/>
+    <circle cx="80" cy="42" r="6"/>
+  </g>
+</svg>

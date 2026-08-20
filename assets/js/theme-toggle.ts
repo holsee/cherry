@@ -33,8 +33,13 @@ function render(button: HTMLElement, mode: Mode): void {
   }
 }
 
+// Forcing a rendition works through `color-scheme` + `light-dark()`. On
+// an engine without light-dark() the site is the complete light
+// rendition and the button would be a lie — leave it hidden there.
+const supported = CSS.supports("color", "light-dark(#fff, #000)");
+
 const button = document.querySelector<HTMLElement>(".theme-toggle");
-if (button) {
+if (button && supported) {
   let mode = storedMode();
   render(button, mode);
   button.dataset.ready = "";

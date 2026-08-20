@@ -4,7 +4,10 @@
   description: "Cherry is a static site generator for hackers, a modern take on Octopress.",
   author: "holsee",
   theme: "cherrybomb",
-  search: "pagefind",
+  search: "cherry",
   social_image: "og-card.png",
-  nav: [[label: "Guides", href: "guides/", position: :start]]
+  nav: [
+    [label: "Guides", href: "guides/", position: :start],
+    [label: "Docs", href: "docs/", position: :start]
+  ]
 ]

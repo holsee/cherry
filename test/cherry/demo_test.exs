@@ -46,6 +46,12 @@ defmodule Cherry.DemoTest do
     assert home =~ ~s(rel="icon"), "the icon convention section claims this is automatic"
     assert home =~ ~s(data-search="/search/index.json"), "the search section claims this is wired"
 
+    # The theming section claims the demo's accent moved to violet through
+    # `cherry config tokens.--color-accent` — the ladder's rung 2, one
+    # light-dark() pair carrying both renditions.
+    assert home =~ ~s(<style id="cherry-tokens">)
+    assert home =~ "--color-accent: light-dark(#7c3aed, #a78bfa);"
+
     # The guide's theming section shows the ejected post_list grouping by year.
     blog = File.read!(Path.join(out, "blog/index.html"))
     assert blog =~ "<h2>2025</h2>" and blog =~ "<h2>2026</h2>"
@@ -67,9 +73,9 @@ defmodule Cherry.DemoTest do
       assert guide =~ "cherry #{verb}", "the guide never shows `cherry #{verb}`"
     end
 
-    # `cherry new` does not exist — scaffolding is the cherry_new archive,
-    # and the guide says so. This gate keeps that from regressing into a
-    # command a binary-only reader cannot run.
-    refute guide =~ ~r/^\$ cherry new /m
+    # `cherry new` is the binary lane's scaffold; the mix lane's twin
+    # lives in the cherry_new archive, not core, so the guide must show
+    # the verb without promising a `mix cherry.new` task from core.
+    assert guide =~ ~r/^\$ cherry new /m
   end
 end

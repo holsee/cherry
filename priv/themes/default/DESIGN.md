@@ -24,10 +24,11 @@ spacing discipline. No editor cosplay, no smuggled quirk.
 - Every color lives in a token (`site.css` `:root` blocks); templates and
   component rules never carry a literal — test-enforced
   (`theme_tokens_test.exs`).
-- Dark redefines every color token twice: under
-  `prefers-color-scheme: dark` (guarded `:root:not([data-theme="light"])`)
-  and under `:root[data-theme="dark"]`, so the manual toggle always beats
-  system preference in both directions.
+- Each color token is one `light-dark()` pair (plus a plain light
+  fallback line for engines without it, which get the complete light
+  rendition). The toggle forces a rendition by flipping `color-scheme`
+  via `[data-theme]` — one property, every token follows, and the manual
+  choice beats system preference in both directions by construction.
 - Reading column: `--measure` 42rem (~66ch), 1.125rem/1.7 body.
 - Spacing rhythm: more space above a heading than below it (h2: 2.5rem /
   0.75rem).

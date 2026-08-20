@@ -113,6 +113,16 @@ defmodule Cherry.Commands.ThemeEject do
         {:error,
          %Error{code: :unknown_template, message: "theme has no template #{name}", exit: 2}}
 
+      File.exists?(Resolver.heex_variant(overlay)) ->
+        {:error,
+         %Error{
+           code: :overlay_rewritten,
+           message:
+             "#{name} is rewritten as HEEx at #{Resolver.heex_variant(overlay)}, which wins " <>
+               "the lookup — an ejected EEx copy would be shadowed; edit the .heex file",
+           exit: 2
+         }}
+
       File.exists?(overlay) and not force? ->
         {:error,
          %Error{

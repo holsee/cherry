@@ -25,46 +25,50 @@ cherry version
 ```
 
 ```text
-cherry 0.1.0
+cherry 0.2.0
 ```
 
-A release binary also prints, in parentheses, the git revision it was compiled from — useful when you are running something built between releases.
+A release binary also prints, in parentheses, the git revision it was compiled from, which is useful when you are running something built between releases.
 
 > [!NOTE]
 > Elixir developers can skip the binary entirely: add `{:cherry, "~> 0.1"}` to a mix project and every command below is `mix cherry.<verb>`. Same verbs, same flags, same output, by construction.
 
 ## 2 · Make a site
 
-A Cherry site is a directory with a config file and content. That's the whole format:
+```sh
+cherry new mysite
+```
+
+```text
+* creating cherry.exs
+* creating .gitignore
+* creating README.md
+* creating AGENTS.md
+* creating .claude/skills/publish/SKILL.md
+* creating content/pages/index.md
+* creating content/pages/about.md
+* creating content/posts/2026-08-19-hello-cherry.md
+* creating static/images/.gitkeep
+
+Your orchard is planted at mysite. Next:
+
+    cd mysite
+    cherry serve          # live-reloading dev server
+    cherry check          # the verifier agents build against
+    cherry gen.action     # GitHub Pages deploy workflow
+```
+
+A working site with a first post, plus an `AGENTS.md` that teaches the workflow to any coding agent you point at the repo. Set your real details before anything else, no editor needed:
 
 ```sh
-mkdir mysite && cd mysite
+cherry config title "My Site"
+cherry config url "https://mysite.example"
 ```
 
-Create `cherry.exs`:
-
-```elixir
-[
-  title: "My Site",
-  url: "https://example.com",
-  description: "Notes from the orchard."
-]
-```
-
-Create your home page at `content/pages/index.md`:
-
-```markdown
----
-title: Home
-description: The front door.
----
-# Hello
-
-Welcome to my site.
-```
+Under it all, a Cherry site is just a directory with a `cherry.exs` and markdown under `content/`. That's the whole format; the scaffold saves you typing it.
 
 > [!TIP]
-> With Elixir installed you can scaffold all of this in one command: `mix archive.install hex cherry_new`, then `mix cherry.new mysite`. The scaffold includes a deploy workflow and an `AGENTS.md`, so the repo works out of the box whether a shell script or a coding agent is doing the publishing. The [Elixir guide](/guides/elixir/) covers that whole mode.
+> Elixir developers scaffold with the archive instead: `mix archive.install hex cherry_new`, then `mix cherry.new mysite`, which adds the mix project files so Cherry rides as a dependency. The [Elixir guide](/guides/elixir/) covers that whole mode.
 
 ## 3 · Write a post
 

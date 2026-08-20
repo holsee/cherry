@@ -66,6 +66,16 @@ Structured settings like `nav:` are refused rather than rewritten,
 because rewriting them would lose the formatting and comments around
 them; edit those in the file.
 
+Theme token overrides are the exception, addressed with a dotted key:
+
+    cherry config tokens                          # every override
+    cherry config tokens.--color-accent           # one override
+    cherry config tokens.--color-accent "#7c3aed" # write one
+
+A written token must exist in the active theme's manifest
+(`cherry theme.tokens` lists them), so a typo is an error here rather
+than a silently ignored line in `cherry.exs`.
+
 Only the value being changed is rewritten — the rest of the file,
 including comments and layout, is left byte-for-byte alone.
 
@@ -147,6 +157,25 @@ renames it. Point `cherry.exs` at it with `theme: "themes/NAME"` and
 every file is yours; the swap contract keeps the site building
 throughout.
 
+## cherry new
+
+Flags: `--today VALUE` — plus the global flags.
+
+Scaffolds a new Cherry site: content directories, config, a first
+post, `AGENTS.md` documenting the agent workflow, and a `.claude`
+publish skill.
+
+### Usage
+
+    cherry new PATH [--json]
+
+This is the standalone binary's front door — the scaffold speaks
+`cherry <verb>` and carries no mix project. Elixir-toolchain users
+scaffold with the `cherry_new` archive instead (`mix cherry.new`),
+which writes the same site plus `mix.exs` and `config/config.exs`;
+for that reason this verb deliberately has no `mix cherry.new` twin
+in core — the archive owns that name.
+
 ## cherry publish
 
 Flags: `--source VALUE`, `--today VALUE` — plus the global flags.
@@ -197,6 +226,11 @@ and prints its diagnostics.
 handy for agents and CI, where a fixed port may already be taken; the
 port actually bound is in the banner and the `--json` envelope.
 
+The server listens on both IPv4 and IPv6 (falling back to IPv4-only
+where IPv6 is unavailable), so `localhost` never stalls on hosts that
+resolve it to `::1` first. `--verbose` logs every request: method,
+path, status, and how long the response took.
+
 When no file-watcher backend is available (on Linux this means
 inotify-tools is not installed), the site still serves — just without
 live reload. The banner says so and the envelope carries
@@ -215,8 +249,10 @@ Reports drift between the site's theme overlays and the installed theme.
 Statuses: `current` (upstream unchanged), `auto_updatable` (upstream
 moved, your copy untouched — `--apply` re-ejects it with fresh
 provenance), `conflict` (both moved; resolve by hand or re-eject with
-`theme.eject --force`), `untracked` (no provenance header). This is
-the managed-drift answer to silently frozen theme copies.
+`theme.eject --force`), `untracked` (no provenance header),
+`rewritten` (a `.heex` rewrite — owned outright), `shadowed` (an
+`.eex` copy a `.heex` rewrite outranks). This is the managed-drift
+answer to silently frozen theme copies.
 
 ## cherry theme.eject
 
@@ -244,6 +280,25 @@ overlays (fresh / stale / untracked).
 ### Usage
 
     mix cherry.theme.list [--source DIR] [--json]
+
+## cherry theme.tokens
+
+Flags: `--source VALUE` — plus the global flags.
+
+Shows the active theme's styling API: every token the theme declares,
+its default, what it does, and any site override from `tokens:` in
+`cherry.exs` — the merged view a restyle works against.
+
+### Usage
+
+    mix cherry.theme.tokens [--source DIR] [--json]
+
+Overrides are written with `cherry config tokens.NAME VALUE`, e.g.
+
+    cherry config tokens.--color-accent "#7c3aed"
+
+A value applies to both the light and dark renditions unless written
+as `light-dark(a, b)`.
 
 ## cherry theme.which
 

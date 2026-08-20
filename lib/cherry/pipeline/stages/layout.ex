@@ -29,12 +29,21 @@ defmodule Cherry.Pipeline.Stages.Layout do
     cv = if Portfolio.present?(portfolio), do: CV.project(portfolio, build.options.today)
 
     with {:ok, theme} <- Theme.load_active(site),
+         :ok <- Theme.validate_overrides(theme, site.tokens),
          context = base_context(site, theme, portfolio, cv),
          {:ok, content_pages} <- render_documents(build.documents, context),
          {:ok, synthetic} <- synthetic_pages(build.documents, portfolio, cv, context) do
-      assets = build.assets ++ theme_assets(theme)
+      assets = build.assets ++ theme_assets(theme) ++ custom_css_asset(site)
       {:ok, %Build{build | pages: content_pages ++ synthetic, assets: assets}}
     end
+  end
+
+  # The site's own `assets/custom.css` (ladder rung 3) ships beside the
+  # theme's assets; listed after them, so it wins any name collision.
+  defp custom_css_asset(%Site{custom_css: nil}), do: []
+
+  defp custom_css_asset(%Site{custom_css: rel, root: root}) do
+    [%Asset{source: Path.join(root, rel), path: rel}]
   end
 
   defp base_context(site, theme, portfolio, cv) do
@@ -264,7 +273,15 @@ defmodule Cherry.Pipeline.Stages.Layout do
   # The 404 page gets no SEO head: it serves at arbitrary URLs, so a
   # canonical link or Open Graph URL would always be wrong.
   defp not_found(context) do
-    page_context = RenderContext.page(context, "Page not found", "", path_class("404.html"))
+    # No SEO head for the wildcard page, but the styling ladder (tokens
+    # override + custom.css) still applies everywhere.
+    page_context =
+      RenderContext.page(
+        context,
+        "Page not found",
+        Head.styling(context.site),
+        path_class("404.html")
+      )
 
     with {:ok, html} <- Renderer.render_in_layout(page_context, :not_found, site: context.site) do
       {:ok, %Page{source: ":not_found", path: "404.html", content: html}}

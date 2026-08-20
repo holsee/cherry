@@ -20,7 +20,7 @@ The scaffold is a complete site: content directories, a `cherry.exs` config, a f
 ```elixir
 def deps do
   [
-    {:cherry, "~> 0.1.0"}
+    {:cherry, "~> 0.2.0"}
   ]
 end
 ```
@@ -45,6 +45,8 @@ Flag for flag, `cherry <verb>` is `mix cherry.<verb>`, and each one takes `--jso
 | `mix cherry.theme.list` / `theme.which` | inspect available themes and the active one |
 | `mix cherry.theme.eject TEMPLATE` | take ownership of one template, with provenance |
 | `mix cherry.theme.diff --apply` | three-way drift status for every ejected overlay |
+| `mix cherry.theme.tokens` | the theme's styling API: tokens, defaults, docs, overrides |
+| `mix cherry.config KEY VALUE` | read and write cherry.exs surgically, tokens included |
 | `mix cherry.version` | print the version |
 
 > [!NOTE]
@@ -76,7 +78,7 @@ end
 #=>   "links to /guides/pruning/, which this build does not emit"}]
 ```
 
-Anything the [verifier](/guides/check/) reports on the command line is right there as `%Cherry.Check.Diagnostic{}` values. The full API is on [hexdocs.pm/cherry](https://hexdocs.pm/cherry), organized by area: core, content, themes, portfolio, pipeline.
+Anything the [verifier](/guides/check/) reports on the command line is right there as `%Cherry.Check.Diagnostic{}` values. The full API is on [hexdocs.pm/cherry](https://hexdocs.pm/cherry), organised by area: core, content, themes, portfolio, pipeline.
 
 ## When to pick which mode
 

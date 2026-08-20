@@ -39,6 +39,7 @@ defmodule Cherry.Commands.ThemeWhich do
        %{
          template: name,
          winner: winner_level(chain),
+         renders: renders_path(chain),
          chain:
            Enum.map(chain, fn {level, path, exists?} ->
              %{level: Atom.to_string(level), path: path, exists: exists?}
@@ -63,10 +64,12 @@ defmodule Cherry.Commands.ThemeWhich do
 
   @impl Cherry.CLI.Command
   @spec human(map()) :: iodata()
-  def human(%{template: template, winner: winner, chain: chain}) do
+  def human(%{template: template, renders: renders, chain: chain}) do
     lines =
       Enum.map(chain, fn entry ->
-        marker = if (winner && entry.level == winner) and entry.exists, do: " ← renders", else: ""
+        # Exactly one file renders — the first that exists. A shadowed
+        # .eex sitting under a .heex rewrite gets no arrow.
+        marker = if entry.exists and entry.path == renders, do: " ← renders", else: ""
         presence = if entry.exists, do: "", else: " (missing)"
         "  #{String.pad_trailing(entry.level, 13)} #{entry.path}#{presence}#{marker}"
       end)
@@ -77,6 +80,13 @@ defmodule Cherry.Commands.ThemeWhich do
   defp winner_level(chain) do
     case Enum.find(chain, fn {_level, _path, exists?} -> exists? end) do
       {level, _path, true} -> Atom.to_string(level)
+      nil -> nil
+    end
+  end
+
+  defp renders_path(chain) do
+    case Enum.find(chain, fn {_level, _path, exists?} -> exists? end) do
+      {_level, path, true} -> path
       nil -> nil
     end
   end

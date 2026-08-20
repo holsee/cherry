@@ -21,7 +21,7 @@ defmodule Cherry.BuildTest do
       # + feed.json.
       assert length(build.pages) == 10
       # site.css + theme-toggle.js + copy-code.js + static file.
-      assert length(build.assets) == 4
+      assert length(build.assets) == 5
 
       assert_trees_equal(@golden, out)
     end

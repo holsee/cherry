@@ -9,6 +9,10 @@ defmodule Cherry.ExampleTest do
 
   @example Path.expand("../../example", __DIR__)
 
+  # A full pipeline run over the whole cherrybomb.dev site (70+ pages),
+  # competing with the rest of the suite for schedulers and disk.
+  @moduletag timeout: 300_000
+
   @tag :tmp_dir
   test "the example site builds with feed, sitemap, and styled pages", %{tmp_dir: tmp} do
     out = Path.join(tmp, "site")
@@ -23,6 +27,12 @@ defmodule Cherry.ExampleTest do
           "guides/index.html",
           "guides/quick-start/index.html",
           "guides/elixir/index.html",
+          "guides/portfolio-and-cv/index.html",
+          "guides/creating-a-theme/index.html",
+          "docs/index.html",
+          "docs/cli/index.html",
+          "docs/theming/index.html",
+          "docs/pipeline/index.html",
           "404.html",
           "feed.xml",
           "sitemap.xml",
@@ -56,10 +66,18 @@ defmodule Cherry.ExampleTest do
     blog_at = :binary.match(index, ~s(>Blog</a>)) |> elem(0)
     assert guides_at < blog_at
 
-    # The landing pitch: the top-ten checklist and the portfolio/CV story.
+    # The landing pitch: the checklist, the portfolio/CV story, and the
+    # from-nothing transcript that opens with cherry new. (The command
+    # itself is spanned apart by syntax highlighting; the scaffolded
+    # site's name survives as text.)
     assert index =~ ~s(class="checks")
     assert index =~ "AI-agent-friendly CLI"
     assert index =~ "JSON Resume"
+    assert index =~ "One CLI to rule them all"
+    assert index =~ "junovale"
+
+    # Docs joined the nav.
+    assert index =~ ~s(>Docs</a>)
 
     # The real installers (ADR 0007): resolve latest stable with a
     # prerelease fallback (releases/latest 404s until a stable release

@@ -107,6 +107,38 @@ defmodule Cherry.Theme do
     Path.join([root, "templates", "#{name}.html.eex"])
   end
 
+  @doc """
+  Checks a site's `tokens:` overrides against this theme's manifest.
+
+  Every override must name a declared token — the manifest is the theme's
+  public styling API, and a silent typo would look like Cherry ignoring
+  the user. Unknown names error with the nearest declared token.
+  """
+  @spec validate_overrides(t(), [{String.t(), String.t()}]) :: :ok | {:error, String.t()}
+  def validate_overrides(%__MODULE__{} = theme, overrides) do
+    declared = Enum.map(theme.tokens, fn {name, _spec} -> Atom.to_string(name) end)
+
+    case Enum.reject(overrides, fn {name, _value} -> name in declared end) do
+      [] ->
+        :ok
+
+      [{unknown, _value} | _rest] ->
+        {:error,
+         "tokens: #{unknown} is not a token of theme #{theme.name}" <>
+           suggest(unknown, declared) <> " — `cherry theme.tokens` lists them"}
+    end
+  end
+
+  defp suggest(unknown, declared) do
+    case Enum.max_by(declared, &String.jaro_distance(&1, unknown), fn -> nil end) do
+      nil ->
+        ""
+
+      best ->
+        if String.jaro_distance(best, unknown) > 0.75, do: " (did you mean #{best}?)", else: ""
+    end
+  end
+
   defp read_manifest(manifest, root) do
     if File.exists?(manifest) do
       {config, _binding} = Code.eval_file(manifest)

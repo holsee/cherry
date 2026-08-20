@@ -20,6 +20,16 @@ defmodule Cherry.Commands.Config do
   because rewriting them would lose the formatting and comments around
   them; edit those in the file.
 
+  Theme token overrides are the exception, addressed with a dotted key:
+
+      cherry config tokens                          # every override
+      cherry config tokens.--color-accent           # one override
+      cherry config tokens.--color-accent "#7c3aed" # write one
+
+  A written token must exist in the active theme's manifest
+  (`cherry theme.tokens` lists them), so a typo is an error here rather
+  than a silently ignored line in `cherry.exs`.
+
   Only the value being changed is rewritten — the rest of the file,
   including comments and layout, is left byte-for-byte alone.
   """
@@ -32,7 +42,7 @@ defmodule Cherry.Commands.Config do
   alias Cherry.Site
 
   @writable ~w(title url description author theme search base_path social_image)
-  @readable @writable ++ ~w(nav)
+  @readable @writable ++ ~w(nav tokens)
 
   @doc "The single-sourced doc text, reused as the mix task's @moduledoc."
   @spec doc() :: String.t()
@@ -50,10 +60,35 @@ defmodule Cherry.Commands.Config do
     end
   end
 
+  def run(%Context{args: ["tokens." <> token], opts: opts}) do
+    with {:ok, site} <- load(source(opts)) do
+      {:ok, %{key: "tokens.#{token}", value: token_value(site, token)}}
+    end
+  end
+
   def run(%Context{args: [key], opts: opts}) do
     with :ok <- known?(key, @readable),
          {:ok, site} <- load(source(opts)) do
       {:ok, %{key: key, value: readable_value(site, key)}}
+    end
+  end
+
+  def run(%Context{args: ["tokens." <> token, value], opts: opts}) do
+    source = source(opts)
+    path = Path.join(source, "cherry.exs")
+
+    with {:ok, site} <- load(source),
+         :ok <- token_known?(site, token),
+         {:ok, original} <- read(path),
+         :ok <- File.write(path, put_token(original, token, value)),
+         :ok <- revalidate(source, path, original) do
+      {:ok,
+       %{
+         key: "tokens.#{token}",
+         value: value,
+         previous: token_value(site, token),
+         path: "cherry.exs"
+       }}
     end
   end
 
@@ -93,12 +128,38 @@ defmodule Cherry.Commands.Config do
   defp show(value) when is_list(value),
     do: "#{length(value)} entr#{if length(value) == 1, do: "y", else: "ies"}"
 
+  defp show(value) when is_map(value) and map_size(value) == 0, do: "(none)"
+
+  defp show(value) when is_map(value),
+    do: Enum.map_join(Enum.sort(value), ", ", fn {name, val} -> "#{name}=#{val}" end)
+
   defp show(value), do: to_string(value)
 
   defp source(opts), do: Keyword.get(opts, :source, File.cwd!())
 
   defp readable_value(site, "nav"), do: site.nav
+  defp readable_value(site, "tokens"), do: Map.new(site.tokens)
   defp readable_value(site, key), do: Map.get(site, String.to_existing_atom(key))
+
+  defp token_value(site, token) do
+    Enum.find_value(site.tokens, fn {name, value} -> name == token && value end)
+  end
+
+  # A token write is only as good as the name: validate against the
+  # active theme's manifest up front, so `cherry.exs` never gains a line
+  # the build would then refuse.
+  defp token_known?(site, token) do
+    case Cherry.Theme.load_active(site) do
+      {:ok, theme} ->
+        case Cherry.Theme.validate_overrides(theme, [{token, "pending"}]) do
+          :ok -> :ok
+          {:error, message} -> {:error, %Error{code: :unknown_key, message: message, exit: 2}}
+        end
+
+      {:error, message} ->
+        {:error, %Error{code: :theme_invalid, message: message}}
+    end
+  end
 
   defp known?(key, allowed) do
     if key in allowed do
@@ -150,6 +211,29 @@ defmodule Cherry.Commands.Config do
   # quoted string, which may contain either.
   defp key_pattern(key) do
     ~r/(?<=[\[,\s])#{Regex.escape(key)}:\s*(?:"(?:[^"\\]|\\.)*"|[^,\]\n]+)/
+  end
+
+  # Token writes are the one structured exception: entries are quoted-atom
+  # keys (`"--color-accent": "#7c3aed"`), distinctive enough to address
+  # individually without reformatting the list around them.
+  defp put_token(content, token, value) do
+    literal = inspect(value)
+    entry = ~s("#{token}": #{literal})
+    existing = ~r/"#{Regex.escape(token)}":\s*"(?:[^"\\]|\\.)*"/
+
+    cond do
+      Regex.match?(existing, content) ->
+        Regex.replace(existing, content, entry, global: false)
+
+      Regex.match?(~r/tokens:\s*\[\s*\]/, content) ->
+        Regex.replace(~r/tokens:\s*\[\s*\]/, content, "tokens: [#{entry}]", global: false)
+
+      Regex.match?(~r/tokens:\s*\[/, content) ->
+        Regex.replace(~r/tokens:\s*\[/, content, "tokens: [#{entry}, ", global: false)
+
+      true ->
+        insert(content, "tokens", "[#{entry}]")
+    end
   end
 
   defp insert(content, key, literal) do

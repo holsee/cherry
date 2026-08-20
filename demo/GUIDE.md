@@ -10,7 +10,9 @@ Read it start to finish the first time. After that, each section stands alone.
 readability; nothing else is edited. Commands are written for the standalone
 binary (`cherry build`).
 If you installed Cherry as an Elixir dependency instead, every verb is a mix
-task with the same name and flags: `mix cherry.build`. Inside this repository,
+task with the same name and flags: `mix cherry.build`. The one exception is
+`cherry new` — its mix twin comes from the `cherry_new` archive (§2), not from
+core. Inside this repository,
 add `--source demo/site` to point at the demo rather than the current directory.
 
 **Contents**
@@ -99,26 +101,42 @@ You get a site, not a framework: markdown under `content/`, files to copy under
 `static/`, one `cherry.exs`, and an `AGENTS.md` describing the loop for whatever
 coding agent you point at it.
 
-### With the standalone binary only
+### With the standalone binary
 
-There is no `cherry new` — scaffolding lives in the mix archive above, so a
-binary-only install has nothing to run it. The gap is one file wide, and worth
-knowing exactly how wide:
+`cherry new` plants the same site — minus the mix project files a
+binary-only install has no use for:
 
-```bash
-mkdir -p junovale/content/posts junovale/content/pages
-cd junovale
-cat > cherry.exs <<'EOF'
-[
-  title: "Juno Vale",
-  url: "https://junovale.example"
-]
-EOF
+```console
+$ cherry new junovale
+* creating cherry.exs
+* creating .gitignore
+* creating README.md
+* creating AGENTS.md
+* creating .claude/skills/publish/SKILL.md
+* creating content/pages/index.md
+* creating content/pages/about.md
+* creating content/posts/2026-08-19-hello-cherry.md
+* creating static/images/.gitkeep
+
+Your orchard is planted at junovale. Next:
+
+    cd junovale
+    cherry serve          # live-reloading dev server
+    cherry check          # the verifier agents build against
+    cherry gen.action     # GitHub Pages deploy workflow
+
+AGENTS.md documents the whole workflow — point your agent at it.
 ```
 
-That is the whole bootstrap. `cherry.exs` has to exist before any verb works —
-including `cherry config`, which reads a site before it writes one — but from
-here everything is commands:
+It refuses a directory that already has anything in it, and the title
+humanizes from the directory name (`juno-vale` → `Juno Vale`). This is
+the one verb without a `mix cherry.new` twin in core: the archive above
+owns that name, so the two install lanes can coexist in one project.
+
+The scaffold is also nothing you could not type yourself. `cherry.exs`
+is the only file any verb strictly requires — `cherry config`, which
+reads a site before it writes one, works the moment that file exists —
+and from there everything is commands:
 
 ```console
 $ cherry config
@@ -285,6 +303,46 @@ Capture `from` and `to`. Here they match, because `--today` gave the post the
 date its filename already had. Publish without it and they differ — the file is
 renamed to today — and anything linking to the old path needs updating.
 
+### Rich content without theme lock-in
+
+Markdown is GFM throughout — tables, footnotes, task lists, `> [!NOTE]`
+alerts. On top of that, three content components cover what plain markdown
+cannot, in the directive syntax you may know from Docusaurus or VitePress:
+
+```markdown
+::figure{src="/images/nif-boundary.svg" alt="The NIF boundary" caption="The whole architecture, honestly."}
+
+::video{youtube="q6Yr9DkTn2k" title="Backpressure in Practice — ElixirConf EU 2025"}
+
+:::tip{title="Where the fear lives"}
+Container callouts take **markdown** and a custom title.
+:::
+```
+
+`figure` is an image that owns its caption. `video` embeds nothing at rest —
+it renders a styled link that makes zero third-party requests until the reader
+clicks, at which point a small island swaps in a youtube-nocookie embed
+(without JS it is just a link to YouTube); `src=` plays a local file natively.
+The callout containers are the five alert types (`note`, `tip`, `important`,
+`warning`, `caution`) with an optional title of your own.
+
+Write component asset paths root-absolute (`/images/…`). Unlike raw markdown,
+components apply the site's `base_path`, so the same source works at a domain
+root and under GitHub project pages.
+
+These are framework-level, not theme-level, which is the point: swap themes
+and every component re-renders in the new theme's tokens, because content
+never references theme internals. The rust-nif post and the ElixirConf talk
+in this demo carry all three.
+
+Misuse never breaks a build — `::figure` without alt text, `::video` without
+a title, an unknown name — the line stays visible in the output and
+`cherry check` names the file, the line, and what is wrong:
+
+```text
+[error] content/posts/2026-01-01-clip.md: component — ::figure needs alt — alt text is not optional
+```
+
 ## 6. Read the verifier properly
 
 `cherry check` builds the whole site in memory and writes nothing. It is the
@@ -438,7 +496,49 @@ deliberately; the demo uses the built-in one to keep the toolchain at one tool.
 
 ## 10. Themes, by provenance
 
-Start by looking:
+Most restyles never need a template. Climb this ladder and stop at the first
+rung that does the job:
+
+1. **Pick a theme** — `theme: "cherrybomb"` in `cherry.exs`.
+2. **Override tokens** — the theme's public styling API.
+3. **Append CSS** — `assets/custom.css`, loaded last, always.
+4. **Eject a template** — with provenance, shown below.
+5. **Own the theme** — `cherry gen.theme`.
+
+Rung 2 starts with looking. Every token the theme declares, with its default,
+what it does, and any override you have in place:
+
+```console
+$ cherry theme.tokens
+tokens of theme default:
+  --color-bg             light-dark(#ffffff, #15171b)
+                         Page background.
+  --color-accent         light-dark(#b3173e, #f4718c)
+                         Links and interactive accents.
+  --measure              42rem
+                         Reading column width (~66ch).
+  …
+```
+
+Every color is one `light-dark(light, dark)` pair — both renditions in a
+single value. Overriding one is a config write, not a CSS file, and the demo
+site runs with its accent moved to violet exactly this way:
+
+```console
+$ cherry config tokens.--color-accent "light-dark(#7c3aed, #a78bfa)" --json
+{"command":"config","data":{"key":"tokens.--color-accent","path":"cherry.exs","previous":null,"value":"light-dark(#7c3aed, #a78bfa)"},"ok":true}
+```
+
+The name must exist in `theme.tokens` — a typo is refused here, with the
+nearest real token named, instead of becoming a dead line in `cherry.exs`.
+A plain value (`"#7c3aed"`) works too and applies to both renditions.
+
+Rung 3 is a file: anything in `assets/custom.css` ships as
+`/assets/custom.css` and loads after everything else. Theme CSS lives inside
+`@layer theme`, and your overrides — tokens and custom.css both — are
+unlayered, so yours win by declaration, never by specificity fights.
+
+When a restyle really is structural, continue to rung 4. Start by looking:
 
 ```console
 $ cherry theme.list
@@ -501,6 +601,36 @@ cherry config theme themes/orchard
 A theme that lives inside your site is yours outright: it has no overlay level,
 so `theme.diff` reports nothing to drift and `theme.eject` refuses, pointing you
 at the file to edit directly.
+
+### Templates speak two languages
+
+Every template above is classic EEx. Since 0.2.0 the lookup also accepts
+**HEEx** — the same `<name>.html.heex` file name, and it wins over the `.eex`
+twin at the same level. HEEx is the template language Phoenix developers
+already know: interpolation is `{@doc.meta.title}` and **escapes by default**
+(`raw/1` is the explicit door for rendered markdown), iteration is an
+attribute, and components are tags:
+
+```heex
+<ul>
+  <li :for={post <- @posts}>
+    <time>{format_date(post.meta.date)}</time>
+    <a href={post.url}>{post.meta.title}</a>
+  </li>
+</ul>
+```
+
+A theme can also ship a `components.exs` at its root — a module of
+`Phoenix.Component` function components every HEEx template in that theme can
+call as `<.card title={...}>`. It is runtime-compiled like `theme.exs`, so the
+standalone binary renders it identically to a mix project.
+
+Rewriting an ejected template as `.heex` takes it out of provenance on
+purpose: a rewrite is a different language, so no three-way merge against the
+EEx upstream is possible. `theme.diff` reports it as `rewritten` — owned, not
+drift — and `theme.eject` refuses to write an `.eex` copy that would be
+shadowed. A malformed HEEx template fails the build with the file, line,
+column, and a caret pointing at the problem.
 
 ## 11. Icons and static files
 
@@ -602,6 +732,7 @@ Point your agent at either and it will follow this same loop.
 | `cherry check [--strict]` | verify without writing |
 | `cherry serve [--port N]` | dev server with live reload |
 | `cherry theme.list` | active theme, templates, tokens |
+| `cherry theme.tokens` | the styling API: tokens, defaults, overrides |
 | `cherry theme.which TEMPLATE` | resolution chain for one template |
 | `cherry theme.eject TEMPLATE` | take ownership, with provenance |
 | `cherry theme.diff` | drift status of every overlay |

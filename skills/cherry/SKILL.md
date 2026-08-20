@@ -5,7 +5,7 @@ description: Author, build, verify, theme, and deploy Cherry static sites throug
 
 # Cherry
 
-Use the `cherry` CLI for deterministic, structured control of a Cherry site. Every verb behaves identically under the standalone binary (`cherry VERB`) and mix (`mix cherry.VERB`) — both are thin wrappers around one seam, so pick whichever the environment provides and never assume they differ.
+Use the `cherry` CLI for deterministic, structured control of a Cherry site. Every verb behaves identically under the standalone binary (`cherry VERB`) and mix (`mix cherry.VERB`) — both are thin wrappers around one seam, so pick whichever the environment provides and never assume they differ. The one asymmetry is scaffolding: `cherry new PATH` exists only in the binary, because the mix lane scaffolds with the `cherry_new` archive (`mix cherry.new`), which owns that task name and additionally writes the mix project files.
 
 ## Start safely
 
@@ -16,9 +16,9 @@ Use the `cherry` CLI for deterministic, structured control of a Cherry site. Eve
 
 ## Follow the operating loop
 
-This is the loop the scaffolded site `AGENTS.md` teaches; keep to it:
+Starting from nothing, `cherry new PATH` plants the site first — config, first post, `AGENTS.md`, and a publish skill; it refuses a non-empty directory. From there, this is the loop the scaffolded site `AGENTS.md` teaches; keep to it:
 
-1. **Author** — `cherry gen.post "Title"` creates a draft; `cherry gen.project` and `cherry gen.talk` scaffold portfolio entries with valid frontmatter. Capture `data.path` from the envelope and edit that file.
+1. **Author** — `cherry gen.post "Title"` creates a draft; `cherry gen.project` and `cherry gen.talk` scaffold portfolio entries with valid frontmatter. Capture `data.path` from the envelope and edit that file. Markdown is GFM plus three framework-level content components in remark-directive syntax: `::figure{src="…" alt="…" caption="…"}` (alt is required), `::video{youtube="ID" title="…"}` (renders a zero-request facade; `src=` plays a local file), and `:::note{title="…"} … :::` containers for the five alert types. They are theme-independent by design; misuse is a `component` diagnostic in `cherry check`, never a broken build.
 2. **Build** — `cherry build` emits the site to `_site/`. Treat a failing build as the first diagnostic, not an obstacle.
 3. **Verify** — `cherry check --strict --json` builds in memory (writes nothing) and reports structured diagnostics. Fix and re-run until clean; do not ship with warnings suppressed.
 4. **Preview** — `cherry serve` runs until interrupted (live reload, drafts included). In automation, background it or skip it; never let it block the loop. Prefer `--port 0` there: it binds a free ephemeral port and reports it in the envelope, so a taken port 4000 cannot fail the run. Trust `live_reload` in the envelope over the assumption that edits reload: on a Docker bind mount or a network share it is `false`, and you must rebuild explicitly.
@@ -44,13 +44,15 @@ Without `--strict`, warnings stay warnings and only errors fail the check.
 Never hand-copy a theme file — provenance is what keeps upgrades mergeable.
 
 - Inspect with `cherry theme.list` and `cherry theme.which TEMPLATE` (shows the three-level lookup chain and the winner).
+- Restyle before you eject: `cherry theme.tokens` lists the theme's styling API — every CSS token with its default, doc, and any site override — and `cherry config tokens.--color-accent "#7c3aed"` writes an override. Token overrides and the site's `assets/custom.css` load unlayered over the theme's `@layer theme` CSS, so they always win; most restyles never need to touch a template. A token value applies to both light and dark unless written as `light-dark(a, b)`.
 - Take ownership of a template with `cherry theme.eject TEMPLATE`; the copy records provenance.
+- Templates are EEx or HEEx — the extension decides, and `<name>.html.heex` beats `<name>.html.eex` at the same lookup level. HEEx escapes by default (`raw(@doc.html)` for rendered markdown), supports `:for`/`:if` and `<.component>` calls, and a theme-root `components.exs` (`use Phoenix.Component`) defines components its templates can call. A `.heex` overlay is a rewrite: `theme.diff` reports it `rewritten` (owned, no three-way merge), and `theme.eject` refuses to write a shadowed `.eex` beside it.
 - After a Cherry upgrade, run `cherry theme.diff`: `current` needs nothing, `auto_updatable` re-ejects cleanly with `--apply`, `conflict` means both sides moved — merge by hand, then `theme.eject --force`; `untracked` has no provenance — re-eject to adopt it.
 - A whole-theme fork is `cherry gen.theme NAME [--from THEME]`.
 
 ## Mutate deliberately
 
-- `cherry config` reads and writes `cherry.exs`, so site settings never need an editor: `cherry config` lists everything, `cherry config KEY` reads one, `cherry config KEY VALUE` writes one. The write is validated by reloading the site and rolled back if the value is rejected, and only the changed value is rewritten — comments and layout survive. Structured settings like `nav:` are refused by design; edit those in the file.
+- `cherry config` reads and writes `cherry.exs`, so site settings never need an editor: `cherry config` lists everything, `cherry config KEY` reads one, `cherry config KEY VALUE` writes one. The write is validated by reloading the site and rolled back if the value is rejected, and only the changed value is rewritten — comments and layout survive. Structured settings like `nav:` are refused by design; edit those in the file. The exception is theme token overrides, addressed with a dotted key: `cherry config tokens.NAME VALUE` (the name must exist in `cherry theme.tokens`, so typos fail here instead of becoming dead config).
 - Activating a scaffolded theme is two commands, not a file edit: `cherry gen.theme NAME` then `cherry config theme themes/NAME`.
 - `gen.post`, `gen.project`, `gen.talk`, and `gen.theme` refuse to overwrite existing files; a refusal means the thing exists — read it instead of forcing.
 - `publish` moves a file; capture `data.from` and `data.to` and update anything referencing the old path.
