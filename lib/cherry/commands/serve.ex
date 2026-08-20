@@ -15,6 +15,11 @@ defmodule Cherry.Commands.Serve do
   handy for agents and CI, where a fixed port may already be taken; the
   port actually bound is in the banner and the `--json` envelope.
 
+  The server listens on both IPv4 and IPv6 (falling back to IPv4-only
+  where IPv6 is unavailable), so `localhost` never stalls on hosts that
+  resolve it to `::1` first. `--verbose` logs every request: method,
+  path, status, and how long the response took.
+
   When no file-watcher backend is available (on Linux this means
   inotify-tools is not installed), the site still serves — just without
   live reload. The banner says so and the envelope carries
@@ -37,12 +42,12 @@ defmodule Cherry.Commands.Serve do
 
   @impl Cherry.CLI.Command
   @spec run(Context.t()) :: {:ok, map()} | {:error, Error.t()}
-  def run(%Context{opts: opts}) do
+  def run(%Context{opts: opts, verbose?: verbose?}) do
     source = Keyword.get(opts, :source, File.cwd!())
     output = Keyword.get(opts, :out, Path.join(source, "_site"))
     port = Keyword.get(opts, :port, 4000)
 
-    case Cherry.Serve.start(source: source, output: output, port: port) do
+    case Cherry.Serve.start(source: source, output: output, port: port, verbose: verbose?) do
       {:ok, pid, bound_port} ->
         {:ok,
          %{

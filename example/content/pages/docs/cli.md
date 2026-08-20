@@ -64,7 +64,7 @@ build failed (still serving the last good output):
 validate: content/pages/about.md: required :title option not found
 ```
 
-`--port 0` binds a free ephemeral port and reports it in the banner and envelope, which is exactly what you want in scripts and CI where port 4000 may be taken. [How the server works inside](/the-embedded-server/) is a story of its own.
+`--port 0` binds a free ephemeral port and reports it in the banner and envelope, which is exactly what you want in scripts and CI where port 4000 may be taken. The listener is dual-stack (IPv4 and IPv6 on one socket, IPv4-only where the host has no IPv6), so `localhost` answers instantly even on systems that resolve it to `::1` first. Add `--verbose` for a request log: method, path, status, and response time per line. [How the server works inside](/the-embedded-server/) is a story of its own.
 
 #### cherry build
 

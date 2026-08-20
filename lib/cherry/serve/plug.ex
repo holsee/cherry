@@ -21,16 +21,31 @@ defmodule Cherry.Serve.Plug do
 
   @impl Plug
   @spec call(Plug.Conn.t(), map()) :: Plug.Conn.t()
-  def call(%Plug.Conn{path_info: ["__cherry", "reload"]} = conn, _opts) do
+  def call(%Plug.Conn{path_info: ["__cherry", "reload"]} = conn, config) do
+    if config[:verbose?], do: IO.puts("GET /__cherry/reload → SSE subscriber connected")
     sse(conn)
   end
 
-  def call(conn, %{output: output}) do
+  def call(conn, %{output: output} = config) do
+    started = System.monotonic_time(:microsecond)
+
     case resolve(output, conn.path_info) do
-      {:ok, path} -> serve_file(conn, path, 200)
-      :error -> not_found(conn, output)
+      {:ok, path} -> conn |> serve_file(path, 200) |> log_request(config, started)
+      :error -> conn |> not_found(output) |> log_request(config, started)
     end
   end
+
+  # --verbose request log: one line per response, timed from dispatch.
+  defp log_request(conn, %{verbose?: true}, started) do
+    elapsed_us = System.monotonic_time(:microsecond) - started
+    IO.puts("#{conn.method} #{conn.request_path} → #{conn.status} #{format_elapsed(elapsed_us)}")
+    conn
+  end
+
+  defp log_request(conn, _config, _started), do: conn
+
+  defp format_elapsed(us) when us < 1_000, do: "#{us}µs"
+  defp format_elapsed(us), do: "#{Float.round(us / 1_000, 1)}ms"
 
   defp sse(conn) do
     Reloader.subscribe()
