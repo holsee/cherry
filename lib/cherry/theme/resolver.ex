@@ -30,13 +30,25 @@ defmodule Cherry.Theme.Resolver do
     end
   end
 
-  @doc "Whether this theme is loaded from inside the site itself."
+  @doc """
+  Whether this theme is loaded from inside the site itself.
+
+  Built-in themes are never site-local, wherever they live on disk: when
+  Cherry is a dependency, its priv/ (and the official themes in it) sits
+  under the site's own `_build`, which is inside the site root — without
+  the exception, every hex-dep site would lose overlays entirely.
+  """
   @spec site_local?(Site.t(), Theme.t()) :: boolean()
   def site_local?(%Site{root: site_root}, %Theme{root: theme_root}) do
     site = normalize(site_root)
     theme = normalize(theme_root)
 
-    theme != site and String.starts_with?(theme, site <> "/")
+    not builtin?(theme) and theme != site and String.starts_with?(theme, site <> "/")
+  end
+
+  defp builtin?(theme_root) do
+    builtins = :cherry |> :code.priv_dir() |> Path.join("themes") |> normalize()
+    String.starts_with?(theme_root, builtins <> "/")
   end
 
   defp normalize(path) do

@@ -194,6 +194,33 @@ defmodule Cherry.ThemeDiffTest do
       refute Resolver.site_local?(site, theme)
       assert Resolver.overlay_path(site, theme, :post) =~ "themes/default/templates/post.html.eex"
     end
+
+    test "a builtin theme under the site root is not site-local (hex-dep case)" do
+      # When cherry is a dependency, its priv/ — official themes included —
+      # lives inside the site's own _build, so the ancestry check alone
+      # would classify the theme as site-local and disable overlays for
+      # every hex-dep site.
+      builtin = Theme.builtin_root("cherrybomb")
+      {:ok, theme} = Theme.load(builtin)
+
+      root =
+        builtin |> Path.split() |> Enum.take_while(&(&1 != "_build")) |> Path.join()
+
+      assert String.starts_with?(Path.expand(builtin), Path.expand(root))
+
+      site = %Cherry.Site{
+        title: "T",
+        url: "https://t.example",
+        base_path: "/",
+        root: root,
+        output: Path.join(root, "_site")
+      }
+
+      refute Resolver.site_local?(site, theme)
+
+      assert Resolver.overlay_path(site, theme, :layout) =~
+               "themes/cherrybomb/templates/layout.html.eex"
+    end
   end
 
   defp upstream(ctx), do: ctx.theme |> Theme.template_path(:post) |> File.read!()
