@@ -1,1 +1,1 @@
-"use strict";(()=>{var e=new EventSource("/__cherry/reload");e.onmessage=()=>location.reload();})();
+"use strict";(()=>{var e=new EventSource("/__cherry/reload");e.onmessage=()=>location.reload();addEventListener("pagehide",()=>e.close());addEventListener("pageshow",o=>{o.persisted&&location.reload()});})();
