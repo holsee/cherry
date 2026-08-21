@@ -116,7 +116,8 @@ defmodule Cherry.Commands.JsonEnvelopeTest do
     end
 
     test "gen.action", %{tmp_dir: tmp} do
-      assert %{"path" => _, "branch" => _} = data(["gen.action", "--source", stub_site(tmp)])
+      assert %{"host" => "github", "path" => _, "branch" => _} =
+               data(["gen.action", "--source", stub_site(tmp)])
     end
 
     test "theme.list", %{tmp_dir: tmp} do

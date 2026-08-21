@@ -5,6 +5,11 @@ All notable changes to Cherry are documented here. Format follows
 
 Entries are terse one-liners linked to their PR: `- Thing that changed. (#12)`
 
+## [Unreleased]
+
+### Added
+- `cherry gen.action --host cloudflare`: first-class Cloudflare deploys via Workers static assets — writes a `wrangler.jsonc` (no Worker script; `_site/` as assets with `404.html` wired up, Worker named by `--name` or a slug of the site title) plus `.github/workflows/cloudflare.yml`, which builds with the pinned cherry action and ships with `wrangler deploy`. `_headers`/`_redirects` files pass through `static/` verbatim, so Cloudflare's header and redirect rules work with no new config. (#91)
+
 ## [0.3.0] — 2026-08-21
 
 ### Added

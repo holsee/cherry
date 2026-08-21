@@ -146,9 +146,10 @@ diagnostics. `cherry schema posts --json` tells an agent exactly what valid
 frontmatter is *before* it writes. New sites ship an `AGENTS.md`. Published sites
 emit `llms.txt` and a markdown mirror of every page — readable without scraping.
 
-**Host anywhere.** `_site/` is plain files. GitHub Pages is first-class (generated
-Actions workflow, correct base-path handling for project pages, CNAME, `.nojekyll`)
-— Netlify, Cloudflare, S3, or rsync work just as well.
+**Host anywhere.** `_site/` is plain files. GitHub Pages and Cloudflare are
+first-class: `cherry gen.action` writes the whole pipeline for either
+(`--host cloudflare` emits a `wrangler.jsonc` plus deploy workflow for
+Workers static assets) — Netlify, S3, or rsync work just as well.
 
 ## Hack it
 

@@ -51,3 +51,5 @@ Every emitted URL (pages, assets, feeds, canonical links, icons, nav) respects i
 
 > [!NOTE]
 > Sites with `search: "pagefind"` need Node available in the workflow (the post-build stage shells `npx pagefind`). The generated action handles toolchains for you; if you hand-roll a workflow, add `actions/setup-node` before the build.
+
+Prefer Cloudflare? The same verb targets Workers static assets: the [Cloudflare guide](/guides/deploy-cloudflare/) is the walkthrough.
