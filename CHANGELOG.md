@@ -5,7 +5,7 @@ All notable changes to Cherry are documented here. Format follows
 
 Entries are terse one-liners linked to their PR: `- Thing that changed. (#12)`
 
-## [Unreleased]
+## [0.4.0] — 2026-08-21
 
 ### Fixed
 - `cherry serve` honours `base_path`: the site serves under its prefix exactly as production will (banner URL included), the bare root redirects there, and an unprefixed path that would 404 on the real host now 404s in dev too — previously a `base_path` site served styleless because every emitted asset URL pointed at the prefix the dev server ignored. (#92)

@@ -20,7 +20,7 @@ The scaffold is a complete site: content directories, a `cherry.exs` config, a f
 ```elixir
 def deps do
   [
-    {:cherry, "~> 0.3.0"}
+    {:cherry, "~> 0.4.0"}
   ]
 end
 ```
