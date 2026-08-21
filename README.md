@@ -60,12 +60,12 @@ mix cherry.new mysite
 The scaffold is a complete site: content directories, a `cherry.exs` config, a first
 post, a GitHub Pages deploy workflow, an `AGENTS.md` describing the publish loop, and
 a `mix.exs` that depends on the cherry release matching the installer — from there
-the site's own `{:cherry, "~> 0.3.0"}` dependency pulls the real framework:
+the site's own `{:cherry, "~> 0.4.0"}` dependency pulls the real framework:
 
 ```elixir
 def deps do
   [
-    {:cherry, "~> 0.3.0"}
+    {:cherry, "~> 0.4.0"}
   ]
 end
 ```
@@ -162,11 +162,12 @@ Builds are deterministic by contract: same input, byte-identical output.
 
 ## Status
 
-**v0.3.0 is out**: named dev-server URLs via
-[cherrypicker](https://github.com/holsee/cherrypicker) (`cherry serve --name
-mysite` answers at `http://mysite.localhost`), `PORT` env support for proxy
-runners, and template overlays fixed for sites taking Cherry from hex — on
-top of 0.2.0's `cherry new` scaffolding, HEEx templates, content components,
+**v0.4.0 is out**: first-class Cloudflare deploys (`cherry gen.action
+--host cloudflare` writes the `wrangler.jsonc` and workflow for Workers
+static assets), and the dev server now honours `base_path`, serving
+subpath sites exactly as production will — on top of 0.3.0's named
+dev-server URLs via [cherrypicker](https://github.com/holsee/cherrypicker)
+(`cherry serve --name mysite`), `PORT` env support, and 0.2.0's `cherry new` scaffolding, HEEx templates, content components,
 `light-dark()` theme tokens with the customization ladder, pure-Elixir
 search, and the dual-stack dev server. The CLI is complete
 enough to run a site end to end without an editor —
