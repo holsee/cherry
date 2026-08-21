@@ -31,6 +31,7 @@ defmodule Cherry.CherrybombThemeTest do
     for file <- [
           "pruning-processes/index.html",
           "portfolio/index.html",
+          "cv/timeline/index.html",
           "cv/index.html",
           "404.html"
         ] do

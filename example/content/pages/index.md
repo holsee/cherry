@@ -169,7 +169,7 @@ Every theme publishes its tokens as an API (`cherry theme.tokens` lists them, do
 
 ## More than a blog roll
 
-The same content tree that builds your posts can carry your whole developer story. Portfolio collections (positions, projects, talks, open source, education) render a **timeline** at `/portfolio/`, **story pages** that cross-link everything sharing a tag, and a **`/cv`** shaped for employers: curated bullets, evidence-backed skills, a print stylesheet that produces a clean one-pager, and a machine-readable `cv.json` in JSON Resume format. All of it static, all of it typed, all of it checked by the same verifier as the blog. [Build yours in one guide.](/guides/portfolio-and-cv/)
+The same content tree that builds your posts can carry your whole developer story. Portfolio collections (positions, projects, talks, open source, education) render one profile with two modes: a **`/cv/`** shaped for employers, with curated bullets, evidence-backed skills, a print stylesheet that produces a clean one-pager, and a machine-readable `cv.json` in JSON Resume format; a full dated **timeline** at `/cv/timeline/`; plus **story pages** that cross-link everything sharing a tag. All of it static, all of it typed, all of it checked by the same verifier as the blog. [Build yours in one guide.](/guides/portfolio-and-cv/)
 
 </section>
 

@@ -13,7 +13,7 @@
 
 ## Portfolio
 
-- [Portfolio](https://folio.example/portfolio/index.md)
+- [Portfolio](https://folio.example/cv/timeline/index.md)
 - [The elixir story](https://folio.example/story/elixir/index.md)
 - [The erlang story](https://folio.example/story/erlang/index.md)
 
