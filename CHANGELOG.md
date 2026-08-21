@@ -5,7 +5,7 @@ All notable changes to Cherry are documented here. Format follows
 
 Entries are terse one-liners linked to their PR: `- Thing that changed. (#12)`
 
-## [Unreleased]
+## [0.3.0] — 2026-08-21
 
 ### Added
 - `cherry serve` honours the `PORT` environment variable when `--port` is absent (explicit flag still wins; malformed values fall back to 4000) — what proxy runners and PaaS-style tooling hand out. (#83)
