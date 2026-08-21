@@ -81,20 +81,26 @@ including comments and layout, is left byte-for-byte alone.
 
 ## cherry gen.action
 
-Flags: `--source VALUE`, `--branch VALUE`, `--force` — plus the global flags.
+Flags: `--source VALUE`, `--branch VALUE`, `--host VALUE`, `--name VALUE`, `--force` — plus the global flags.
 
-Generates a GitHub Pages deploy workflow for this site.
+Generates a deploy pipeline for this site.
 
 ### Usage
 
-    mix cherry.gen.action [--source DIR] [--branch NAME] [--force] [--json]
+    mix cherry.gen.action [--host github|cloudflare] [--source DIR] [--branch NAME] [--name NAME] [--force] [--json]
 
-Writes `.github/workflows/pages.yml`: build on push to `--branch`
-(default `main`), upload the site, deploy via GitHub's Pages actions.
-The workflow adds `.nojekyll`, and a `CNAME` when the site's `url` is a
-custom domain (skipped for `*.github.io` and subpath `base_path` sites).
+The default host, `github`, writes `.github/workflows/pages.yml`: build
+on push to `--branch` (default `main`), upload the site, deploy via
+GitHub's Pages actions. The workflow adds `.nojekyll`, and a `CNAME`
+when the site's `url` is a custom domain (skipped for `*.github.io` and
+subpath `base_path` sites). One-time repo setup: Settings → Pages →
+Source → GitHub Actions.
 
-One-time repo setup: Settings → Pages → Source → GitHub Actions.
+`--host cloudflare` targets Cloudflare Workers static assets: writes
+`wrangler.jsonc` (Worker named by `--name`, default a slug of the site
+title) plus `.github/workflows/cloudflare.yml`, which builds the site
+and ships it with `wrangler deploy`. One-time repo setup: add
+`CLOUDFLARE_API_TOKEN` and `CLOUDFLARE_ACCOUNT_ID` repository secrets.
 
 ## cherry gen.post
 
@@ -232,6 +238,11 @@ envelope.
 [cherrypicker](https://github.com/holsee/cherrypicker) daemon, so the
 site also answers at a stable `http://NAME.localhost` URL. No daemon
 running simply means the port URL, never a failed serve.
+
+A site with a `base_path` serves under that prefix, exactly as
+production will: the banner URL carries it, the bare root redirects
+to it, and an unprefixed path that would 404 on the real host 404s
+here too.
 
 The server listens on both IPv4 and IPv6 (falling back to IPv4-only
 where IPv6 is unavailable), so `localhost` never stalls on hosts that

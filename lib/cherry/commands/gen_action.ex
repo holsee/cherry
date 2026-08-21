@@ -1,17 +1,23 @@
 defmodule Cherry.Commands.GenAction do
   @doc_text """
-  Generates a GitHub Pages deploy workflow for this site.
+  Generates a deploy pipeline for this site.
 
   ## Usage
 
-      mix cherry.gen.action [--source DIR] [--branch NAME] [--force] [--json]
+      mix cherry.gen.action [--host github|cloudflare] [--source DIR] [--branch NAME] [--name NAME] [--force] [--json]
 
-  Writes `.github/workflows/pages.yml`: build on push to `--branch`
-  (default `main`), upload the site, deploy via GitHub's Pages actions.
-  The workflow adds `.nojekyll`, and a `CNAME` when the site's `url` is a
-  custom domain (skipped for `*.github.io` and subpath `base_path` sites).
+  The default host, `github`, writes `.github/workflows/pages.yml`: build
+  on push to `--branch` (default `main`), upload the site, deploy via
+  GitHub's Pages actions. The workflow adds `.nojekyll`, and a `CNAME`
+  when the site's `url` is a custom domain (skipped for `*.github.io` and
+  subpath `base_path` sites). One-time repo setup: Settings → Pages →
+  Source → GitHub Actions.
 
-  One-time repo setup: Settings → Pages → Source → GitHub Actions.
+  `--host cloudflare` targets Cloudflare Workers static assets: writes
+  `wrangler.jsonc` (Worker named by `--name`, default a slug of the site
+  title) plus `.github/workflows/cloudflare.yml`, which builds the site
+  and ships it with `wrangler deploy`. One-time repo setup: add
+  `CLOUDFLARE_API_TOKEN` and `CLOUDFLARE_ACCOUNT_ID` repository secrets.
   """
 
   @moduledoc @doc_text
@@ -21,7 +27,9 @@ defmodule Cherry.Commands.GenAction do
   alias Cherry.CLI.{Context, Error}
   alias Cherry.Site
 
-  @workflow_path ".github/workflows/pages.yml"
+  @pages_workflow ".github/workflows/pages.yml"
+  @cloudflare_workflow ".github/workflows/cloudflare.yml"
+  @wrangler_config "wrangler.jsonc"
 
   @doc "The single-sourced doc text, reused as the mix task's @moduledoc."
   @spec doc() :: String.t()
@@ -29,34 +37,87 @@ defmodule Cherry.Commands.GenAction do
 
   @impl Cherry.CLI.Command
   @spec switches() :: keyword()
-  def switches, do: [source: :string, branch: :string, force: :boolean]
+  def switches,
+    do: [source: :string, branch: :string, host: :string, name: :string, force: :boolean]
 
   @impl Cherry.CLI.Command
   @spec run(Context.t()) :: {:ok, map()} | {:error, Error.t()}
   def run(%Context{opts: opts}) do
     source = Keyword.get(opts, :source, File.cwd!())
     branch = Keyword.get(opts, :branch, "main")
-    path = Path.join(source, @workflow_path)
 
-    with {:ok, site} <- load_site(source),
-         :ok <- refuse_overwrite(path, opts) do
-      cname = custom_domain(site)
-
-      File.mkdir_p!(Path.dirname(path))
-      File.write!(path, workflow(branch, cname))
-
-      {:ok, %{path: @workflow_path, branch: branch, cname: cname}}
+    with {:ok, host} <- parse_host(opts),
+         {:ok, site} <- load_site(source) do
+      generate(host, site, source, branch, opts)
     end
   end
 
   @impl Cherry.CLI.Command
   @spec human(map()) :: iodata()
+  def human(%{host: "cloudflare", path: path, config: config, name: name}) do
+    [
+      "Wrote #{config} (worker: #{name}) and #{path} — add the ",
+      "CLOUDFLARE_API_TOKEN and CLOUDFLARE_ACCOUNT_ID repository secrets once, ",
+      "then every push deploys to #{name}.<account>.workers.dev."
+    ]
+  end
+
   def human(%{path: path, cname: cname}) do
     [
       "Wrote #{path}",
       if(cname, do: " (CNAME: #{cname})", else: ""),
       " — enable it once under Settings → Pages → Source → GitHub Actions."
     ]
+  end
+
+  defp generate("github", site, source, branch, opts) do
+    path = Path.join(source, @pages_workflow)
+
+    with :ok <- refuse_overwrite(path, @pages_workflow, opts) do
+      cname = custom_domain(site)
+
+      File.mkdir_p!(Path.dirname(path))
+      File.write!(path, pages_workflow(branch, cname))
+
+      {:ok, %{host: "github", path: @pages_workflow, branch: branch, cname: cname}}
+    end
+  end
+
+  defp generate("cloudflare", site, source, branch, opts) do
+    workflow_path = Path.join(source, @cloudflare_workflow)
+    config_path = Path.join(source, @wrangler_config)
+    name = Keyword.get_lazy(opts, :name, fn -> worker_name(site) end)
+
+    with :ok <- refuse_overwrite(workflow_path, @cloudflare_workflow, opts),
+         :ok <- refuse_overwrite(config_path, @wrangler_config, opts) do
+      File.mkdir_p!(Path.dirname(workflow_path))
+      File.write!(workflow_path, cloudflare_workflow(branch))
+      File.write!(config_path, wrangler_config(name))
+
+      {:ok,
+       %{
+         host: "cloudflare",
+         path: @cloudflare_workflow,
+         config: @wrangler_config,
+         name: name,
+         branch: branch
+       }}
+    end
+  end
+
+  defp parse_host(opts) do
+    case Keyword.get(opts, :host, "github") do
+      host when host in ["github", "cloudflare"] ->
+        {:ok, host}
+
+      other ->
+        {:error,
+         %Error{
+           code: :usage,
+           message: "unknown --host #{inspect(other)} — expected github or cloudflare",
+           exit: 2
+         }}
+    end
   end
 
   defp load_site(source) do
@@ -66,9 +127,9 @@ defmodule Cherry.Commands.GenAction do
     end
   end
 
-  defp refuse_overwrite(path, opts) do
+  defp refuse_overwrite(path, rel, opts) do
     if File.exists?(path) and not Keyword.get(opts, :force, false) do
-      {:error, %Error{code: :exists, message: "#{@workflow_path} already exists (use --force)"}}
+      {:error, %Error{code: :exists, message: "#{rel} already exists (use --force)"}}
     else
       :ok
     end
@@ -85,7 +146,16 @@ defmodule Cherry.Commands.GenAction do
     end
   end
 
-  defp workflow(branch, cname) do
+  # Worker names are lowercase DNS-ish labels; a slug of the site title is
+  # the obvious default, with --name for anyone who wants control.
+  defp worker_name(%Site{title: title}) do
+    case title |> String.downcase() |> String.replace(~r/[^a-z0-9]+/, "-") |> String.trim("-") do
+      "" -> "cherry-site"
+      slug -> slug
+    end
+  end
+
+  defp pages_workflow(branch, cname) do
     cname_step =
       if cname do
         "\n      - run: echo \"#{cname}\" > _site/CNAME"
@@ -136,6 +206,61 @@ defmodule Cherry.Commands.GenAction do
         steps:
           - id: deployment
             uses: actions/deploy-pages@v5
+    """
+  end
+
+  defp cloudflare_workflow(branch) do
+    """
+    # Generated by `mix cherry.gen.action --host cloudflare` — regenerate with
+    # --force rather than editing, or delete this header to take ownership.
+    name: Deploy to Cloudflare
+
+    on:
+      push:
+        branches: [#{branch}]
+      workflow_dispatch:
+
+    permissions:
+      contents: read
+
+    concurrency:
+      group: cloudflare
+      cancel-in-progress: true
+
+    jobs:
+      deploy:
+        runs-on: ubuntu-latest
+        steps:
+          - uses: actions/checkout@v7
+
+          # Toolchain setup, caching, build, and cherry.check in one step.
+          - uses: holsee/cherry/action@#{action_ref()}
+
+          # Ships _site as Workers static assets, per wrangler.jsonc.
+          - uses: cloudflare/wrangler-action@v4
+            with:
+              apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+              accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+              command: deploy
+    """
+  end
+
+  # A static-assets-only Worker: no main script, no html_handling override
+  # (the auto-trailing-slash default matches Cherry's directory-index URLs),
+  # and 404.html — which every build emits — as the not-found page.
+  defp wrangler_config(name) do
+    """
+    // Generated by `mix cherry.gen.action --host cloudflare` — regenerate
+    // with --force rather than editing, or delete this header to take
+    // ownership.
+    {
+      "name": "#{name}",
+      "compatibility_date": "#{Date.to_iso8601(Date.utc_today())}",
+      "assets": {
+        "directory": "./_site",
+        "not_found_handling": "404-page"
+      }
+    }
     """
   end
 

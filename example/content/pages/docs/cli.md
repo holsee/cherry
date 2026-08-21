@@ -53,7 +53,7 @@ This is the one verb without a `mix cherry.new` twin in core: the mix lane scaff
 #### cherry serve
 
 ```sh
-cherry serve [--source DIR] [--out DIR] [--port N] [--json]
+cherry serve [--source DIR] [--out DIR] [--port N] [--name NAME] [--json]
 ```
 
 Builds once, then serves with live reload. Drafts are included, because this is your writing loop. Edits to content, static files, themes, or `cherry.exs` rebuild automatically and reload connected browsers; a broken edit keeps the last good output serving and prints its diagnostics instead of dying:
@@ -64,7 +64,7 @@ build failed (still serving the last good output):
 validate: content/pages/about.md: required :title option not found
 ```
 
-`--port 0` binds a free ephemeral port and reports it in the banner and envelope, which is exactly what you want in scripts and CI where port 4000 may be taken. The server listens on both IPv4 and IPv6 (IPv4-only where the host has no IPv6), so `localhost` answers instantly even on systems that resolve it to `::1` first. Add `--verbose` for a request log: method, path, status, and response time per line. [How the server works inside](/the-embedded-server/) is a story of its own.
+`--port 0` binds a free ephemeral port and reports it in the banner and envelope, which is exactly what you want in scripts and CI where port 4000 may be taken (`PORT` in the environment is honoured when `--port` is absent). `--name mysite` registers the bound port with a running [cherrypicker](https://github.com/holsee/cherrypicker) daemon so the site also answers at `http://mysite.localhost`; no daemon just means the port URL. A site with a `base_path` serves under that prefix, exactly as production will: the bare root redirects to it, and an unprefixed path that would 404 on the real host 404s in dev too. The server listens on both IPv4 and IPv6 (IPv4-only where the host has no IPv6), so `localhost` answers instantly even on systems that resolve it to `::1` first. Add `--verbose` for a request log: method, path, status, and response time per line. [How the server works inside](/the-embedded-server/) is a story of its own.
 
 #### cherry build
 
@@ -203,10 +203,10 @@ The five `theme.*` verbs and `gen.theme` are covered in depth in [Theming](/docs
 #### cherry gen.action
 
 ```sh
-cherry gen.action [--source DIR] [--branch NAME] [--force] [--json]
+cherry gen.action [--host github|cloudflare] [--source DIR] [--branch NAME] [--name NAME] [--force] [--json]
 ```
 
-Writes `.github/workflows/pages.yml`: on push to `--branch` (default `main`), install Cherry, run `cherry check --strict`, build, deploy to GitHub Pages. Adds `.nojekyll`, and a `CNAME` when your `url` is a custom domain. One-time repo setup: Settings, then Pages, then Source: GitHub Actions. Details in [Deploying](/docs/deploy/).
+Writes your deploy pipeline. The default host, `github`, writes `.github/workflows/pages.yml`: on push to `--branch` (default `main`), install Cherry, run `cherry check --strict`, build, deploy to GitHub Pages. Adds `.nojekyll`, and a `CNAME` when your `url` is a custom domain. One-time repo setup: Settings, then Pages, then Source: GitHub Actions. `--host cloudflare` targets Cloudflare Workers static assets instead: writes `wrangler.jsonc` (Worker named by `--name`, default a slug of the site title) plus `.github/workflows/cloudflare.yml`, deploying with `wrangler deploy`; one-time setup is two repository secrets. Details in [Deploying](/docs/deploy/), [GitHub Pages guide](/guides/deploy/), and [Cloudflare guide](/guides/deploy-cloudflare/).
 
 #### cherry upgrade
 
@@ -222,8 +222,8 @@ Upgrades the binary in place, rustup style: resolves the latest stable GitHub re
   "command": "upgrade",
   "data": {
     "status": "up_to_date",
-    "current": "0.3.0",
-    "target": "v0.3.0",
+    "current": "0.4.0",
+    "target": "v0.4.0",
     "asset": "cherry-linux-x86_64"
   }
 }
@@ -238,7 +238,7 @@ cherry version [--json]
 ```
 
 ```text
-cherry 0.3.0 (29956fd)
+cherry 0.4.0 (c999b0e)
 ```
 
 The parenthesised value is the git commit the binary was compiled from, so a build from a branch is distinguishable from the release it was branched from. It is absent when Cherry was compiled from a hex package.

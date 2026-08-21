@@ -14,17 +14,22 @@ defmodule Cherry.Serve do
 
   Options: `:source` (site root, required), `:output` (default
   `source/_site`), `:port` (default 4000), `:verbose` (log every request).
-  Returns the supervisor pid and the port actually bound (pass `port: 0`
-  for an ephemeral port).
+  Returns the supervisor pid, the port actually bound (pass `port: 0`
+  for an ephemeral port), and the site's URL prefix — `""` for a root
+  site, `"/repo"` for a `base_path` site, whose pages then serve under
+  that prefix exactly as production will. Changing `base_path` needs a
+  serve restart; rebuilds pick up content, not a new prefix.
   """
-  @spec start(keyword()) :: {:ok, pid(), :inet.port_number()} | {:error, String.t()}
+  @spec start(keyword()) :: {:ok, pid(), :inet.port_number(), String.t()} | {:error, String.t()}
   def start(opts) do
     source = Keyword.fetch!(opts, :source)
     output = Keyword.get(opts, :output, Path.join(source, "_site"))
     port = Keyword.get(opts, :port, 4000)
     verbose? = Keyword.get(opts, :verbose, false)
 
-    with {:ok, _build} <- Cherry.build(source: source, output: output, drafts: true) do
+    with {:ok, build} <- Cherry.build(source: source, output: output, drafts: true) do
+      base = base_segments(build.site.base_path)
+
       # Bandit.Clock caches the Date header in an ETS table owned by the
       # :bandit application. Starting only the child spec leaves that
       # table missing, and every response logs a warning.
@@ -32,15 +37,15 @@ defmodule Cherry.Serve do
 
       children = [
         {Registry, keys: :duplicate, name: Reloader.registry()},
-        {Bandit, bandit_opts(output, port, verbose?, :inet)},
+        {Bandit, bandit_opts(output, base, port, verbose?, :inet)},
         {Watcher, source: source, output: output}
       ]
 
       case Supervisor.start_link(children, strategy: :one_for_one) do
         {:ok, pid} ->
           bound = bound_port(pid)
-          add_ipv6_listener(pid, output, bound, verbose?)
-          {:ok, pid, bound}
+          add_ipv6_listener(pid, output, base, bound, verbose?)
+          {:ok, pid, bound, base_prefix(base)}
 
         {:error, reason} ->
           {:error, "could not start server: #{inspect(reason)}"}
@@ -48,15 +53,21 @@ defmodule Cherry.Serve do
     end
   end
 
+  defp base_segments("/"), do: []
+  defp base_segments(base_path), do: base_path |> String.split("/", trim: true)
+
+  defp base_prefix([]), do: ""
+  defp base_prefix(segments), do: "/" <> Enum.join(segments, "/")
+
   # `localhost` resolves to `::1` first on Windows and macOS, so with
   # only an IPv4 listener every click stalls on an IPv6 connect before
   # the browser falls back. One dual-stack socket is not portable —
   # Windows returns :einval for `ipv6_v6only: false` — so a second,
   # v6-only listener joins the tree on the same port. A host without
   # usable IPv6 keeps just the IPv4 listener, the old behaviour.
-  defp add_ipv6_listener(supervisor, output, port, verbose?) do
+  defp add_ipv6_listener(supervisor, output, base, port, verbose?) do
     spec =
-      Supervisor.child_spec({Bandit, bandit_opts(output, port, verbose?, :inet6)},
+      Supervisor.child_spec({Bandit, bandit_opts(output, base, port, verbose?, :inet6)},
         id: :bandit_ipv6
       )
 
@@ -66,16 +77,16 @@ defmodule Cherry.Serve do
     end
   end
 
-  defp bandit_opts(output, port, verbose?, :inet) do
+  defp bandit_opts(output, base, port, verbose?, :inet) do
     [
-      plug: {Cherry.Serve.Plug, %{output: output, verbose?: verbose?}},
+      plug: {Cherry.Serve.Plug, %{output: output, base: base, verbose?: verbose?}},
       port: port,
       startup_log: false
     ]
   end
 
-  defp bandit_opts(output, port, verbose?, :inet6) do
-    bandit_opts(output, port, verbose?, :inet) ++
+  defp bandit_opts(output, base, port, verbose?, :inet6) do
+    bandit_opts(output, base, port, verbose?, :inet) ++
       [thousand_island_options: [transport_options: [:inet6, ipv6_v6only: true]]]
   end
 
