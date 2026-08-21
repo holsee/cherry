@@ -203,10 +203,10 @@ The five `theme.*` verbs and `gen.theme` are covered in depth in [Theming](/docs
 #### cherry gen.action
 
 ```sh
-cherry gen.action [--source DIR] [--branch NAME] [--force] [--json]
+cherry gen.action [--host github|cloudflare] [--source DIR] [--branch NAME] [--name NAME] [--force] [--json]
 ```
 
-Writes `.github/workflows/pages.yml`: on push to `--branch` (default `main`), install Cherry, run `cherry check --strict`, build, deploy to GitHub Pages. Adds `.nojekyll`, and a `CNAME` when your `url` is a custom domain. One-time repo setup: Settings, then Pages, then Source: GitHub Actions. Details in [Deploying](/docs/deploy/).
+Writes your deploy pipeline. The default host, `github`, writes `.github/workflows/pages.yml`: on push to `--branch` (default `main`), install Cherry, run `cherry check --strict`, build, deploy to GitHub Pages. Adds `.nojekyll`, and a `CNAME` when your `url` is a custom domain. One-time repo setup: Settings, then Pages, then Source: GitHub Actions. `--host cloudflare` targets Cloudflare Workers static assets instead: writes `wrangler.jsonc` (Worker named by `--name`, default a slug of the site title) plus `.github/workflows/cloudflare.yml`, deploying with `wrangler deploy`; one-time setup is two repository secrets. Details in [Deploying](/docs/deploy/), [GitHub Pages guide](/guides/deploy/), and [Cloudflare guide](/guides/deploy-cloudflare/).
 
 #### cherry upgrade
 

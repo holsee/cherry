@@ -1,10 +1,10 @@
 ---
 title: Deploying
-description: GitHub Pages, custom domains, base_path, and what the generated workflow actually does.
+description: GitHub Pages, Cloudflare, custom domains, base_path, and what the generated pipelines actually do.
 ---
 ## Deploying
 
-`_site/` is plain static files, so anything that serves files serves a Cherry site. The paved road is GitHub Pages, and it is one verb long.
+`_site/` is plain static files, so anything that serves files serves a Cherry site. There are two paved roads, GitHub Pages and Cloudflare, and each is one verb long.
 
 ### The generated workflow
 
@@ -40,6 +40,10 @@ base_path: "/repo"
 
 Links, images, feed URLs, search assets, and [component](/docs/components/) `src`/`poster` paths are all rewritten. The verifier resolves links against the same rule, so a hardcoded absolute path that would break under the prefix is caught before it ships.
 
+### Cloudflare
+
+`cherry gen.action --host cloudflare` targets [Cloudflare Workers static assets](https://developers.cloudflare.com/workers/static-assets/) instead: it writes a `wrangler.jsonc` (no Worker script — just your `_site/` as assets, with `404.html` wired up) and a workflow that builds and ships with `wrangler deploy`. One-time setup is two repository secrets. Custom response headers and redirects are a `_headers` or `_redirects` file dropped into `static/`. The full walkthrough is the [Cloudflare guide](/guides/deploy-cloudflare/).
+
 ### Anywhere else
 
-`cherry build && rsync -a _site/ server:/var/www/site/` is a complete deploy. Builds are [deterministic](/docs/pipeline/), so rsync transfers only what actually changed, and two machines building the same commit produce identical trees. Netlify, Cloudflare Pages, and friends work the same way: point them at `cherry build` and `_site/`.
+`cherry build && rsync -a _site/ server:/var/www/site/` is a complete deploy. Builds are [deterministic](/docs/pipeline/), so rsync transfers only what actually changed, and two machines building the same commit produce identical trees. Netlify and friends work the same way: point them at `cherry build` and `_site/`.

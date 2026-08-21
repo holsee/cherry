@@ -1,5 +1,5 @@
 defmodule Mix.Tasks.Cherry.Gen.Action do
-  @shortdoc "Generates a GitHub Pages deploy workflow"
+  @shortdoc "Generates a deploy pipeline (GitHub Pages or Cloudflare)"
   @moduledoc Cherry.Commands.GenAction.doc()
 
   use Mix.Task
