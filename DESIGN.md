@@ -161,7 +161,7 @@ drifts, and you're maintaining a CV again.
   discipline (never split an entry), no chrome, A4/Letter-safe. Baseline "Download
   PDF" is the browser's print dialog (zero JS, pixel-perfect because we designed for
   it); a build-time rendered PDF artifact (`/cv.pdf`) is a planned enhancement once
-  the toolchain cost is justified (see LATER).
+  the toolchain cost is justified (tracked as a GitHub issue).
 - **Machine-readable**: `/cv.json` in the [JSON Resume](https://jsonresume.org)
   standard schema (ATS tools and agents consume it; the standard's name stays theirs,
   the route is ours), plus the usual markdown mirror. JSON-LD `Person` derives from
@@ -314,6 +314,10 @@ Elsewhere: Netlify/Cloudflare/Vercel need nothing but "build command + output di
 ---
 
 ## 10. Delivery phases
+
+> All three phases shipped: Phase 1 in the 0.1.0 release candidates, Phases 2 and 3
+> across 0.1.0 and 0.2.0. This section stays as the historical record; ongoing work
+> lives in GitHub issues and milestones.
 
 **Phase 1 — Core (usable Octopress successor)**
 Pipeline (load→validate→transform→layout→emit), `pages` + `posts` collections, tags, default theme with light/dark, theme contract v1 (manifest, tokens, shadowing via `theme.eject` with provenance, `theme.list`/`theme.which`), `gen.post`/`build`/`serve`/`publish`, Atom feed, sitemap, canonical/OG/JSON-LD basics, GH Pages action + base-path handling. Migrate holsee.github.io content from `original/` (source branch markdown) as the dogfood.

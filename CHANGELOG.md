@@ -5,6 +5,15 @@ All notable changes to Cherry are documented here. Format follows
 
 Entries are terse one-liners linked to their PR: `- Thing that changed. (#12)`
 
+## [0.3.0] — 2026-08-21
+
+### Added
+- `cherry serve` honours the `PORT` environment variable when `--port` is absent (explicit flag still wins; malformed values fall back to 4000) — what proxy runners and PaaS-style tooling hand out. (#83)
+- `cherry serve --name NAME` registers the bound port with a running [cherrypicker](https://github.com/holsee/cherrypicker) daemon, so the site also answers at a stable `http://NAME.localhost` URL. Zero-cost stdlib client; no daemon running means the port URL as ever, never a failed serve. (#84)
+
+### Fixed
+- Template overlays work for sites using Cherry as a hex dependency: the official themes live under the site's own `_build` there, which the site-local check mistook for a theme living in the site, silently disabling every overlay. Built-in themes are now never site-local, wherever they sit on disk. (#86)
+
 ## [0.2.0] — 2026-08-20
 
 ### Added

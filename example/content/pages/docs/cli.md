@@ -222,8 +222,8 @@ Upgrades the binary in place, rustup style: resolves the latest stable GitHub re
   "command": "upgrade",
   "data": {
     "status": "up_to_date",
-    "current": "0.2.0",
-    "target": "v0.2.0",
+    "current": "0.3.0",
+    "target": "v0.3.0",
     "asset": "cherry-linux-x86_64"
   }
 }
@@ -238,7 +238,7 @@ cherry version [--json]
 ```
 
 ```text
-cherry 0.2.0 (9821cad)
+cherry 0.3.0 (29956fd)
 ```
 
 The parenthesised value is the git commit the binary was compiled from, so a build from a branch is distinguishable from the release it was branched from. It is absent when Cherry was compiled from a hex package.
