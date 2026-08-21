@@ -114,6 +114,64 @@ defmodule Cherry.ServeTest do
     assert body =~ "About"
   end
 
+  describe "the SSE stream" do
+    # A page that leaves without saying goodbye must not hold its socket:
+    # six parked streams exhaust the browser's per-host connection pool
+    # and every later navigation stalls until one times out.
+    @tag :no_server
+    test "heartbeats, and a vanished subscriber is reaped" do
+      tmp = Path.join(System.tmp_dir!(), "cherry-sse-#{System.unique_integer([:positive])}")
+      site = Path.join(tmp, "site")
+      File.mkdir_p!(tmp)
+      on_exit(fn -> File.rm_rf!(tmp) end)
+      File.cp_r!(@fixture, site)
+      File.rm_rf!(Path.join(site, "expected"))
+
+      {:ok, pid, port, ""} =
+        Cherry.Serve.start(
+          source: site,
+          output: Path.join(site, "_site"),
+          port: 0,
+          heartbeat_ms: 50
+        )
+
+      {:ok, socket} = :gen_tcp.connect(~c"127.0.0.1", port, [:binary, active: false])
+      :ok = :gen_tcp.send(socket, "GET /__cherry/reload HTTP/1.1\r\nhost: localhost\r\n\r\n")
+
+      # The stream opens and the comment-frame heartbeat flows.
+      assert recv_until(socket, "text/event-stream") =~ "text/event-stream"
+      assert recv_until(socket, ": ping")
+      assert Registry.count(Reloader.registry()) == 1
+
+      # Closing the client makes the next heartbeat write fail, which is
+      # how the handler learns the browser is gone and lets go.
+      :ok = :gen_tcp.close(socket)
+      assert reaped_within?(2_000), "subscriber still registered after the client closed"
+
+      Supervisor.stop(pid)
+    end
+
+    defp recv_until(socket, marker, acc \\ "") do
+      if acc =~ marker do
+        acc
+      else
+        {:ok, data} = :gen_tcp.recv(socket, 0, 5_000)
+        recv_until(socket, marker, acc <> data)
+      end
+    end
+
+    defp reaped_within?(budget_ms) when budget_ms <= 0, do: false
+
+    defp reaped_within?(budget_ms) do
+      if Registry.count(Reloader.registry()) == 0 do
+        true
+      else
+        Process.sleep(50)
+        reaped_within?(budget_ms - 50)
+      end
+    end
+  end
+
   describe "without a watcher backend" do
     @tag :no_server
     test "serve degrades to no live reload and still serves" do
