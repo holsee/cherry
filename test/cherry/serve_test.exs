@@ -30,7 +30,7 @@ defmodule Cherry.ServeTest do
     File.cp_r!(@fixture, site)
     File.rm_rf!(Path.join(site, "expected"))
 
-    {:ok, _pid, port} =
+    {:ok, _pid, port, ""} =
       Cherry.Serve.start(source: site, output: Path.join(site, "_site"), port: 0)
 
     Application.ensure_all_started(:inets)
@@ -134,7 +134,7 @@ defmodule Cherry.ServeTest do
           Cherry.Serve.start(source: site, output: Path.join(site, "_site"), port: 0)
         end)
 
-      assert {:ok, pid, port} = result
+      assert {:ok, pid, port, _base} = result
       refute Cherry.Serve.live_reload?(pid)
       assert stderr =~ "live reload disabled"
 
@@ -167,7 +167,7 @@ defmodule Cherry.ServeTest do
           Cherry.Serve.start(source: site, output: Path.join(site, "_site"), port: 0)
         end)
 
-      assert {:ok, pid, port} = result
+      assert {:ok, pid, port, _base} = result
       refute Cherry.Serve.live_reload?(pid)
       assert stderr =~ "delivers no change events"
 
@@ -195,7 +195,7 @@ defmodule Cherry.ServeTest do
       # processes inherit the captured group leader.
       output =
         ExUnit.CaptureIO.capture_io(fn ->
-          {:ok, pid, port} =
+          {:ok, pid, port, _base} =
             Cherry.Serve.start(
               source: site,
               output: Path.join(site, "_site"),
@@ -215,6 +215,47 @@ defmodule Cherry.ServeTest do
     end
   end
 
+  describe "with a base_path" do
+    @tag :no_server
+    test "the site serves under its prefix, exactly as production will" do
+      tmp = Path.join(System.tmp_dir!(), "cherry-basepath-#{System.unique_integer([:positive])}")
+      site = Path.join(tmp, "site")
+      File.mkdir_p!(site)
+      on_exit(fn -> File.rm_rf!(tmp) end)
+      File.cp_r!(@fixture, site)
+      File.rm_rf!(Path.join(site, "expected"))
+
+      config = Path.join(site, "cherry.exs")
+
+      File.write!(
+        config,
+        String.replace(File.read!(config), "[\n", "[\n  base_path: \"/blog\",\n")
+      )
+
+      {:ok, pid, port, base} =
+        Cherry.Serve.start(source: site, output: Path.join(site, "_site"), port: 0)
+
+      assert base == "/blog"
+      Application.ensure_all_started(:inets)
+
+      # Pages and assets answer under the prefix, livereload included.
+      {200, body} = get(port, "/blog/hello-world/")
+      assert body =~ "Hello, world"
+      assert body =~ "__cherry/reload"
+      {200, css} = get(port, "/blog/assets/site.css")
+      assert css =~ "--color-accent"
+
+      # The bare root redirects to the prefix rather than 404ing.
+      assert {302, "/blog/"} = get_redirect(port, "/")
+
+      # An unprefixed path that would 404 on the real host 404s here too —
+      # exactly the hardcoded-root-link bug this mirroring exists to catch.
+      {404, _body} = get(port, "/hello-world/")
+
+      Supervisor.stop(pid)
+    end
+  end
+
   # The shared server proves the healthy path: "editing a post rebuilds"
   # above cannot pass unless the probe accepted this filesystem.
   test "the probe that proves live reload leaves nothing behind", %{site: site} do
@@ -228,5 +269,21 @@ defmodule Cherry.ServeTest do
       :httpc.request(:get, {url, []}, [], body_format: :binary)
 
     {status, body}
+  end
+
+  # httpc follows redirects by default; this asks it not to, so a 302
+  # and its location can be asserted directly.
+  defp get_redirect(port, path) do
+    url = ~c"http://localhost:#{port}#{path}"
+
+    {:ok, {{_http, status, _reason}, headers, _body}} =
+      :httpc.request(:get, {url, []}, [autoredirect: false], body_format: :binary)
+
+    location =
+      Enum.find_value(headers, fn {name, value} ->
+        if List.to_string(name) == "location", do: List.to_string(value)
+      end)
+
+    {status, location}
   end
 end

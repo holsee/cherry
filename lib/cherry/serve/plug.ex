@@ -28,10 +28,26 @@ defmodule Cherry.Serve.Plug do
 
   def call(conn, %{output: output} = config) do
     started = System.monotonic_time(:microsecond)
+    base = Map.get(config, :base, [])
 
-    case resolve(output, conn.path_info) do
-      {:ok, path} -> conn |> serve_file(path, 200) |> log_request(config, started)
-      :error -> conn |> not_found(output) |> log_request(config, started)
+    # A base_path site serves under its prefix, exactly as production
+    # will: the bare root redirects there, and an unprefixed path that
+    # would 404 on the real host 404s here too.
+    case strip_base(conn.path_info, base) do
+      {:ok, segments} ->
+        case resolve(output, segments) do
+          {:ok, path} -> conn |> serve_file(path, 200) |> log_request(config, started)
+          :error -> conn |> not_found(output) |> log_request(config, started)
+        end
+
+      :redirect ->
+        conn
+        |> put_resp_header("location", "/" <> Enum.join(base, "/") <> "/")
+        |> send_resp(302, "")
+        |> log_request(config, started)
+
+      :error ->
+        conn |> not_found(output) |> log_request(config, started)
     end
   end
 
@@ -64,6 +80,17 @@ defmodule Cherry.Serve.Plug do
           {:ok, conn} -> sse_loop(conn)
           {:error, _reason} -> conn
         end
+    end
+  end
+
+  defp strip_base(path_info, []), do: {:ok, path_info}
+  defp strip_base([], _base), do: :redirect
+
+  defp strip_base(path_info, base) do
+    if List.starts_with?(path_info, base) do
+      {:ok, Enum.drop(path_info, length(base))}
+    else
+      :error
     end
   end
 

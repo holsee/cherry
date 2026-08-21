@@ -22,6 +22,11 @@ defmodule Cherry.Commands.Serve do
   site also answers at a stable `http://NAME.localhost` URL. No daemon
   running simply means the port URL, never a failed serve.
 
+  A site with a `base_path` serves under that prefix, exactly as
+  production will: the banner URL carries it, the bare root redirects
+  to it, and an unprefixed path that would 404 on the real host 404s
+  here too.
+
   The server listens on both IPv4 and IPv6 (falling back to IPv4-only
   where IPv6 is unavailable), so `localhost` never stalls on hosts that
   resolve it to `::1` first. `--verbose` logs every request: method,
@@ -56,10 +61,12 @@ defmodule Cherry.Commands.Serve do
     port = Keyword.get_lazy(opts, :port, &port_env/0)
 
     case Cherry.Serve.start(source: source, output: output, port: port, verbose: verbose?) do
-      {:ok, pid, bound_port} ->
+      {:ok, pid, bound_port, base} ->
+        url = named_url(opts[:name], bound_port) || "http://localhost:#{bound_port}"
+
         {:ok,
          %{
-           url: named_url(opts[:name], bound_port) || "http://localhost:#{bound_port}",
+           url: url <> base_suffix(base),
            port: bound_port,
            output: output,
            live_reload: Cherry.Serve.live_reload?(pid)
@@ -80,6 +87,11 @@ defmodule Cherry.Commands.Serve do
       _absent_or_malformed -> 4000
     end
   end
+
+  # A base_path site serves under its prefix, so the URL people click
+  # carries it; root sites keep the bare URL.
+  defp base_suffix(""), do: ""
+  defp base_suffix(base), do: base <> "/"
 
   defp named_url(nil, _port), do: nil
 
