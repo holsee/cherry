@@ -4,16 +4,23 @@ defmodule Cherry.Commands.Serve do
 
   ## Usage
 
-      mix cherry.serve [--source DIR] [--out DIR] [--port N] [--json]
+      mix cherry.serve [--source DIR] [--out DIR] [--port N] [--name NAME] [--json]
 
   Drafts are included (this is your writing loop). Edits to content,
   static files, themes, or `cherry.exs` rebuild automatically and reload
   connected browsers; a broken edit keeps the last good output serving
   and prints its diagnostics.
 
-  `--port` defaults to 4000. `--port 0` binds an ephemeral free port —
-  handy for agents and CI, where a fixed port may already be taken; the
-  port actually bound is in the banner and the `--json` envelope.
+  `--port` defaults to the `PORT` environment variable when set (what
+  proxy runners hand out), then 4000. `--port 0` binds an ephemeral
+  free port — handy for agents and CI, where a fixed port may already
+  be taken; the port actually bound is in the banner and the `--json`
+  envelope.
+
+  `--name NAME` registers the bound port with a running
+  [cherrypicker](https://github.com/holsee/cherrypicker) daemon, so the
+  site also answers at a stable `http://NAME.localhost` URL. No daemon
+  running simply means the port URL, never a failed serve.
 
   The server listens on both IPv4 and IPv6 (falling back to IPv4-only
   where IPv6 is unavailable), so `localhost` never stalls on hosts that
@@ -31,6 +38,7 @@ defmodule Cherry.Commands.Serve do
   @behaviour Cherry.CLI.Command
 
   alias Cherry.CLI.{Context, Error}
+  alias Cherry.Serve.Names
 
   @doc "The single-sourced doc text, reused as the mix task's @moduledoc."
   @spec doc() :: String.t()
@@ -38,20 +46,20 @@ defmodule Cherry.Commands.Serve do
 
   @impl Cherry.CLI.Command
   @spec switches() :: keyword()
-  def switches, do: [source: :string, out: :string, port: :integer]
+  def switches, do: [source: :string, out: :string, port: :integer, name: :string]
 
   @impl Cherry.CLI.Command
   @spec run(Context.t()) :: {:ok, map()} | {:error, Error.t()}
   def run(%Context{opts: opts, verbose?: verbose?}) do
     source = Keyword.get(opts, :source, File.cwd!())
     output = Keyword.get(opts, :out, Path.join(source, "_site"))
-    port = Keyword.get(opts, :port, 4000)
+    port = Keyword.get_lazy(opts, :port, &port_env/0)
 
     case Cherry.Serve.start(source: source, output: output, port: port, verbose: verbose?) do
       {:ok, pid, bound_port} ->
         {:ok,
          %{
-           url: "http://localhost:#{bound_port}",
+           url: named_url(opts[:name], bound_port) || "http://localhost:#{bound_port}",
            port: bound_port,
            output: output,
            live_reload: Cherry.Serve.live_reload?(pid)
@@ -59,6 +67,26 @@ defmodule Cherry.Commands.Serve do
 
       {:error, message} ->
         {:error, %Error{code: :serve_failed, message: message}}
+    end
+  end
+
+  # Proxy runners (cherrypicker, portless, foreman) hand out a port via
+  # the environment; an explicit --port always wins over it.
+  defp port_env do
+    with value when is_binary(value) <- System.get_env("PORT"),
+         {port, ""} <- Integer.parse(value) do
+      port
+    else
+      _absent_or_malformed -> 4000
+    end
+  end
+
+  defp named_url(nil, _port), do: nil
+
+  defp named_url(name, port) do
+    case Names.register(name, port) do
+      {:ok, url} -> url
+      :error -> nil
     end
   end
 

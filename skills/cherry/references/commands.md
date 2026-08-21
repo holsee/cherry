@@ -209,22 +209,29 @@ the schema is the contract your frontmatter must satisfy.
 
 ## cherry serve
 
-Flags: `--source VALUE`, `--out VALUE`, `--port N` — plus the global flags.
+Flags: `--source VALUE`, `--out VALUE`, `--port N`, `--name VALUE` — plus the global flags.
 
 Builds the site and serves it locally with live reload.
 
 ### Usage
 
-    mix cherry.serve [--source DIR] [--out DIR] [--port N] [--json]
+    mix cherry.serve [--source DIR] [--out DIR] [--port N] [--name NAME] [--json]
 
 Drafts are included (this is your writing loop). Edits to content,
 static files, themes, or `cherry.exs` rebuild automatically and reload
 connected browsers; a broken edit keeps the last good output serving
 and prints its diagnostics.
 
-`--port` defaults to 4000. `--port 0` binds an ephemeral free port —
-handy for agents and CI, where a fixed port may already be taken; the
-port actually bound is in the banner and the `--json` envelope.
+`--port` defaults to the `PORT` environment variable when set (what
+proxy runners hand out), then 4000. `--port 0` binds an ephemeral
+free port — handy for agents and CI, where a fixed port may already
+be taken; the port actually bound is in the banner and the `--json`
+envelope.
+
+`--name NAME` registers the bound port with a running
+[cherrypicker](https://github.com/holsee/cherrypicker) daemon, so the
+site also answers at a stable `http://NAME.localhost` URL. No daemon
+running simply means the port URL, never a failed serve.
 
 The server listens on both IPv4 and IPv6 (falling back to IPv4-only
 where IPv6 is unavailable), so `localhost` never stalls on hosts that
