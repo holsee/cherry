@@ -463,7 +463,28 @@ CV view, ordered by weight; an entry without one stays on the timeline only.
 That is how a portfolio of everything produces a CV of the relevant parts,
 without a second copy of the truth.
 
-Everything lands at `/portfolio/` as a reverse-chronological timeline.
+The person behind the entries is `portfolio.yaml` at the site root — name,
+headline, location, links. It is what turns the CV on: no profile, no `/cv/`.
+The demo's:
+
+```yaml
+name: Juno Vale
+headline: Distributed systems engineer. Ingestion pipelines and event-sourced inventory on the BEAM.
+location: Porto (remote)
+links:
+  - label: GitHub
+    url: https://github.com/junovale
+  - label: Stack Overflow
+    url: https://stackoverflow.com/users/0/junovale
+updated: 2026-08-21
+```
+
+The profile is one page with two modes. `/cv/` is the default: a careers-style
+two-column view of the curated entries, with story-linked tag pills and skills
+derived from the whole history in the sidebar. `/cv/timeline/` is the other
+mode: everything, reverse-chronological, curation hiding nothing. The view
+switcher flips between them, `/cv.json` is the JSON Resume twin, and the old
+`/portfolio/` URL redirects to its successor.
 
 ## 9. Search without Node
 

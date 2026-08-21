@@ -63,9 +63,9 @@ The long-form story, in markdown, for the portfolio page.
 
 Those collections render three surfaces for free:
 
-- **`/portfolio/`**: a dated timeline of everything, with the profile header.
+- **`/cv/`**: the employer-shaped page, and the profile's default mode. The `cv:` block is the curation layer: `include` opts an entry in, `weight` orders it, and an optional `cv.highlights` list overrides the bullets with a tighter cut. Print it and the stylesheet produces a clean one-pager; `cv.json` ships beside it in JSON Resume format.
+- **`/cv/timeline/`**: the alternate mode, a dated timeline of everything with the profile header. A view switcher links the two.
 - **Story pages** at `/story/TAG/`: everything sharing a tag, portfolio entries and blog posts together. Tags are one taxonomy across the whole site.
-- **`/cv/`**: the employer-shaped page. The `cv:` block is the curation layer: `include` opts an entry in, `weight` orders it, and an optional `cv.highlights` list overrides the bullets with a tighter cut. Print it and the stylesheet produces a clean one-pager; `cv.json` ships beside it in JSON Resume format.
 
 The [portfolio guide](/guides/portfolio-and-cv/) builds all of this from scratch.
 

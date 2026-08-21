@@ -30,7 +30,6 @@
 <div class="wrap">
 <a class="site-title" href="/">Folio</a>
 <nav class="site-nav"><a href="/blog/">Blog</a>
-<a href="/portfolio/">Portfolio</a>
 <a href="/cv/">CV</a>
 
 <button class="theme-toggle" type="button" aria-label="Theme">
@@ -44,26 +43,26 @@
 </header>
 <main>
 <div class="wrap">
-<article class="cv">
+<article class="cv cv-careers">
 <header class="cv-header">
 <h1>grower</h1>
 <p class="cv-headline">Grows orchards and software.</p>
 <p class="cv-contact"><span>Belfast</span><a href="https://github.com/grower">GitHub</a><a href="https://fedi.example/@grower">Fediverse</a></p>
 <p class="cv-updated">Updated August 2026<span class="cv-json-link"> · <a href="/cv.json">cv.json</a></span></p>
 </header>
-<section class="cv-section">
-<h2>Skills</h2>
-<ul class="cv-skills">
-<li><a href="/story/elixir/">elixir</a> <span class="cv-skill-years">7 yrs</span></li>
-</ul>
-</section>
+<nav class="view-switch" aria-label="Profile views"><span aria-current="page">CV</span><a href="/cv/timeline/">Timeline</a></nav>
+<div class="cv-columns">
+<div class="cv-main">
 <section class="cv-section">
 <h2>Experience</h2>
 <article class="cv-entry">
-<h3>Staff Engineer · Orchard Systems</h3>
+<h3>Staff Engineer <span class="entry-org">· Orchard Systems</span></h3>
 <p class="entry-meta">Feb 2020 — present · Remote</p>
 <ul class="entry-highlights">
 <li>Grew the platform from seed to fruit</li>
+</ul>
+<ul class="cv-tags">
+<li><a href="/story/elixir/">elixir</a></li>
 </ul>
 </article>
 </section>
@@ -75,15 +74,28 @@
 <ul class="entry-highlights">
 <li>Presses apples at 10k pods/sec</li>
 </ul>
+<ul class="cv-tags">
+<li><a href="/story/elixir/">elixir</a></li>
+</ul>
 </article>
 </section>
 <section class="cv-section">
 <h2>Education</h2>
 <article class="cv-entry">
-<h3>BSc Pomology · Orchard University</h3>
+<h3>BSc Pomology <span class="entry-org">· Orchard University</span></h3>
 <p class="entry-meta">Sep 2012 — Jun 2016</p>
 </article>
 </section>
+</div>
+<aside class="cv-side">
+<section class="cv-section cv-side-section">
+<h2>Top skills</h2>
+<ul class="cv-skills">
+<li><a href="/story/elixir/">elixir</a> <span class="cv-skill-years">7 yrs</span></li>
+</ul>
+</section>
+</aside>
+</div>
 </article>
 
 </div>

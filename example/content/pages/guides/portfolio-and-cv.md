@@ -4,7 +4,7 @@ description: From an empty site to a developer timeline, story pages, and a prin
 ---
 # Build a portfolio and host your CV
 
-By the end of this guide you will have a portfolio timeline at `/portfolio/`, story pages that cross-link your work by tag, and a CV at `/cv/` that prints to a clean one-pager and ships a machine-readable `cv.json`. All from markdown files, all checked by the verifier, all on your own domain.
+By the end of this guide you will have a careers-style CV at `/cv/` with its dated timeline one click away at `/cv/timeline/`, story pages that cross-link your work by tag, and a print-clean one-pager plus a machine-readable `cv.json` from the same files. All from markdown files, all checked by the verifier, all on your own domain.
 
 It builds on [your first site](/guides/quick-start/); any Cherry site works as the starting point.
 
@@ -30,7 +30,7 @@ You write entries into five collections. Cherry renders three surfaces from them
     <text x="95" y="120">talks/</text>
     <text x="95" y="162">oss/</text>
     <text x="95" y="204">education/</text>
-    <text x="590" y="35">/portfolio/</text>
+    <text x="590" y="35">/cv/timeline/</text>
     <text x="590" y="105">/story/TAG/</text>
     <text x="590" y="175" fill="var(--color-accent)">/cv/ + cv.json</text>
   </g>
@@ -149,18 +149,19 @@ The `oss/` collection (title, repo, role: `author`, `maintainer`, or `contributo
 
 Build, and two surfaces exist already:
 
-- **`/portfolio/`** interleaves everything by date under your profile header: positions as ranges, projects with status, talks and education as points in time.
-- **`/story/TAG/`** exists for every tag your portfolio shares with your blog. Tag a position `elixir` and a post `elixir`, and the story page shows the job and the writing side by side. One taxonomy across the whole site, which is the part hand-rolled portfolios always lose.
+- **`/cv/timeline/`** interleaves everything by date under your profile header: positions as ranges, projects with status, talks and education as points in time. Curation never hides work here.
+- **`/story/TAG/`** exists for every tag your portfolio shares with your blog.
+  Tag a position `elixir` and a post `elixir`, and the story page shows the job and the writing side by side. One taxonomy across the whole site, which is the part hand-rolled portfolios always lose.
 
 ## 5 · Curate the CV
 
-The timeline is your story for peers; the CV is the cut for employers. The `cv:` block is the whole curation model:
+The timeline is your story for peers; the CV view is the cut for employers, and the switcher flips between the two modes of the one profile page. The `cv:` block is the whole curation model:
 
 - `include: true` opts an entry in. No block means timeline-only.
 - `weight:` orders entries within their section, heaviest first.
 - `highlights:` inside `cv:` overrides the timeline bullets with a tighter set.
 
-`/cv/` renders those entries dense and linear: skills backed by years, positions with curated bullets, projects, education. Nothing on it that you did not deliberately include.
+`/cv/` renders those entries in a careers-style two-column layout: positions with curated bullets and story-linked tag pills in the main column, skills backed by years and open source in the sidebar. Nothing on it that you did not deliberately include.
 
 ## 6 · Print it, and ship the JSON twin
 

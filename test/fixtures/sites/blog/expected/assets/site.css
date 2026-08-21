@@ -1167,3 +1167,153 @@ video.video-local {
 }
 
 } /* @layer theme */
+
+/* ---------- the careers layout: default portfolio view + the CV ---------- */
+
+.page-cv main .wrap {
+  max-width: 64rem;
+}
+
+.cv-careers .cv-header {
+  max-width: var(--measure);
+}
+
+.view-switch {
+  display: flex;
+  gap: 1rem;
+  font-family: var(--font-mono);
+  font-size: 0.8125rem;
+  margin: 0 0 1.75rem;
+}
+
+.view-switch a {
+  color: var(--color-muted);
+  text-decoration: none;
+}
+
+.view-switch a:hover {
+  color: var(--color-accent);
+}
+
+.view-switch [aria-current] {
+  color: var(--color-fg);
+  font-weight: 600;
+}
+
+.cv-columns {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 16rem;
+  column-gap: 3.5rem;
+  align-items: start;
+}
+
+.cv-careers .cv-main > .cv-section:first-child h2,
+.cv-careers .cv-side > .cv-side-section:first-child h2 {
+  margin-top: 0.5rem;
+}
+
+.cv-careers .cv-entry {
+  margin-bottom: 1.75rem;
+}
+
+.entry-org {
+  font-weight: 400;
+  color: var(--color-muted);
+}
+
+.cv-tags {
+  list-style: none;
+  margin: 0.6rem 0 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+
+.cv-tags a,
+.cv-careers .cv-skills a {
+  display: inline-block;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  line-height: 1;
+  padding: 0.35rem 0.55rem;
+  border-radius: 0.25rem;
+  background: color-mix(in srgb, var(--color-accent) 12%, var(--color-bg));
+  color: color-mix(in srgb, var(--color-accent) 80%, var(--color-fg));
+  text-decoration: none;
+}
+
+.cv-tags a:hover,
+.cv-tags a:focus-visible,
+.cv-careers .cv-skills a:hover,
+.cv-careers .cv-skills a:focus-visible {
+  background: color-mix(in srgb, var(--color-accent) 24%, var(--color-bg));
+}
+
+.cv-careers .cv-skills {
+  display: flex;
+  flex-direction: column;
+  gap: 0.55rem;
+}
+
+.cv-careers .cv-skills li {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.6rem;
+}
+
+.cv-careers .cv-skills a {
+  font-size: 0.8125rem;
+}
+
+.cv-careers .cv-skill-years {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  white-space: nowrap;
+}
+
+.cv-side .oss-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.cv-side .oss-list li {
+  margin-bottom: 0.6rem;
+}
+
+.cv-side .oss-role {
+  display: block;
+}
+
+@media (max-width: 52rem) {
+  .cv-columns {
+    grid-template-columns: minmax(0, 1fr);
+    row-gap: 1.5rem;
+  }
+}
+
+@media print {
+  .page-cv main .wrap {
+    max-width: none;
+  }
+
+  .cv-columns {
+    display: block;
+  }
+
+  .view-switch {
+    display: none;
+  }
+
+  .cv-tags a,
+  .cv-careers .cv-skills a {
+    background: none;
+    padding: 0;
+  }
+
+  .cv-tags {
+    gap: 0.3rem 0.9rem;
+  }
+}

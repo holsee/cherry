@@ -96,7 +96,7 @@ defmodule Cherry.MachineTest do
     test "timeline, story, and CV routes carry markdown twins", %{tmp_dir: tmp} do
       out = build(tmp, @folio)
 
-      timeline = File.read!(Path.join(out, "portfolio/index.md"))
+      timeline = File.read!(Path.join(out, "cv/timeline/index.md"))
       assert timeline =~ "# Portfolio"
       assert timeline =~ "grower — Grows orchards and software."
       assert timeline =~ "## 2020"
@@ -124,7 +124,7 @@ defmodule Cherry.MachineTest do
       out = build(tmp, @folio)
 
       llms = File.read!(Path.join(out, "llms.txt"))
-      assert llms =~ "- [Portfolio](https://folio.example/portfolio/index.md)"
+      assert llms =~ "- [Portfolio](https://folio.example/cv/timeline/index.md)"
       assert llms =~ "- [The elixir story](https://folio.example/story/elixir/index.md)"
       assert llms =~ "- [CV](https://folio.example/cv/index.md)"
       assert llms =~ "- [JSON Resume](https://folio.example/cv.json)"

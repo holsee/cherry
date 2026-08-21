@@ -25,8 +25,10 @@
       doc: "Published posts carrying one tag; links to the tag's story when one exists."
     ],
     portfolio_timeline: [
-      assigns: [:site, :portfolio],
-      doc: "The developer story: profile header, dated timeline, open source."
+      assigns: [:site, :portfolio, :cv_href],
+      doc:
+        "The timeline mode of the profile: dated entries, open source; " <>
+          "cv_href links the switcher back to the CV view when public."
     ],
     story: [
       assigns: [:site, :tag, :portfolio, :posts],
@@ -34,7 +36,7 @@
     ],
     cv: [
       assigns: [:site, :cv],
-      doc: "The employer-shaped CV: linear, dense, print-first."
+      doc: "The employer-shaped CV: cv-curated entries in the careers layout, print-first."
     ],
     not_found: [
       assigns: [:site],
