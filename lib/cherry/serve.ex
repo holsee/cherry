@@ -27,6 +27,9 @@ defmodule Cherry.Serve do
     port = Keyword.get(opts, :port, 4000)
     verbose? = Keyword.get(opts, :verbose, false)
 
+    # SSE heartbeat cadence; tests shrink it to observe disconnect reaping.
+    heartbeat_ms = Keyword.get(opts, :heartbeat_ms, 15_000)
+
     with {:ok, build} <- Cherry.build(source: source, output: output, drafts: true) do
       base = base_segments(build.site.base_path)
 
@@ -35,16 +38,18 @@ defmodule Cherry.Serve do
       # table missing, and every response logs a warning.
       {:ok, _apps} = Application.ensure_all_started(:bandit)
 
+      plug_config = %{output: output, base: base, verbose?: verbose?, heartbeat_ms: heartbeat_ms}
+
       children = [
         {Registry, keys: :duplicate, name: Reloader.registry()},
-        {Bandit, bandit_opts(output, base, port, verbose?, :inet)},
+        {Bandit, bandit_opts(plug_config, port, :inet)},
         {Watcher, source: source, output: output}
       ]
 
       case Supervisor.start_link(children, strategy: :one_for_one) do
         {:ok, pid} ->
           bound = bound_port(pid)
-          add_ipv6_listener(pid, output, base, bound, verbose?)
+          add_ipv6_listener(pid, plug_config, bound)
           {:ok, pid, bound, base_prefix(base)}
 
         {:error, reason} ->
@@ -65,9 +70,9 @@ defmodule Cherry.Serve do
   # Windows returns :einval for `ipv6_v6only: false` — so a second,
   # v6-only listener joins the tree on the same port. A host without
   # usable IPv6 keeps just the IPv4 listener, the old behaviour.
-  defp add_ipv6_listener(supervisor, output, base, port, verbose?) do
+  defp add_ipv6_listener(supervisor, plug_config, port) do
     spec =
-      Supervisor.child_spec({Bandit, bandit_opts(output, base, port, verbose?, :inet6)},
+      Supervisor.child_spec({Bandit, bandit_opts(plug_config, port, :inet6)},
         id: :bandit_ipv6
       )
 
@@ -77,16 +82,16 @@ defmodule Cherry.Serve do
     end
   end
 
-  defp bandit_opts(output, base, port, verbose?, :inet) do
+  defp bandit_opts(plug_config, port, :inet) do
     [
-      plug: {Cherry.Serve.Plug, %{output: output, base: base, verbose?: verbose?}},
+      plug: {Cherry.Serve.Plug, plug_config},
       port: port,
       startup_log: false
     ]
   end
 
-  defp bandit_opts(output, base, port, verbose?, :inet6) do
-    bandit_opts(output, base, port, verbose?, :inet) ++
+  defp bandit_opts(plug_config, port, :inet6) do
+    bandit_opts(plug_config, port, :inet) ++
       [thousand_island_options: [transport_options: [:inet6, ipv6_v6only: true]]]
   end
 
