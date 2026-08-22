@@ -23,7 +23,7 @@ defmodule Cherry.Commands.ThemeTokens do
   alias Cherry.CLI.{Context, Error}
   alias Cherry.Theme
 
-  @doc "The single-sourced doc text, reused as the mix task's @moduledoc."
+  @impl Cherry.CLI.Command
   @spec doc() :: String.t()
   def doc, do: @doc_text
 

@@ -31,7 +31,7 @@ defmodule Cherry.Commands.GenAction do
   @cloudflare_workflow ".github/workflows/cloudflare.yml"
   @wrangler_config "wrangler.jsonc"
 
-  @doc "The single-sourced doc text, reused as the mix task's @moduledoc."
+  @impl Cherry.CLI.Command
   @spec doc() :: String.t()
   def doc, do: @doc_text
 
