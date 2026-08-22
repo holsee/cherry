@@ -1,5 +1,6 @@
 ---
 title: "Six sockets: a live-reload leak in two acts"
+description: A click stalled for 55 seconds while the server answered in 3 milliseconds. Debugging the browser's six-connection limit, abandoned SSE streams, and two fixes in Elixir.
 tags: [debugging, elixir, serve, cherrypicker]
 ---
 
