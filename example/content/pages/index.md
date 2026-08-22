@@ -36,6 +36,30 @@ description: Write markdown, get a whole website. Cherry is a one-binary static 
 
 Content is just files: a post is one markdown file in `content/posts/`, a page is one in `content/pages/`, and the filename gives the URL. Install the binary, then watch how far four commands go. Real output throughout, because this site is built by the same tool it describes.
 
+### 0 · Let your agent cook
+
+Prefer to delegate? Cherry ships a [skill](/guides/agents/) that teaches a coding agent every verb, the JSON envelopes, and the verify-fix loop. One command installs it (swap the agent flag for `github-copilot`, `cursor`, `codex`, and friends):
+
+```sh
+gh skill install holsee/cherry cherry --agent claude-code
+```
+
+Then steps 1 to 4 below are things you can simply ask for:
+
+```text
+Create a new cherry site for my blog and serve it locally.
+
+Scaffold my portfolio from my CV and this list of talks, then curate
+which entries make the /cv/ page.
+
+Set up deploys to Cloudflare on every push to main.
+
+Draft a post from these meeting notes and run cherry check
+before showing me anything.
+```
+
+The skill carries the error-recovery playbook too, so a failed check comes back as a fix, not a question.
+
 ### 1 · Plant
 
 ```sh
