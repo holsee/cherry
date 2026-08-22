@@ -1207,7 +1207,7 @@ video.video-local {
   margin: 0;
   padding: 0.3rem 0.65rem 0.3rem 1.25rem;
   font-family: var(--font-mono);
-  font-size: 0.6875rem;
+  font-size: 0.75rem;
   line-height: 1.6;
   color: var(--color-muted);
   background: color-mix(in srgb, var(--color-surface) 85%, var(--color-bg));
@@ -1216,12 +1216,16 @@ video.video-local {
   border-radius: 8px 8px 0 0;
 }
 
+.code-lang {
+  color: var(--color-fg);
+  font-weight: 500;
+}
+
 .code-title {
   min-width: 0;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-  opacity: 0.8;
 }
 
 /* In the bar the button rides the row; 1.5rem keeps the bar slim while
