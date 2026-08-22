@@ -23,7 +23,7 @@ defmodule Cherry.Serve.Plug do
   @spec call(Plug.Conn.t(), map()) :: Plug.Conn.t()
   def call(%Plug.Conn{path_info: ["__cherry", "reload"]} = conn, config) do
     if config[:verbose?], do: IO.puts("GET /__cherry/reload → SSE subscriber connected")
-    sse(conn)
+    sse(conn, Map.get(config, :heartbeat_ms, 15_000))
   end
 
   def call(conn, %{output: output} = config) do
@@ -63,21 +63,30 @@ defmodule Cherry.Serve.Plug do
   defp format_elapsed(us) when us < 1_000, do: "#{us}µs"
   defp format_elapsed(us), do: "#{Float.round(us / 1_000, 1)}ms"
 
-  defp sse(conn) do
+  defp sse(conn, heartbeat_ms) do
     Reloader.subscribe()
 
     conn
     |> put_resp_header("content-type", "text/event-stream")
     |> put_resp_header("cache-control", "no-cache")
     |> send_chunked(200)
-    |> sse_loop()
+    |> sse_loop(heartbeat_ms)
   end
 
-  defp sse_loop(conn) do
+  # The heartbeat is a comment frame EventSource ignores; the write is
+  # how a vanished browser gets noticed, since a stream that only ever
+  # waits for the next rebuild would hold its socket forever.
+  defp sse_loop(conn, heartbeat_ms) do
     receive do
       :cherry_reload ->
         case chunk(conn, "data: reload\n\n") do
-          {:ok, conn} -> sse_loop(conn)
+          {:ok, conn} -> sse_loop(conn, heartbeat_ms)
+          {:error, _reason} -> conn
+        end
+    after
+      heartbeat_ms ->
+        case chunk(conn, ": ping\n\n") do
+          {:ok, conn} -> sse_loop(conn, heartbeat_ms)
           {:error, _reason} -> conn
         end
     end

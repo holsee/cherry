@@ -25,7 +25,7 @@ cherry version
 ```
 
 ```text
-cherry 0.4.0
+cherry 0.4.1
 ```
 
 A release binary also prints, in parentheses, the git revision it was compiled from, which is useful when you are running something built between releases.

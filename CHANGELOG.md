@@ -5,6 +5,11 @@ All notable changes to Cherry are documented here. Format follows
 
 Entries are terse one-liners linked to their PR: `- Thing that changed. (#12)`
 
+## [0.4.1] — 2026-08-22
+
+### Fixed
+- `cherry serve` no longer lets abandoned live-reload streams pile up: the injected client closes its EventSource on `pagehide` (and reloads a page restored from the back/forward cache), and the SSE handler sends a comment-frame heartbeat every 15 s so a vanished browser is noticed and its socket released. Six parked streams used to exhaust the browser's per-host connection pool, stalling the next navigation for close to a minute. (#97)
+
 ## [0.4.0] — 2026-08-21
 
 ### Fixed
