@@ -48,14 +48,48 @@ Then steps 1 to 4 below are things you can simply ask for:
 
 ```text
 Create a new cherry site for my blog and serve it locally.
+```
 
+```text
 Scaffold my portfolio from my CV and this list of talks, then curate
 which entries make the /cv/ page.
+```
 
+```text
 Set up deploys to Cloudflare on every push to main.
+```
 
-Draft a post from these meeting notes and run cherry check
-before showing me anything.
+```text
+Draft a post from these meeting notes and run cherry check before
+showing me anything.
+```
+
+And the loop does not stop at scaffolding:
+
+```text
+Migrate my old Jekyll posts into content/posts/ and fix whatever
+cherry check flags.
+```
+
+```text
+Change the accent colour to match my logo, in light and dark.
+```
+
+```text
+Change the footer to link my Mastodon and my GitHub.
+```
+
+```text
+Scaffold a theme called porcelain from the default theme and make it
+mine: serif body, a muted sage accent as a light-dark pair, generous
+whitespace. Keep every token the manifest declares, run cherry check,
+and show me the home page and /cv/ in both light and dark before we
+keep it.
+```
+
+```text
+Add my three most recent conference talks to the portfolio with
+links to the videos.
 ```
 
 The skill carries the error-recovery playbook too, so a failed check comes back as a fix, not a question.
@@ -118,6 +152,25 @@ Size the queue for the promise, not the traffic.
 ```
 
 Figures with captions, video embeds that make zero third-party requests until clicked, and callouts. Framework-level, so they survive a theme swap.
+
+Your work history is files too. Portfolio entries live under `content/portfolio/` in five folders (`positions`, `projects`, `talks`, `oss`, `education`), with your name, headline, and links in a `portfolio.yaml` at the site root. The generators scaffold an entry with valid frontmatter:
+
+```sh
+cherry gen.project "Cider Press" --json
+```
+
+```json
+{
+  "ok": true,
+  "command": "gen.project",
+  "data": {
+    "path": "content/portfolio/projects/cider-press.md",
+    "slug": "cider-press"
+  }
+}
+```
+
+Open the file it names and fill in the dates, tags, and highlights; `cherry gen.talk` does the same for talks. From those files cherry renders a dated timeline at `/portfolio/` and, because the project scaffold arrives with a `cv:` block (`include` opts it in, `weight` orders it), a curated employer-ready `/cv/` with machine-readable `cv.json` beside it. The [portfolio guide](/guides/portfolio-and-cv/) builds the whole thing from scratch.
 
 ### 3 · Verify
 
