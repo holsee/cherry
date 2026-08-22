@@ -238,20 +238,7 @@ cv:
 The press line, from crate to bottle, as one supervised Elixir application.
 ```
 
-Those files become three things at once. Every entry lands on the dated **timeline** at `/portfolio/`, cross-linked by tag with your blog posts. The `cv:` block curates the **`/cv/`** page - `include` opts an entry in, `weight` orders it - which ships with a print stylesheet that produces a clean one-pager. And beside it, a machine-readable **`cv.json`** in JSON Resume format:
-
-```json
-{
-  "$schema": "https://raw.githubusercontent.com/jsonresume/resume-schema/v1.0.0/schema.json",
-  "basics": {
-    "label": "Systems engineer who ships small, sharp tools",
-    "name": "Juno Vale",
-    "profiles": [{"network": "GitHub", "url": "https://github.com/junovale"}]
-  }
-}
-```
-
-`cherry gen.talk` scaffolds talks the same way (event, date, video link), and `cherry schema portfolio/projects` prints every field an entry accepts. The [portfolio guide](/guides/portfolio-and-cv/) builds the whole thing from scratch.
+`cherry gen.talk` scaffolds talks the same way (event, date, video link), and `cherry schema portfolio/projects` prints every field an entry accepts. What those files turn into is a story of its own - [the next section](#the-devlog-that-becomes-your-cv).
 
 ### 5 · Verify
 
@@ -310,6 +297,33 @@ Built 33 page(s), 4 asset(s) → _site
 ```
 
 Builds are deterministic - same tree in, same bytes out - so CI can prove nothing drifted. Push, and the workflow checks, builds, and deploys Pages. Prefer Cloudflare? `cherry gen.action --host cloudflare` writes that pipeline instead. Both are covered in the [deploy guide](/guides/deploy/) and its [Cloudflare twin](/guides/deploy-cloudflare/).
+
+</section>
+
+<section class="beyond">
+
+## The devlog that becomes your CV
+
+A blog records what you were thinking. The portfolio records what you shipped. Keep both in the same content tree and something better than either falls out: a running, public record of your work - every position, project, talk, open-source contribution, and course, logged as one markdown file when it happens, in exactly the detail you want the world to see.
+
+From those files, three views, no extra work:
+
+- **The full timeline** at `/portfolio/`: everything you have ever done, dated and interleaved - positions as ranges, projects with status, talks as moments in time. Curation never hides work here; this is the complete history, and it only grows.
+- **Story pages** at `/story/TAG/`: one thread per tag. The job, the projects it produced, the talks about them, and the blog posts written along the way, cross-linked on a single page - tags are one taxonomy across the whole site, so your writing and your work weave together on their own.
+- **The CV** at `/cv/`: the employer-shaped cut. A `cv:` block on each entry opts it in and orders it, the print stylesheet turns it into a clean one-pager, and a machine-readable `cv.json` ships beside it in JSON Resume format:
+
+```json
+{
+  "$schema": "https://raw.githubusercontent.com/jsonresume/resume-schema/v1.0.0/schema.json",
+  "basics": {
+    "label": "Systems engineer who ships small, sharp tools",
+    "name": "Juno Vale",
+    "profiles": [{"network": "GitHub", "url": "https://github.com/junovale"}]
+  }
+}
+```
+
+The payoff is the habit. Write the entry the week you ship the thing, while the details are still sharp, and your timeline and CV stay current forever - no night-before-the-interview scramble to reconstruct five years of work from old repos and older memories. All of it static, all of it typed, all of it checked by the same verifier as the blog. [Build yours in one guide.](/guides/portfolio-and-cv/)
 
 </section>
 
