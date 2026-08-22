@@ -1,7 +1,11 @@
 defmodule Cherry.CodeHeadTest do
   use ExUnit.Case, async: true
 
+  alias Cherry.Build
   alias Cherry.Content.CodeHead
+  alias Cherry.Content.Document
+  alias Cherry.Pipeline.Stages.Transform
+  alias Cherry.Site
 
   describe "parse/1" do
     test "language alone" do
@@ -68,7 +72,7 @@ defmodule Cherry.CodeHeadTest do
       ```
       """
 
-      doc = %Cherry.Content.Document{
+      doc = %Document{
         source: "x.md",
         collection: :pages,
         body: body,
@@ -77,9 +81,9 @@ defmodule Cherry.CodeHeadTest do
         meta: %{}
       }
 
-      build = %Cherry.Build{
+      build = %Build{
         options: [],
-        site: %Cherry.Site{
+        site: %Site{
           title: "t",
           url: "https://x",
           base_path: "",
@@ -89,7 +93,7 @@ defmodule Cherry.CodeHeadTest do
         documents: [doc]
       }
 
-      {:ok, out} = Cherry.Pipeline.Stages.Transform.run(build)
+      {:ok, out} = Transform.run(build)
       html = hd(out.documents).html
 
       assert html =~ ~s(<figcaption class="code-head">)

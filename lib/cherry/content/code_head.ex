@@ -59,27 +59,28 @@ defmodule Cherry.Content.CodeHead do
   # The icon key normalises fence-language aliases onto the glyph set the
   # official themes ship. Unknown languages key "file", the default glyph
   # every `.code-icon` carries, so third-party themes degrade gracefully.
+  @icon_keys for {key, aliases} <- [
+                   elixir: ~w(ex exs elixir),
+                   phoenix: ~w(heex eex leex),
+                   shell: ~w(sh bash zsh shell console),
+                   javascript: ~w(js javascript mjs cjs jsx),
+                   typescript: ~w(ts typescript tsx),
+                   json: ~w(json jsonc),
+                   yaml: ~w(yaml yml),
+                   markdown: ~w(md markdown),
+                   css: ~w(css),
+                   html: ~w(html htm xml svg),
+                   rust: ~w(rust rs),
+                   erlang: ~w(erlang erl),
+                   python: ~w(python py)
+                 ],
+                 alias_name <- aliases,
+                 into: %{},
+                 do: {alias_name, Atom.to_string(key)}
+
   @spec icon_key(String.t() | nil) :: String.t()
   defp icon_key(nil), do: "file"
-
-  defp icon_key(lang) do
-    case String.downcase(lang) do
-      l when l in ~w(ex exs elixir) -> "elixir"
-      l when l in ~w(heex eex leex) -> "phoenix"
-      l when l in ~w(sh bash zsh shell console) -> "shell"
-      l when l in ~w(js javascript mjs cjs jsx) -> "javascript"
-      l when l in ~w(ts typescript tsx) -> "typescript"
-      l when l in ~w(json jsonc) -> "json"
-      l when l in ~w(yaml yml) -> "yaml"
-      l when l in ~w(md markdown) -> "markdown"
-      l when l in ~w(css) -> "css"
-      l when l in ~w(html htm xml svg) -> "html"
-      l when l in ~w(rust rs) -> "rust"
-      l when l in ~w(erlang erl) -> "erlang"
-      l when l in ~w(python py) -> "python"
-      _other -> "file"
-    end
-  end
+  defp icon_key(lang), do: Map.get(@icon_keys, String.downcase(lang), "file")
 
   defp escape(text) do
     text
