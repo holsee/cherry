@@ -22,7 +22,7 @@ defmodule Cherry.Commands.New do
 
   alias Cherry.CLI.{Context, Error}
 
-  @doc "The single-sourced doc text, reused for `cherry help`."
+  @impl Cherry.CLI.Command
   @spec doc() :: String.t()
   def doc, do: @doc_text
 

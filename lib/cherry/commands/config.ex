@@ -44,7 +44,7 @@ defmodule Cherry.Commands.Config do
   @writable ~w(title url description author theme search base_path social_image)
   @readable @writable ++ ~w(nav tokens)
 
-  @doc "The single-sourced doc text, reused as the mix task's @moduledoc."
+  @impl Cherry.CLI.Command
   @spec doc() :: String.t()
   def doc, do: @doc_text
 

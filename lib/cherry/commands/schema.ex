@@ -19,7 +19,7 @@ defmodule Cherry.Commands.Schema do
   alias Cherry.Collections
   alias Cherry.Collections.Schema
 
-  @doc "The single-sourced doc text, reused as the mix task's @moduledoc."
+  @impl Cherry.CLI.Command
   @spec doc() :: String.t()
   def doc, do: @doc_text
 

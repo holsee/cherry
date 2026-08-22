@@ -17,11 +17,18 @@ defmodule Cherry.CLI do
 
   Every command accepts `--json` (machine-readable envelope on stdout) and
   `--verbose` (extra detail for humans debugging).
+
+  ## Help
+
+  `cherry` bare, `cherry help`, and `cherry --help` print the command list;
+  `cherry help <verb>` and `cherry <verb> --help` print one command's doc.
+  Help always goes to stdout and exits 0.
   """
 
-  alias Cherry.CLI.{Context, Error, Registry}
+  alias Cherry.CLI.{Context, Error, Help, Registry}
 
   @global_switches [json: :boolean, verbose: :boolean]
+  @help_flags ["--help", "-h"]
 
   @doc """
   Runs a Cherry command from raw argv and returns its exit code.
@@ -30,7 +37,10 @@ defmodule Cherry.CLI do
   into `exit({:shutdown, code})`, the binary into `System.halt/1`.
   """
   @spec run([String.t()]) :: non_neg_integer()
-  def run([]), do: render_error(usage_error("no command given"), nil, json?: false)
+  def run([]), do: base_help()
+  def run(["help"]), do: base_help()
+  def run(["help", verb | _rest]), do: verb_help(verb)
+  def run([flag | _rest]) when flag in @help_flags, do: base_help()
 
   def run([verb | rest]) do
     case Registry.fetch(verb) do
@@ -39,7 +49,35 @@ defmodule Cherry.CLI do
     end
   end
 
+  defp base_help do
+    IO.puts(Help.base())
+    0
+  end
+
+  defp verb_help(verb) do
+    case Registry.fetch(verb) do
+      {:ok, command} ->
+        IO.puts(Help.verb(command))
+        0
+
+      :error ->
+        render_unknown_verb(verb, [])
+    end
+  end
+
+  # --help is intercepted before OptionParser (strict parsing would reject
+  # it) and before dispatch, so `cherry serve --help` prints instead of
+  # serving.
   defp run_command(command, verb, rest) do
+    if Enum.any?(rest, &(&1 in @help_flags)) do
+      IO.puts(Help.verb(command))
+      0
+    else
+      parse_and_dispatch(command, verb, rest)
+    end
+  end
+
+  defp parse_and_dispatch(command, verb, rest) do
     switches = Keyword.merge(@global_switches, command.switches())
 
     case OptionParser.parse(rest, strict: switches) do

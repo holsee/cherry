@@ -8,6 +8,7 @@ Entries are terse one-liners linked to their PR: `- Thing that changed. (#12)`
 ## [Unreleased]
 
 ### Added
+- Built-in help: bare `cherry`, `cherry help`, and `cherry --help` list every verb with a one-line summary; `cherry help VERB` and `cherry VERB --help`/`-h` print the verb's full doc, rendered from the same single-sourced text as the mix task docs and the agent skill. Help prints to stdout and exits 0 — bare `cherry` previously exited 2 with "no command given". (#105)
 - The cherrybomb theme ships Noto Sans Mono for code: a 32 KB latin-subset variable woff2, self-hosted in the theme's assets and leading `--font-mono` — zero third-party requests. The default theme keeps its zero-byte system stack. (#106)
 
 ### Changed
