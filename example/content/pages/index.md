@@ -254,7 +254,7 @@ cherry check --strict --json
   "command": "check",
   "error": {
     "code": "check_failed",
-    "message": "Checked 35 page(s): 1 error(s), 0 warning(s).",
+    "message": "Checked 36 page(s): 1 error(s), 0 warning(s).",
     "details": {
       "errors": 1,
       "diagnostics": [
@@ -273,7 +273,7 @@ cherry check --strict --json
 The diagnostic names the file, the rule, and the problem. Fix it, run again:
 
 ```text
-Checked 33 page(s): all clear.
+Checked 34 page(s): all clear.
 ```
 
 That's the verifier loop: build, check, fix, repeat. A broken link cannot reach production, because the deploy workflow runs the same check before it builds. Every rule is documented in the [check guide](/guides/check/).
@@ -293,7 +293,7 @@ cherry build
 ```
 
 ```text
-Built 33 page(s), 4 asset(s) → _site
+Built 34 page(s), 4 asset(s) → _site
 ```
 
 Builds are deterministic - same tree in, same bytes out - so CI can prove nothing drifted. Push, and the workflow checks, builds, and deploys Pages. Prefer Cloudflare? `cherry gen.action --host cloudflare` writes that pipeline instead. Both are covered in the [deploy guide](/guides/deploy/) and its [Cloudflare twin](/guides/deploy-cloudflare/).

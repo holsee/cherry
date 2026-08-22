@@ -5,7 +5,7 @@ All notable changes to Cherry are documented here. Format follows
 
 Entries are terse one-liners linked to their PR: `- Thing that changed. (#12)`
 
-## [Unreleased]
+## [0.5.0] — 2026-08-22
 
 ### Added
 - Built-in help: bare `cherry`, `cherry help`, and `cherry --help` list every verb with a one-line summary; `cherry help VERB` and `cherry VERB --help`/`-h` print the verb's full doc, rendered from the same single-sourced text as the mix task docs and the agent skill. Help prints to stdout and exits 0 — bare `cherry` previously exited 2 with "no command given". (#105)
