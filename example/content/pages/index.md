@@ -1,11 +1,11 @@
 ---
 title: Home
-description: Cherry is a static site generator for hackers. Typed content, deterministic builds, real theming, one binary.
+description: Write markdown, get a whole website. Cherry is a one-binary static site generator that builds your blog, pages, and developer CV, and deploys them to GitHub Pages or Cloudflare.
 ---
 <section class="hero">
 <img class="hero-mark" src="/brand/cherrybomb-mark.webp" alt="CherryBomb: two cherries with a lit fuse and sunglasses" width="320" height="320">
 <h1>A static site generator<br>for all the <em>hackers</em></h1>
-<p class="hero-tagline">A modern take on static site generation: typed content, deterministic builds, themes that survive upgrades. One binary, fuse lit.</p>
+<p class="hero-tagline">Write markdown files, get a whole website: a blog, your pages, and a developer portfolio with a print-ready CV. Cherry is the one binary that builds it, checks it, and deploys it to GitHub Pages or Cloudflare. No Node, no config safari. Fuse lit.</p>
 <p class="hero-actions"><a class="button" href="/guides/quick-start/">Quick-start</a> <a class="button button-ghost" href="/docs/">Docs</a> <a class="button button-ghost" href="https://github.com/holsee/cherry">GitHub</a></p>
 <div class="cmd" data-copy><span class="cmd-os">macOS / Linux</span><code>curl -fsSL https://cherrybomb.dev/install.sh | sh</code></div>
 <div class="cmd" data-copy><span class="cmd-os">Windows</span><code>irm https://cherrybomb.dev/install.ps1 | iex</code></div>
@@ -34,7 +34,7 @@ description: Cherry is a static site generator for hackers. Typed content, deter
 
 ## One CLI to rule them all
 
-No Node, no bundler, no config safari. Install the binary, then watch how far four commands go. Real output throughout, because this site is built by the same tool it describes.
+Content is just files: a post is one markdown file in `content/posts/`, a page is one in `content/pages/`, and the filename gives the URL. Install the binary, then watch how far four commands go. Real output throughout, because this site is built by the same tool it describes.
 
 ### 1 · Plant
 
