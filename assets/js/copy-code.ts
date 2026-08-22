@@ -61,12 +61,22 @@ function attach(target: HTMLElement): void {
   });
 
   if (target.tagName === "PRE") {
-    // Wrap so the button anchors to the block, not the scrolling content.
-    const wrap = document.createElement("div");
-    wrap.className = "code-copy";
-    target.replaceWith(wrap);
-    wrap.appendChild(target);
-    wrap.appendChild(button);
+    // A block with a header bar gives the button a natural home: in the
+    // bar, never over the code.
+    const head = target.parentElement?.classList.contains("code-block")
+      ? target.parentElement.querySelector<HTMLElement>(":scope > .code-head")
+      : null;
+
+    if (head) {
+      head.appendChild(button);
+    } else {
+      // Wrap so the button anchors to the block, not the scrolling content.
+      const wrap = document.createElement("div");
+      wrap.className = "code-copy";
+      target.replaceWith(wrap);
+      wrap.appendChild(target);
+      wrap.appendChild(button);
+    }
   } else {
     target.appendChild(button);
   }
@@ -77,6 +87,7 @@ function init(): void {
   const targets = document.querySelectorAll<HTMLElement>("pre, [data-copy]");
   targets.forEach((el) => {
     if (el.parentElement?.classList.contains("code-copy")) return;
+    if (el.parentElement?.querySelector(":scope > .code-head > .copy-code")) return;
     if (el.querySelector(":scope > .copy-code")) return;
     attach(el);
   });
