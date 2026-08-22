@@ -79,7 +79,13 @@ defmodule Cherry.CodeHeadTest do
 
       build = %Cherry.Build{
         options: [],
-        site: %Cherry.Site{title: "t", url: "https://x", base_path: "", root: ".", output: "_site"},
+        site: %Cherry.Site{
+          title: "t",
+          url: "https://x",
+          base_path: "",
+          root: ".",
+          output: "_site"
+        },
         documents: [doc]
       }
 
