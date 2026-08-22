@@ -5,6 +5,11 @@ All notable changes to Cherry are documented here. Format follows
 
 Entries are terse one-liners linked to their PR: `- Thing that changed. (#12)`
 
+## [Unreleased]
+
+### Added
+- Code block headers: a fence that names a language gets a slim bar above the block - the language in small text beside its editor-style file icon (devicon glyphs shipped in both official themes as `currentColor` CSS masks; unknown languages get a generic file glyph). `title="path"` in the fence info adds the file path, Docusaurus-style; both parts optional, bare fences unchanged. The copy button rides the bar when one exists, so it never covers code. (#111)
+
 ## [0.5.0] — 2026-08-22
 
 ### Added

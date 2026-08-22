@@ -71,7 +71,17 @@ The [portfolio guide](/guides/portfolio-and-cv/) builds all of this from scratch
 
 ### Markdown
 
-GitHub-flavoured throughout: tables, strikethrough, task lists, footnotes, autolinks. Heading anchors are automatic. Syntax highlighting is class-based and coloured by [theme tokens](/docs/theming/), so code blocks follow your palette in both renditions. GitHub-style alerts work as blockquotes (`> [!NOTE]`), and the richer [content components](/docs/components/) cover figures, video, and callouts. Raw HTML passes through, which is how this site's landing page is built.
+GitHub-flavoured throughout: tables, strikethrough, task lists, footnotes, autolinks. Heading anchors are automatic. Syntax highlighting is class-based and coloured by [theme tokens](/docs/theming/), so code blocks follow your palette in both renditions.
+
+Fenced code blocks grow a header bar when the fence names a language: the language in small text with its editor-style file icon (the same glyph set file trees use, shipped in the official themes as `currentColor` masks - no requests, no colour clashes). Add `title="…"` to the fence and the header carries the file path too; both parts are optional, and a bare fence stays a bare block:
+
+````markdown
+```elixir title="lib/press/scheduler.ex"
+def press(crates), do: Enum.each(crates, &Press.run/1)
+```
+````
+
+The copy button rides the header bar when one exists, so it never covers code. GitHub-style alerts work as blockquotes (`> [!NOTE]`), and the richer [content components](/docs/components/) cover figures, video, and callouts. Raw HTML passes through, which is how this site's landing page is built.
 
 :::tip{title="Let the generators write the boilerplate"}
 `cherry gen.post`, `gen.project`, and `gen.talk` all emit files that satisfy their schemas, with a `--json` envelope carrying the path. The verifier's `unfilled-field` rule then reminds you about any scaffold string you forgot to replace.

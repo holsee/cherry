@@ -14,7 +14,7 @@ defmodule Cherry.Pipeline.Stages.Transform do
   @behaviour Cherry.Pipeline.Stage
 
   alias Cherry.Build
-  alias Cherry.Content.{Components, Document}
+  alias Cherry.Content.{CodeHead, Components, Document}
 
   @mdex_options [
     extension: [
@@ -50,6 +50,8 @@ defmodule Cherry.Pipeline.Stages.Transform do
       html =
         doc.body
         |> Components.render(base_path)
+        |> MDEx.parse_document!(@mdex_options)
+        |> decorate_code_blocks()
         |> MDEx.to_html!(@mdex_options)
         |> wrap_tables()
 
@@ -57,6 +59,32 @@ defmodule Cherry.Pipeline.Stages.Transform do
     else
       %Document{doc | html: doc.body}
     end
+  end
+
+  # Fenced blocks with a language or a `title="…"` gain a header bar
+  # (Cherry.Content.CodeHead): the block renders alone through the same
+  # pipeline options, then re-enters the document as raw HTML wrapped in
+  # the figure. Indented blocks and bare fences stay exactly as they were.
+  defp decorate_code_blocks(document) do
+    MDEx.traverse_and_update(document, fn
+      %MDEx.CodeBlock{fenced: true, info: info} = node ->
+        case CodeHead.parse(info) do
+          {nil, nil} ->
+            node
+
+          {lang, title} ->
+            pre =
+              MDEx.to_html!(
+                %MDEx.Document{nodes: [%MDEx.CodeBlock{node | info: lang || ""}]},
+                @mdex_options
+              )
+
+            %MDEx.HtmlBlock{literal: CodeHead.wrap(String.trim_trailing(pre), lang, title)}
+        end
+
+      other ->
+        other
+    end)
   end
 
   # Tables scroll inside their own box on narrow screens without losing
