@@ -111,8 +111,9 @@
     ],
     "--font-mono": [
       default:
-        "ui-monospace, 'Cascadia Code', 'SF Mono', Consolas, 'DejaVu Sans Mono', monospace",
-      doc: "Structure and code face."
+        "'Noto Sans Mono', ui-monospace, 'Cascadia Code', 'SF Mono', Consolas, 'DejaVu Sans Mono', monospace",
+      doc:
+        "Structure and code face. Noto Sans Mono ships with the theme (latin subset, self-hosted, 32 KB); everything after it is the fallback stack."
     ],
     "--measure": [default: "42rem", doc: "Reading column width (~66ch)."]
   ]

@@ -31,6 +31,23 @@
  * the cascade by declaration, never by specificity arithmetic.
  */
 
+/* The one webfont the theme ships: Noto Sans Mono, latin subset, as a
+ * 32 KB variable woff2 self-hosted beside this file - code is where the
+ * neon burns, so it gets its own face. Self-hosted means zero third-party
+ * requests, same rule as the video facades. Glyphs outside the subset
+ * fall through to the system stack in --font-mono. */
+@font-face {
+  font-family: "Noto Sans Mono";
+  font-style: normal;
+  font-weight: 400 700;
+  font-stretch: 100%;
+  font-display: swap;
+  src: url("fonts/noto-sans-mono-latin.woff2") format("woff2");
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6,
+    U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122,
+    U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
 @layer theme {
 
 :root {
@@ -54,7 +71,7 @@
 
   --font-prose:
     system-ui, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-  --font-mono: ui-monospace, "Cascadia Code", "SF Mono", Consolas, "DejaVu Sans Mono", monospace;
+  --font-mono: "Noto Sans Mono", ui-monospace, "Cascadia Code", "SF Mono", Consolas, "DejaVu Sans Mono", monospace;
   --measure: 42rem;
 
   color-scheme: light;
@@ -1109,10 +1126,14 @@ video.video-local {
   top: 0.5rem;
   right: 0.5rem;
   z-index: 2;
-  padding: 0.15rem 0.55rem;
-  font-family: var(--font-mono);
-  font-size: 0.6875rem;
-  line-height: 1.6;
+  /* An icon-only square: 28px meets the WCAG 2.5.8 tap floor and covers
+     almost none of the code beneath it. */
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.75rem;
+  height: 1.75rem;
+  padding: 0;
   color: var(--color-muted);
   background: color-mix(in srgb, var(--color-surface) 85%, var(--color-bg));
   border: 1px solid var(--color-border);
@@ -1146,6 +1167,12 @@ video.video-local {
 @media (hover: none) {
   .copy-code {
     opacity: 1;
+  }
+
+  /* No hover to reveal on touch, so the button is always there: reserve
+     the corner so it never sits on top of the first line of code. */
+  .code-copy pre {
+    padding-top: 2.6rem;
   }
 }
 
