@@ -5,6 +5,16 @@ All notable changes to Cherry are documented here. Format follows
 
 Entries are terse one-liners linked to their PR: `- Thing that changed. (#12)`
 
+## [0.5.0] — 2026-08-22
+
+### Added
+- Built-in help: bare `cherry`, `cherry help`, and `cherry --help` list every verb with a one-line summary; `cherry help VERB` and `cherry VERB --help`/`-h` print the verb's full doc, rendered from the same single-sourced text as the mix task docs and the agent skill. Help prints to stdout and exits 0 — bare `cherry` previously exited 2 with "no command given". (#105)
+- The cherrybomb theme ships Noto Sans Mono for code: a 32 KB latin-subset variable woff2, self-hosted in the theme's assets and leading `--font-mono` — zero third-party requests. The default theme keeps its zero-byte system stack. (#106)
+
+### Changed
+- Copy buttons on code blocks are icon-only 28 px squares (words moved to `aria-label`), and on touch screens the code block reserves its top corner so the always-visible button never covers code. (#106)
+- The profile is now one page with two modes: `/cv/` renders the cv-curated entries in a Stack Overflow Careers-style two-column layout (story-linked tag pills, skills derived from the whole history in the sidebar) and is the default; the full dated timeline lives at `/cv/timeline/` with a view switcher linking the two modes. `/portfolio/` ships as a redirect to its successor so old links keep working, and the nav carries one profile entry (CV when public, otherwise Portfolio pointing at the timeline). The demo site gains a `portfolio.yaml`, turning its CV on. (#96)
+
 ## [0.4.1] — 2026-08-22
 
 ### Fixed

@@ -25,8 +25,10 @@
       doc: "Published posts carrying one tag; links to the tag's story when one exists."
     ],
     portfolio_timeline: [
-      assigns: [:site, :portfolio],
-      doc: "The developer story: profile header, dated timeline, open source."
+      assigns: [:site, :portfolio, :cv_href],
+      doc:
+        "The timeline mode of the profile: dated entries, open source; " <>
+          "cv_href links the switcher back to the CV view when public."
     ],
     story: [
       assigns: [:site, :tag, :portfolio, :posts],
@@ -34,7 +36,7 @@
     ],
     cv: [
       assigns: [:site, :cv],
-      doc: "The employer-shaped CV: linear, dense, print-first."
+      doc: "The employer-shaped CV: cv-curated entries in the careers layout, print-first."
     ],
     not_found: [
       assigns: [:site],
@@ -109,8 +111,9 @@
     ],
     "--font-mono": [
       default:
-        "ui-monospace, 'Cascadia Code', 'SF Mono', Consolas, 'DejaVu Sans Mono', monospace",
-      doc: "Structure and code face."
+        "'Noto Sans Mono', ui-monospace, 'Cascadia Code', 'SF Mono', Consolas, 'DejaVu Sans Mono', monospace",
+      doc:
+        "Structure and code face. Noto Sans Mono ships with the theme (latin subset, self-hosted, 32 KB); everything after it is the fallback stack."
     ],
     "--measure": [default: "42rem", doc: "Reading column width (~66ch)."]
   ]

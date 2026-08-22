@@ -112,7 +112,7 @@ defmodule Cherry.Machine do
       end
 
     %Mirror{
-      path: "portfolio/index.md",
+      path: "cv/timeline/index.md",
       markdown:
         "# Portfolio\n\n" <>
           profile_line(portfolio.profile) <>
@@ -306,7 +306,8 @@ defmodule Cherry.Machine do
           "- [The #{tag} story](#{Site.abs_url(site, "story/#{slug}/index.md")})\n"
         end)
 
-      "\n## Portfolio\n\n- [Portfolio](#{Site.abs_url(site, "portfolio/index.md")})\n" <> stories
+      "\n## Portfolio\n\n- [Portfolio](#{Site.abs_url(site, "cv/timeline/index.md")})\n" <>
+        stories
     else
       ""
     end

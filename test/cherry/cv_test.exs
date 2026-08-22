@@ -44,7 +44,9 @@ defmodule Cherry.CVTest do
       assert page =~ "<h1>grower</h1>"
       assert page =~ "Updated August 2026"
       assert page =~ ~s(<a href="/cv/">CV</a>)
-      assert page =~ "Staff Engineer · Orchard Systems"
+      assert page =~ ~s(<a href="/cv/timeline/">Timeline</a>)
+      assert page =~ ~s(<div class="cv-columns">)
+      assert page =~ ~s(Staff Engineer <span class="entry-org">· Orchard Systems</span>)
       assert page =~ ~s(<a href="/story/elixir/">elixir</a>)
       refute page =~ "noindex"
       refute page =~ "Hedgerow"
@@ -69,16 +71,29 @@ defmodule Cherry.CVTest do
       refute page =~ ~s(<a href="/cv/">CV</a>)
 
       assert File.exists?(Path.join(out, "cv.json"))
-      refute File.read!(Path.join(out, "sitemap.xml")) =~ "/cv/"
+      # The timeline mode stays listed; only the CV page itself hides.
+      sitemap = File.read!(Path.join(out, "sitemap.xml"))
+      refute sitemap =~ "/cv/</loc>"
+      assert sitemap =~ "/cv/timeline/</loc>"
+
+      # An unlisted CV is never advertised from the timeline either.
+      timeline = File.read!(Path.join(out, "cv/timeline/index.html"))
+      refute timeline =~ ~s(<a href="/cv/">CV</a>)
     end
 
     @tag :tmp_dir
-    test "off: nothing is emitted", %{tmp_dir: tmp} do
+    test "off: the CV page vanishes, the timeline mode survives", %{tmp_dir: tmp} do
       out = build_with_visibility(tmp, "off")
 
-      refute File.exists?(Path.join(out, "cv"))
+      refute File.exists?(Path.join(out, "cv/index.html"))
       refute File.exists?(Path.join(out, "cv.json"))
       refute File.read!(Path.join(out, "index.html")) =~ ~s(>CV<)
+
+      # The nav's profile entry falls back to the timeline, and the old
+      # /portfolio/ URL redirects there instead of the hidden CV.
+      assert File.exists?(Path.join(out, "cv/timeline/index.html"))
+      assert File.read!(Path.join(out, "index.html")) =~ ~s(<a href="/cv/timeline/">Portfolio</a>)
+      assert File.read!(Path.join(out, "portfolio/index.html")) =~ "url=/cv/timeline/"
     end
   end
 

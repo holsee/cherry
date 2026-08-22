@@ -130,19 +130,23 @@ The Careers 2.0 insight was that a developer's story is a *timeline of typed ent
 - Emits JSON-LD `Person` (with `worksFor`, `alumniOf`, `knowsAbout`) — the portfolio *is* the structured data.
 - A `portfolio.yaml` at the root holds the profile itself (name, headline, location, links, avatar). Contact email is **off by default** (spam harvesting on public static pages is real); opt-in via config.
 
-### Two views of the story: the timeline and the CV
+### One profile, two modes: the CV and its timeline
 
 Careers 2.0's killer use was linking an employer to your profile instead of sending a
-CV. Cherry ships **both of its faces as first-class web views of the same portfolio
-data**:
+CV. Cherry ships the profile as **one page family with two modes of the same
+portfolio data**, linked by a view switcher:
 
-1. **The timeline** (`/portfolio/`, template `portfolio_timeline`) — the Careers-style
-   exploratory view: chronological, rich, cross-linked into the blog through the
-   shared tag taxonomy. This is the *story*.
-2. **The CV** (`/cv/`, template `cv`) — a web page that *reads like a CV*: linear,
-   dense, scannable, employer-shaped. Not a print stylesheet bolted onto the
-   timeline — its own designed view. Print and PDF are output forms of this view,
-   not its reason for existing.
+1. **The CV view** (`/cv/`, template `cv`) — the default mode: a Careers-profile
+   two-column page that *reads like a CV* — `cv:`-curated entries with story-linked
+   tag pills in the main column, derived skills and open source in the sidebar.
+   Employer-shaped, scannable, print-first: print and PDF are output forms of this
+   view, not its reason for existing.
+2. **The timeline mode** (`/cv/timeline/`, template `portfolio_timeline`) — the same
+   profile over the *full* portfolio, chronological and rich, cross-linked into the
+   blog through the shared tag taxonomy. Curation never hides work here.
+
+`/portfolio/` ships as a meta-refresh redirect to its successor, so old links keep
+working; it stays out of the sitemap with a canonical to the new home.
 
 The design principle is strict: **both views are projections of the same portfolio
 data — never a second dataset.** The moment CV content lives in its own file, it
@@ -183,7 +187,7 @@ drifts, and you're maintaining a CV again.
   from the newest included entry (or an explicit `updated:` in `portfolio.yaml`) —
   the determinism contract holds.
 - Both `portfolio_timeline` and `cv` are part of the **theme contract inventory**, so
-  every theme ships both and swapping never loses either view.
+  every theme ships both and swapping never loses either mode.
 
 ---
 

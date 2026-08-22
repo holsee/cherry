@@ -22,9 +22,9 @@ work in one place.
   defects, and where the technique stopped paying
 
 Everything else is in [the archive](/blog/), and the work is on the
-[timeline](/portfolio/).
+[timeline](/cv/timeline/).
 
 ## Elsewhere
 
-Talks and slides are on the [portfolio](/portfolio/). I answer email, and I
+Talks and slides are on the [timeline](/cv/timeline/). I answer email, and I
 read every reply to the [feed](/feed.xml).

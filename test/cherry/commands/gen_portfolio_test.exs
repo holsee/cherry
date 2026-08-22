@@ -19,7 +19,7 @@ defmodule Cherry.Commands.GenPortfolioTest do
     # The scaffold is valid as-is: the site builds and the entry shows.
     out = Path.join(tmp, "_site")
     assert {:ok, _build} = Cherry.build(source: tmp, output: out, today: ~D[2026-08-14])
-    assert File.read!(Path.join(out, "portfolio/index.html")) =~ "Cider Press"
+    assert File.read!(Path.join(out, "cv/timeline/index.html")) =~ "Cider Press"
   end
 
   @tag :tmp_dir

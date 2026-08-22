@@ -1,0 +1,128 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Timeline · Folio</title>
+<link rel="canonical" href="https://folio.example/cv/timeline/">
+<link rel="alternate" type="application/atom+xml" title="Folio" href="/feed.xml">
+<link rel="alternate" type="application/feed+json" title="Folio" href="/feed.json">
+<meta name="description" content="A developer story grown for Cherry's golden harness.">
+<meta property="og:description" content="A developer story grown for Cherry's golden harness.">
+<meta property="og:title" content="Timeline">
+<meta property="og:url" content="https://folio.example/cv/timeline/">
+<meta property="og:site_name" content="Folio">
+<meta name="twitter:card" content="summary">
+<meta property="og:type" content="website">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"Person","alumniOf":[{"@type":"EducationalOrganization","name":"Orchard University"}],"description":"Grows orchards and software.","jobTitle":"Staff Engineer","knowsAbout":["elixir","erlang"],"name":"grower","sameAs":["https://github.com/grower","https://fedi.example/@grower"],"url":"https://folio.example/portfolio/","worksFor":{"@type":"Organization","name":"Orchard Systems"}}</script>
+<link rel="stylesheet" href="/assets/site.css">
+<script>
+/* No-flash: apply the stored theme before first paint. */
+(function () {
+  try {
+    var t = localStorage.getItem("cherry-theme");
+    if (t === "light" || t === "dark") document.documentElement.dataset.theme = t;
+  } catch (e) {}
+})();
+</script>
+</head>
+<body class="page-cv-timeline">
+<header class="site-header">
+<div class="wrap">
+<a class="site-title" href="/">Folio</a>
+<nav class="site-nav"><a href="/blog/">Blog</a>
+<a href="/cv/">CV</a>
+
+<button class="theme-toggle" type="button" aria-label="Theme">
+<svg data-theme-icon="auto" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><circle cx="8" cy="8" r="6"/><path d="M8 2 A6 6 0 0 1 8 14 Z" fill="currentColor" stroke="none"/></svg>
+<svg data-theme-icon="light" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true" style="display:none"><circle cx="8" cy="8" r="3.5"/><path d="M8 1v2M8 13v2M1 8h2M13 8h2M3 3l1.4 1.4M11.6 11.6L13 13M13 3l-1.4 1.4M4.4 11.6L3 13"/></svg>
+<svg data-theme-icon="dark" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true" style="display:none"><path d="M13.5 9.5A6 6 0 1 1 6.5 2.5a5 5 0 0 0 7 7Z"/></svg>
+<span data-theme-label>auto</span>
+</button>
+</nav>
+</div>
+</header>
+<main>
+<div class="wrap">
+<header class="profile">
+<h1>grower</h1>
+<p class="profile-headline">Grows orchards and software.</p>
+<p class="profile-meta"><span>Belfast</span><a href="https://github.com/grower">GitHub</a><a href="https://fedi.example/@grower">Fediverse</a></p>
+</header>
+<nav class="view-switch" aria-label="Profile views"><a href="/cv/">CV</a><span aria-current="page">Timeline</span></nav>
+<div class="timeline">
+<section class="timeline-year">
+<h2 class="year-mark">2024</h2>
+<article class="timeline-entry">
+<p class="entry-kind">Talk</p>
+<h3>Growing on the BEAM</h3>
+<p class="entry-meta">CodeGarden · Sep 2024 · <a href="https://video.example/growing-beam">Video</a></p>
+<p class="entry-tags"><a href="/story/elixir/">elixir</a></p>
+</article>
+</section>
+<section class="timeline-year">
+<h2 class="year-mark">2023</h2>
+<article class="timeline-entry">
+<p class="entry-kind">Project</p>
+<h3>Cider Press</h3>
+<p class="entry-meta">Jun 2023 — present · <a href="https://github.com/grower/cider-press">Source</a></p>
+<ul class="entry-highlights">
+<li>Presses apples at 10k pods/sec</li>
+</ul>
+<p class="entry-tags"><a href="/story/elixir/">elixir</a></p>
+</article>
+</section>
+<section class="timeline-year">
+<h2 class="year-mark">2020</h2>
+<article class="timeline-entry">
+<p class="entry-kind">Position</p>
+<h3>Staff Engineer · Orchard Systems</h3>
+<p class="entry-meta">Feb 2020 — present · Remote</p>
+<ul class="entry-highlights">
+<li>Grew the platform from seed to fruit</li>
+<li>Led a team of five gardeners</li>
+</ul>
+<p class="entry-tags"><a href="/story/elixir/">elixir</a></p>
+</article>
+</section>
+<section class="timeline-year">
+<h2 class="year-mark">2016</h2>
+<article class="timeline-entry">
+<p class="entry-kind">Position</p>
+<h3>Software Engineer · Hedgerow Ltd</h3>
+<p class="entry-meta">May 2016 — Jan 2020</p>
+<p class="entry-tags"><a href="/story/erlang/">erlang</a></p>
+</article>
+</section>
+<section class="timeline-year">
+<h2 class="year-mark">2012</h2>
+<article class="timeline-entry">
+<p class="entry-kind">Education</p>
+<h3>BSc Pomology · Orchard University</h3>
+<p class="entry-meta">Sep 2012 — Jun 2016</p>
+</article>
+</section>
+</div>
+<section class="oss">
+<h2>Open source</h2>
+<ul class="oss-list">
+<li>
+<a href="https://github.com/grower/trellis">Trellis</a> <span class="oss-role">author</span>
+<span class="entry-tags"><a href="/story/elixir/">elixir</a></span>
+</li>
+</ul>
+</section>
+
+</div>
+</main>
+<footer class="site-footer">
+<div class="wrap">
+<span>© Folio</span>
+<a href="/feed.xml">RSS</a>
+</div>
+</footer>
+<script src="/assets/theme-toggle.js" defer></script>
+<script src="/assets/copy-code.js" defer></script>
+<script src="/assets/video-embed.js" defer></script>
+</body>
+</html>

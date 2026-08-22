@@ -31,6 +31,23 @@
  * the cascade by declaration, never by specificity arithmetic.
  */
 
+/* The one webfont the theme ships: Noto Sans Mono, latin subset, as a
+ * 32 KB variable woff2 self-hosted beside this file - code is where the
+ * neon burns, so it gets its own face. Self-hosted means zero third-party
+ * requests, same rule as the video facades. Glyphs outside the subset
+ * fall through to the system stack in --font-mono. */
+@font-face {
+  font-family: "Noto Sans Mono";
+  font-style: normal;
+  font-weight: 400 700;
+  font-stretch: 100%;
+  font-display: swap;
+  src: url("fonts/noto-sans-mono-latin.woff2") format("woff2");
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6,
+    U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122,
+    U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
 @layer theme {
 
 :root {
@@ -54,7 +71,7 @@
 
   --font-prose:
     system-ui, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-  --font-mono: ui-monospace, "Cascadia Code", "SF Mono", Consolas, "DejaVu Sans Mono", monospace;
+  --font-mono: "Noto Sans Mono", ui-monospace, "Cascadia Code", "SF Mono", Consolas, "DejaVu Sans Mono", monospace;
   --measure: 42rem;
 
   color-scheme: light;
@@ -1109,10 +1126,14 @@ video.video-local {
   top: 0.5rem;
   right: 0.5rem;
   z-index: 2;
-  padding: 0.15rem 0.55rem;
-  font-family: var(--font-mono);
-  font-size: 0.6875rem;
-  line-height: 1.6;
+  /* An icon-only square: 28px meets the WCAG 2.5.8 tap floor and covers
+     almost none of the code beneath it. */
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.75rem;
+  height: 1.75rem;
+  padding: 0;
   color: var(--color-muted);
   background: color-mix(in srgb, var(--color-surface) 85%, var(--color-bg));
   border: 1px solid var(--color-border);
@@ -1146,6 +1167,12 @@ video.video-local {
 @media (hover: none) {
   .copy-code {
     opacity: 1;
+  }
+
+  /* No hover to reveal on touch, so the button is always there: reserve
+     the corner so it never sits on top of the first line of code. */
+  .code-copy pre {
+    padding-top: 2.6rem;
   }
 }
 
@@ -1541,3 +1568,153 @@ video.video-local {
 }
 
 } /* @layer theme */
+
+/* ---------- the careers layout: default portfolio view + the CV ---------- */
+
+.page-cv main .wrap {
+  max-width: 64rem;
+}
+
+.cv-careers .cv-header {
+  max-width: var(--measure);
+}
+
+.view-switch {
+  display: flex;
+  gap: 1rem;
+  font-family: var(--font-mono);
+  font-size: 0.8125rem;
+  margin: 0 0 1.75rem;
+}
+
+.view-switch a {
+  color: var(--color-muted);
+  text-decoration: none;
+}
+
+.view-switch a:hover {
+  color: var(--color-accent);
+}
+
+.view-switch [aria-current] {
+  color: var(--color-fg);
+  font-weight: 600;
+}
+
+.cv-columns {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 16rem;
+  column-gap: 3.5rem;
+  align-items: start;
+}
+
+.cv-careers .cv-main > .cv-section:first-child h2,
+.cv-careers .cv-side > .cv-side-section:first-child h2 {
+  margin-top: 0.5rem;
+}
+
+.cv-careers .cv-entry {
+  margin-bottom: 1.75rem;
+}
+
+.entry-org {
+  font-weight: 400;
+  color: var(--color-muted);
+}
+
+.cv-tags {
+  list-style: none;
+  margin: 0.6rem 0 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+
+.cv-tags a,
+.cv-careers .cv-skills a {
+  display: inline-block;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  line-height: 1;
+  padding: 0.35rem 0.55rem;
+  border-radius: 0.25rem;
+  background: color-mix(in srgb, var(--color-accent) 12%, var(--color-bg));
+  color: color-mix(in srgb, var(--color-accent) 80%, var(--color-fg));
+  text-decoration: none;
+}
+
+.cv-tags a:hover,
+.cv-tags a:focus-visible,
+.cv-careers .cv-skills a:hover,
+.cv-careers .cv-skills a:focus-visible {
+  background: color-mix(in srgb, var(--color-accent) 24%, var(--color-bg));
+}
+
+.cv-careers .cv-skills {
+  display: flex;
+  flex-direction: column;
+  gap: 0.55rem;
+}
+
+.cv-careers .cv-skills li {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.6rem;
+}
+
+.cv-careers .cv-skills a {
+  font-size: 0.8125rem;
+}
+
+.cv-careers .cv-skill-years {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  white-space: nowrap;
+}
+
+.cv-side .oss-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.cv-side .oss-list li {
+  margin-bottom: 0.6rem;
+}
+
+.cv-side .oss-role {
+  display: block;
+}
+
+@media (max-width: 52rem) {
+  .cv-columns {
+    grid-template-columns: minmax(0, 1fr);
+    row-gap: 1.5rem;
+  }
+}
+
+@media print {
+  .page-cv main .wrap {
+    max-width: none;
+  }
+
+  .cv-columns {
+    display: block;
+  }
+
+  .view-switch {
+    display: none;
+  }
+
+  .cv-tags a,
+  .cv-careers .cv-skills a {
+    background: none;
+    padding: 0;
+  }
+
+  .cv-tags {
+    gap: 0.3rem 0.9rem;
+  }
+}

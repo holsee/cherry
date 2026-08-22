@@ -62,11 +62,59 @@ defmodule Cherry.CLITest do
       assert stderr =~ "invalid flags: --bogus"
     end
 
-    test "empty argv exits 2" do
-      {stderr, code} = run_stderr([])
+    test "help for an unknown verb exits 2" do
+      {stderr, code} = run_stderr(["help", "frobnicate"])
 
       assert code == 2
-      assert stderr =~ "no command given"
+      assert stderr =~ "unknown command \"frobnicate\""
+    end
+  end
+
+  describe "help" do
+    test "bare, `help`, and `--help` all print the base screen and exit 0" do
+      for argv <- [[], ["help"], ["--help"], ["-h"]] do
+        {output, code} = run(argv)
+
+        assert code == 0
+        assert output =~ "usage: cherry <command>"
+        assert output =~ "--json"
+      end
+    end
+
+    test "the base screen lists every registered verb with a summary" do
+      {output, _code} = run(["help"])
+
+      for verb <- Cherry.CLI.Registry.verbs() do
+        assert output =~ verb
+      end
+    end
+
+    test "`help <verb>` and `<verb> --help` print the command doc in binary form" do
+      for argv <- [["help", "version"], ["version", "--help"], ["version", "-h"]] do
+        {output, code} = run(argv)
+
+        assert code == 0
+        assert output =~ "Prints the Cherry version"
+        assert output =~ "cherry version"
+        refute output =~ "mix cherry."
+      end
+    end
+
+    # Interception must happen before dispatch, or this test never returns.
+    test "--help on a blocking verb prints instead of serving" do
+      {output, code} = run(["serve", "--help"])
+
+      assert code == 0
+      assert output =~ "cherry serve"
+    end
+
+    test "every command's doc yields a non-empty summary line" do
+      for verb <- Cherry.CLI.Registry.verbs() do
+        {:ok, command} = Cherry.CLI.Registry.fetch(verb)
+        [summary | _rest] = String.split(command.doc(), "\n")
+
+        assert summary != "", "#{verb} has an empty first doc line"
+      end
     end
   end
 

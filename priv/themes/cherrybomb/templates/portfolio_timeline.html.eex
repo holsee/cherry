@@ -4,6 +4,7 @@
 <% end %><p class="profile-meta"><%= if @portfolio.profile.location do %><span><%= h(@portfolio.profile.location) %></span><% end %><%= for link <- @portfolio.profile.links do %><a href="<%= link.url %>"><%= h(link.label) %></a><% end %></p>
 </header>
 <% else %><h1>Portfolio</h1>
+<% end %><%= if @cv_href do %><nav class="view-switch" aria-label="Profile views"><a href="<%= @cv_href %>">CV</a><span aria-current="page">Timeline</span></nav>
 <% end %><div class="timeline">
 <%= for {year, items} <- Timeline.groups(@portfolio) do %><section class="timeline-year">
 <h2 class="year-mark"><%= year %></h2>

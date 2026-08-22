@@ -12,6 +12,8 @@ Nineteen verbs, one contract. Every command accepts `--json` for a machine-reada
 | `1` | the command ran and failed: a build error, a failed check |
 | `2` | usage error: unknown flag, bad value, missing argument |
 
+Help is built in: bare `cherry` or `cherry help` lists every verb with a one-line summary, and `cherry help VERB` or `cherry VERB --help` prints one verb's full doc. Help always goes to stdout and exits 0.
+
 Verbs are identical under the standalone binary (`cherry build`) and the Elixir dependency (`mix cherry.build`), with one exception noted under [`new`](#cherry-new). Envelopes always have the same shape:
 
 ```json
@@ -238,7 +240,7 @@ cherry version [--json]
 ```
 
 ```text
-cherry 0.4.1 (d696feb)
+cherry 0.5.0 (03dc4b8)
 ```
 
 The parenthesised value is the git commit the binary was compiled from, so a build from a branch is distinguishable from the release it was branched from. It is absent when Cherry was compiled from a hex package.

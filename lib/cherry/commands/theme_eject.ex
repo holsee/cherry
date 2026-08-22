@@ -20,7 +20,7 @@ defmodule Cherry.Commands.ThemeEject do
   alias Cherry.Theme
   alias Cherry.Theme.{Provenance, Resolver}
 
-  @doc "The single-sourced doc text, reused as the mix task's @moduledoc."
+  @impl Cherry.CLI.Command
   @spec doc() :: String.t()
   def doc, do: @doc_text
 

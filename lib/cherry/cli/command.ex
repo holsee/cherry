@@ -10,6 +10,13 @@ defmodule Cherry.CLI.Command do
 
   alias Cherry.CLI.{Context, Error}
 
+  @doc """
+  The command's full doc text — the single source reused as the mix task's
+  `@moduledoc` and rendered by `cherry help <verb>` and `cherry <verb> --help`.
+  The first line doubles as the one-line summary on the base help screen.
+  """
+  @callback doc() :: String.t()
+
   @doc "Command-specific OptionParser switches, merged with the global ones."
   @callback switches() :: keyword()
 

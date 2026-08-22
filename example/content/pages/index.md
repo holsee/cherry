@@ -254,7 +254,7 @@ cherry check --strict --json
   "command": "check",
   "error": {
     "code": "check_failed",
-    "message": "Checked 35 page(s): 1 error(s), 0 warning(s).",
+    "message": "Checked 36 page(s): 1 error(s), 0 warning(s).",
     "details": {
       "errors": 1,
       "diagnostics": [
@@ -273,7 +273,7 @@ cherry check --strict --json
 The diagnostic names the file, the rule, and the problem. Fix it, run again:
 
 ```text
-Checked 33 page(s): all clear.
+Checked 34 page(s): all clear.
 ```
 
 That's the verifier loop: build, check, fix, repeat. A broken link cannot reach production, because the deploy workflow runs the same check before it builds. Every rule is documented in the [check guide](/guides/check/).
@@ -293,7 +293,7 @@ cherry build
 ```
 
 ```text
-Built 33 page(s), 4 asset(s) → _site
+Built 34 page(s), 4 asset(s) → _site
 ```
 
 Builds are deterministic - same tree in, same bytes out - so CI can prove nothing drifted. Push, and the workflow checks, builds, and deploys Pages. Prefer Cloudflare? `cherry gen.action --host cloudflare` writes that pipeline instead. Both are covered in the [deploy guide](/guides/deploy/) and its [Cloudflare twin](/guides/deploy-cloudflare/).
@@ -308,7 +308,7 @@ A blog records what you were thinking. The portfolio records what you shipped. K
 
 From those files, three views, no extra work:
 
-- **The full timeline** at `/portfolio/`: everything you have ever done, dated and interleaved - positions as ranges, projects with status, talks as moments in time. Curation never hides work here; this is the complete history, and it only grows.
+- **The full timeline** at `/cv/timeline/`: everything you have ever done, dated and interleaved - positions as ranges, projects with status, talks as moments in time. Curation never hides work here; this is the complete history, and it only grows.
 - **Story pages** at `/story/TAG/`: one thread per tag. The job, the projects it produced, the talks about them, and the blog posts written along the way, cross-linked on a single page - tags are one taxonomy across the whole site, so your writing and your work weave together on their own.
 - **The CV** at `/cv/`: the employer-shaped cut. A `cv:` block on each entry opts it in and orders it, the print stylesheet turns it into a clean one-pager, and a machine-readable `cv.json` ships beside it in JSON Resume format:
 

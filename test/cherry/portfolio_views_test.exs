@@ -17,27 +17,30 @@ defmodule Cherry.PortfolioViewsTest do
 
       assert {:ok, build} = Cherry.build(source: @fixture, output: out, today: @today)
 
-      # 1 page + 1 post + blog index + 1 tag page + timeline + 2 stories
-      # + cv page + cv.json + 404 + feed/sitemap/robots.
+      # 1 page + 1 post + blog index + 1 tag page + timeline + the
+      # /portfolio/ redirect + 2 stories + cv page + cv.json + 404
+      # + feed/sitemap/robots.
       # Machine surface: 2 document mirrors + blog + 1 tag + timeline
       # + 2 story + cv mirrors + llms.txt + feed.json.
-      assert length(build.pages) == 23
+      assert length(build.pages) == 24
       assert_trees_equal(@golden, out)
     end
 
     @tag :tmp_dir
-    test "the timeline page tells the story", %{tmp_dir: tmp} do
+    test "the timeline mode shows all work at /cv/timeline/", %{tmp_dir: tmp} do
       out = build!(tmp)
-      timeline = File.read!(Path.join(out, "portfolio/index.html"))
+      timeline = File.read!(Path.join(out, "cv/timeline/index.html"))
 
-      # Profile header, Person JSON-LD, and the nav knows the page exists.
+      # Profile header, Person JSON-LD, and the nav's single profile entry.
       assert timeline =~ "<h1>grower</h1>"
       assert timeline =~ "Grows orchards and software."
       assert timeline =~ ~s("@type":"Person")
       assert timeline =~ ~s("worksFor":{"@type":"Organization","name":"Orchard Systems"})
-      assert timeline =~ ~s(<a href="/portfolio/">Portfolio</a>)
+      assert timeline =~ ~s(<a href="/cv/">CV</a>)
 
-      # Entries with kind labels, ranges, and story-linked tags.
+      # Entries with kind labels, ranges, and story-linked tags — the
+      # FULL portfolio: Hedgerow has no cv.include but the timeline
+      # never hides work.
       assert timeline =~ "Staff Engineer · Orchard Systems"
       assert timeline =~ "Feb 2020 — present"
       assert timeline =~ "Software Engineer · Hedgerow Ltd"
@@ -48,6 +51,24 @@ defmodule Cherry.PortfolioViewsTest do
       # OSS is a standing role, not a dated event.
       assert timeline =~ "Trellis"
       assert timeline =~ ~s(<span class="oss-role">author</span>)
+
+      # The switcher marks Timeline current, and the timeline keeps the
+      # reading-measure body class instead of the CV's wide one.
+      assert timeline =~ ~s(<span aria-current="page">Timeline</span>)
+      assert timeline =~ ~s(<body class="page-cv-timeline">)
+    end
+
+    @tag :tmp_dir
+    test "/portfolio/ redirects to its successor", %{tmp_dir: tmp} do
+      out = build!(tmp)
+      redirect = File.read!(Path.join(out, "portfolio/index.html"))
+
+      assert redirect =~ ~s(http-equiv="refresh")
+      assert redirect =~ ~s(url=/cv/)
+      assert redirect =~ ~s(rel="canonical" href="https://folio.example/cv/")
+
+      # Old links keep working; the sitemap never advertises the stub.
+      refute File.read!(Path.join(out, "sitemap.xml")) =~ "/portfolio/"
     end
 
     @tag :tmp_dir

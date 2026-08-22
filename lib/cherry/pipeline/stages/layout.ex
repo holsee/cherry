@@ -52,16 +52,8 @@ defmodule Cherry.Pipeline.Stages.Layout do
     nav =
       Enum.map(leading, &custom_nav_item(site, &1)) ++
         [%NavItem{label: "Blog", href: Site.href(site, "blog/")}] ++
-        if Portfolio.present?(portfolio) do
-          [%NavItem{label: "Portfolio", href: Site.href(site, "portfolio/")}]
-        else
-          []
-        end ++
-        if cv_visibility(cv) == :public do
-          [%NavItem{label: "CV", href: Site.href(site, "cv/")}]
-        else
-          []
-        end ++ Enum.map(trailing, &custom_nav_item(site, &1))
+        profile_nav(site, portfolio, cv) ++
+        Enum.map(trailing, &custom_nav_item(site, &1))
 
     %RenderContext{site: site, theme: theme, nav: nav, search: site.search}
   end
@@ -79,6 +71,22 @@ defmodule Cherry.Pipeline.Stages.Layout do
 
   defp cv_visibility(%CV{profile: profile}), do: profile.cv.visibility
   defp cv_visibility(_cv), do: :off
+
+  # One profile entry in the nav: the CV view is the front door when
+  # public; with the CV page hidden, the timeline is the family's
+  # public face.
+  defp profile_nav(site, portfolio, cv) do
+    cond do
+      cv_visibility(cv) == :public ->
+        [%NavItem{label: "CV", href: Site.href(site, "cv/")}]
+
+      Portfolio.present?(portfolio) ->
+        [%NavItem{label: "Portfolio", href: Site.href(site, "cv/timeline/")}]
+
+      true ->
+        []
+    end
+  end
 
   # The theme's static files (CSS, compiled islands) ship under /assets/.
   defp theme_assets(theme) do
@@ -126,7 +134,7 @@ defmodule Cherry.Pipeline.Stages.Layout do
 
     with {:ok, index} <- post_index(posts, context),
          {:ok, tag_pages} <- tag_pages(posts, portfolio, context),
-         {:ok, portfolio_pages} <- portfolio_pages(portfolio, posts, context),
+         {:ok, portfolio_pages} <- portfolio_pages(portfolio, posts, cv, context),
          {:ok, cv_pages} <- cv_pages(cv, context),
          {:ok, not_found} <- not_found(context) do
       {:ok, [index | tag_pages] ++ portfolio_pages ++ cv_pages ++ [not_found]}
@@ -215,29 +223,54 @@ defmodule Cherry.Pipeline.Stages.Layout do
     end)
   end
 
-  defp portfolio_pages(portfolio, posts, context) do
+  defp portfolio_pages(portfolio, posts, cv, context) do
     if Portfolio.present?(portfolio) do
-      with {:ok, timeline} <- timeline_page(portfolio, context),
+      with {:ok, timeline} <- timeline_page(portfolio, cv, context),
            {:ok, stories} <- story_pages(portfolio, posts, context) do
-        {:ok, [timeline | stories]}
+        {:ok, [timeline, portfolio_redirect(cv, context) | stories]}
       end
     else
       {:ok, []}
     end
   end
 
-  defp timeline_page(portfolio, context) do
-    path = "portfolio/index.html"
+  # The timeline is the CV view's alternate mode: same profile, the
+  # FULL portfolio (curation never hides work here), one click away.
+  # The switcher back to /cv/ only renders when that page is public.
+  defp timeline_page(portfolio, cv, context) do
+    path = "cv/timeline/index.html"
 
     head =
-      Head.for_page(context.site, "Portfolio", path) <> Person.json_ld(context.site, portfolio)
+      Head.for_page(context.site, "Timeline", path) <> Person.json_ld(context.site, portfolio)
 
-    page_context = RenderContext.page(context, "Portfolio", head, path_class(path))
-    assigns = [site: context.site, portfolio: portfolio]
+    page_context = RenderContext.page(context, "Timeline", head, path_class(path))
+    cv_href = if cv_visibility(cv) == :public, do: Site.href(context.site, "cv/")
+    assigns = [site: context.site, portfolio: portfolio, cv_href: cv_href]
 
     with {:ok, html} <- Renderer.render_in_layout(page_context, :portfolio_timeline, assigns) do
       {:ok, %Page{source: ":portfolio_timeline", path: path, content: html}}
     end
+  end
+
+  # /portfolio/ moved under /cv/; a static host cannot send a 301, so
+  # the old URL ships a meta refresh with a canonical to its successor
+  # and stays out of the sitemap.
+  defp portfolio_redirect(cv, context) do
+    target = if cv_visibility(cv) == :public, do: "cv/", else: "cv/timeline/"
+    url = Site.href(context.site, target)
+
+    html =
+      "<!doctype html>\n<meta charset=\"utf-8\">\n" <>
+        ~s(<meta http-equiv="refresh" content="0; url=#{url}">\n) <>
+        ~s(<link rel="canonical" href="#{Site.abs_url(context.site, target)}">\n) <>
+        ~s(<p>Moved to <a href="#{url}">#{url}</a>.</p>\n)
+
+    %Page{
+      source: ":portfolio_redirect",
+      path: "portfolio/index.html",
+      content: html,
+      unlisted?: true
+    }
   end
 
   defp story_pages(portfolio, posts, context) do
@@ -304,6 +337,9 @@ defmodule Cherry.Pipeline.Stages.Layout do
 
   defp path_class("index.html"), do: "page-home"
   defp path_class("404.html"), do: "page-not-found"
+  # The timeline shares the /cv/ family but keeps the reading measure;
+  # only the CV view itself widens for the two-column layout.
+  defp path_class("cv/timeline/index.html"), do: "page-cv-timeline"
 
   defp path_class(path) do
     segment =
