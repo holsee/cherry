@@ -138,7 +138,7 @@ cherry gen.project "Project name" [--source DIR] [--json]
 cherry gen.talk "Talk title" [--source DIR] [--today DATE] [--json]
 ```
 
-Scaffold [portfolio](/guides/portfolio-and-cv/) entries with valid frontmatter: projects land in `content/portfolio/projects/`, talks in `content/portfolio/talks/`, each with a `cv:` curation block ready to edit.
+Scaffold [portfolio](/guides/portfolio-and-cv/) entries with valid frontmatter: projects land in `content/portfolio/projects/` with a `cv:` curation block ready to edit, talks in `content/portfolio/talks/` (add a `cv:` block yourself to put a talk on the CV).
 
 #### cherry schema
 

@@ -11,6 +11,7 @@ Every guide is a worked project: the commands, their real output, and what it me
 
 <ul class="guide-list">
 <li><a href="/guides/quick-start/">Your first site</a><p>Install the binary, cherry new, write a post, put it on the internet. Fifteen minutes, no Elixir required to run it.</p></li>
+<li><a href="/guides/landing-page/">Pages and the landing page</a><p>Static pages from plain markdown files, and a landing page with a hero: raw HTML, theme classes, and custom.css.</p></li>
 <li><a href="/guides/portfolio-and-cv/">Build a portfolio and host your CV</a><p>The developer timeline, story pages that cross-link your work by tag, and a print-ready CV with JSON Resume output.</p></li>
 <li><a href="/guides/creating-a-theme/">Create a theme</a><p>Scaffold from an official theme, retune its tokens, restyle it, and rewrite a template in HEEx with function components.</p></li>
 </ul>
