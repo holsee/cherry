@@ -81,7 +81,7 @@ cherry gen.post "Growing season" --json
 }
 ```
 
-One file, valid frontmatter, `draft: true`. The envelope hands back the path, so pipe it straight into your editor, a script, or whatever else does your writing. Markdown is GitHub-flavoured, and the things markdown is bad at are one directive away:
+That created `content/posts/2026-08-14-growing-season.md`: one file, valid frontmatter, `draft: true`. You never need the generator, though - a post is any markdown file you drop into `content/posts/` named `YYYY-MM-DD-slug.md`, and a page is any file in `content/pages/`, where `about.md` becomes `/about/`. The command just types the boilerplate and hands back the path, so pipe it straight into your editor, a script, or whatever else does your writing. Markdown is GitHub-flavoured, and the things markdown is bad at are one directive away:
 
 ```text
 ::figure{src="/images/harvest.jpg" alt="Crates at dusk" caption="Season one."}
