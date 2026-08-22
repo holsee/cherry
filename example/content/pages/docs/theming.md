@@ -87,6 +87,14 @@ post_list:
   framework     priv/themes/default/templates/post_list.html.eex
 ```
 
+### Inheriting templates (contract 1.1)
+
+A theme does not have to ship templates at all. Declare the full inventory in the manifest as usual, add `inherit_templates: true`, and any template file the theme does not ship resolves through the framework level - the default theme's copy renders. `theme.list` reports those templates as `inherited (framework)`.
+
+That makes a CSS-only theme real: a `theme.exs`, a `site.css`, and the fonts it self-hosts. Nothing copied means nothing to drift. The moment you want your own markup for one template, ship just that file; it wins over the inherited copy, and the rest keep falling through.
+
+`gen.theme --from` on an inheriting theme copies the resolved templates into your fork, so forks stay self-contained and editable.
+
 ### Two template languages
 
 EEx or HEEx is not a configuration choice; it is a file extension, and `.heex` outranks `.eex` at the same level. Official themes are EEx. The HEEx lane is for overlays, rewrites, and themes of your own, and it brings the full Phoenix feel:

@@ -73,9 +73,28 @@ defmodule Cherry.Commands.GenTheme do
       File.mkdir_p!(Path.dirname(dest))
       File.cp_r!(Theme.builtin_root(from), dest)
       rename_manifest(dest, name, from)
+      materialise_inherited(dest, from)
 
       {:ok, %{path: Path.join("themes", name), name: name, from: from}}
     end
+  end
+
+  # An inheriting theme (contract 1.1) does not ship every declared
+  # template; the fork should, so it stays self-contained and editable.
+  # Copy the framework's file for each declared template the copy lacks.
+  defp materialise_inherited(dest, from) do
+    with {:ok, theme} <- Theme.load(Theme.builtin_root(from)) do
+      for spec <- theme.templates,
+          target = Path.join([dest, "templates", "#{spec.name}.html.eex"]),
+          not File.exists?(target),
+          source = Path.join([Theme.default_root(), "templates", "#{spec.name}.html.eex"]),
+          File.exists?(source) do
+        File.mkdir_p!(Path.dirname(target))
+        File.cp!(source, target)
+      end
+    end
+
+    :ok
   end
 
   # The copy keeps everything except the identity: name and a fresh version.

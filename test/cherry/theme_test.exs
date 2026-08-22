@@ -1,8 +1,9 @@
 defmodule Cherry.ThemeTest do
   use ExUnit.Case, async: true
 
+  alias Cherry.Site
   alias Cherry.Theme
-  alias Cherry.Theme.Provenance
+  alias Cherry.Theme.{Provenance, Resolver}
 
   describe "conformance" do
     test "the default theme passes its own contract check" do
@@ -31,6 +32,45 @@ defmodule Cherry.ThemeTest do
 
       assert {:error, message} = Theme.load(tmp)
       assert message =~ "declares but does not ship"
+    end
+
+    @tag :tmp_dir
+    test "inherit_templates lets a theme skip shipping declared templates", %{tmp_dir: tmp} do
+      write_manifest(tmp,
+        contract: "1.1",
+        templates: "[layout: [], page: [], post: [], post_list: [], tag: [], not_found: []]",
+        extra: "inherit_templates: true,"
+      )
+
+      assert {:ok, theme} = Theme.load(tmp)
+      assert theme.inherit_templates
+
+      # Unshipped templates resolve through the framework level.
+      site = %Site{title: "t", url: "https://x", base_path: "", root: tmp, output: "_s"}
+      assert {:ok, {:framework, path}} = Resolver.resolve(site, theme, :layout)
+      assert path == Path.join([Theme.default_root(), "templates", "layout.html.eex"])
+    end
+
+    @tag :tmp_dir
+    test "an inheriting theme still must declare the full inventory", %{tmp_dir: tmp} do
+      write_manifest(tmp,
+        contract: "1.1",
+        templates: "[layout: []]",
+        extra: "inherit_templates: true,"
+      )
+
+      assert {:error, message} = Theme.load(tmp)
+      assert message =~ "does not declare required template"
+    end
+
+    @tag :tmp_dir
+    test "the missing-file error points at inherit_templates", %{tmp_dir: tmp} do
+      write_manifest(tmp,
+        templates: "[layout: [], page: [], post: [], post_list: [], tag: [], not_found: []]"
+      )
+
+      assert {:error, message} = Theme.load(tmp)
+      assert message =~ "inherit_templates: true"
     end
 
     @tag :tmp_dir
@@ -65,12 +105,14 @@ defmodule Cherry.ThemeTest do
   defp write_manifest(tmp, opts) do
     contract = Keyword.get(opts, :contract, "1.0")
     templates = Keyword.fetch!(opts, :templates)
+    extra = Keyword.get(opts, :extra, "")
 
     File.write!(Path.join(tmp, "theme.exs"), """
     [
       name: "broken",
       version: "0.0.1",
       cherry_contract: "#{contract}",
+      #{extra}
       templates: #{templates}
     ]
     """)

@@ -9,6 +9,7 @@ Entries are terse one-liners linked to their PR: `- Thing that changed. (#12)`
 
 ### Added
 - Code block headers: a fence that names a language gets a slim bar above the block - the language in small text beside its editor-style file icon (devicon glyphs shipped in both official themes as `currentColor` CSS masks; unknown languages get a generic file glyph). `title="path"` in the fence info adds the file path, Docusaurus-style; both parts optional, bare fences unchanged. The copy button rides the bar when one exists, so it never covers code. (#111)
+- Template inheritance (theme contract 1.1): a theme may declare `inherit_templates: true` and skip shipping template files - unshipped templates render with the default theme's copies, `theme.list` marks them `inherited (framework)`, and `gen.theme --from` materialises them into forks. CSS-only themes are now a manifest, a stylesheet, and fonts. (#131)
 
 ## [0.5.0] — 2026-08-22
 
