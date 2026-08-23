@@ -4,7 +4,7 @@ description: The official Cherry themes, each shown in both renditions, with lin
 ---
 # Themes
 
-Twenty official themes ship inside the `cherry` binary. Every one is built from the same parts - a documented token manifest, `light-dark()` colour pairs, self-hosted fonts, zero third-party requests - so `theme: "NAME"` in `cherry.exs` is the whole migration, and your token overrides port across.
+Thirty official themes ship inside the `cherry` binary. Every one is built from the same parts - a documented token manifest, `light-dark()` colour pairs, self-hosted fonts, zero third-party requests - so `theme: "NAME"` in `cherry.exs` is the whole migration, and your token overrides port across.
 
 Each screenshot pair below follows your colour scheme; the [exhibition](https://themes.cherrybomb.dev) serves the same demo site once per theme, with identical routes, so you can swap mid-page.
 
@@ -167,3 +167,83 @@ The out-there one, on purpose: a WebGL aurora behind everything, a comet trail f
 <picture><source srcset="/images/themes/showoff-dark.png" media="(prefers-color-scheme: dark)"><img src="/images/themes/showoff-light.png" alt="The showoff theme home page: a pink-to-violet gradient title over an aurora with a serif italic lede" width="1200" height="750" loading="lazy"></picture>
 
 [Live exhibition](https://themes.cherrybomb.dev/t/showoff/)
+
+## atlas
+
+The site is a map. The blog index is an infinite plane: every post is a card placed deterministically inside its tag's region, the regions ringed like contour islands; drag to pan, wheel to zoom, arrow keys for the keyboard, a minimap in the corner, a list view one click away. The rest is a plotter-drawn survey sheet with a title block and a north arrow. Geologica throughout.
+
+<picture><source srcset="/images/themes/atlas-dark.png" media="(prefers-color-scheme: dark)"><img src="/images/themes/atlas-light.png" alt="The atlas theme blog index: post cards inside dashed tag regions on a grid, with a minimap" width="1200" height="750" loading="lazy"></picture>
+
+[Live exhibition](https://themes.cherrybomb.dev/t/atlas/)
+
+## bellows
+
+One variable face, Anybody, whose width axis runs from 50 to 150, bound to the scroll position with CSS scroll-driven animations: the home opens on the site name pulled wide that narrows as it leaves, every heading widens as it enters, the mast compresses as you read down, index titles open up under the pointer. Not one line of script; browsers without scroll timelines see the designed resting widths.
+
+<picture><source srcset="/images/themes/bellows-dark.png" media="(prefers-color-scheme: dark)"><img src="/images/themes/bellows-light.png" alt="The bellows theme home page: the site name set extremely wide in a heavy sans" width="1200" height="750" loading="lazy"></picture>
+
+[Live exhibition](https://themes.cherrybomb.dev/t/bellows/)
+
+## mercury
+
+The Y2K lane done properly: a WebGL height field of drifting blobs shaded with a procedural chrome reflection sits in a band behind the mast, the pointer dents it, a click drops a ripple, and the home title is cast in the same metal. Dark bands, highlights and tint all come from the tokens. Below the band the page is matte and still, Lexend at weight 300.
+
+<picture><source srcset="/images/themes/mercury-dark.png" media="(prefers-color-scheme: dark)"><img src="/images/themes/mercury-light.png" alt="The mercury theme home page: a liquid chrome surface behind a title filled with the same chrome" width="1200" height="750" loading="lazy"></picture>
+
+[Live exhibition](https://themes.cherrybomb.dev/t/mercury/)
+
+## flipdot
+
+Every title arrives the way a split-flap board arrives, each cell cycling through glyphs before it settles, once, on entering view; the blog index is the board (date, title, tags, NEW or ON TIME); the site name runs along the top as the station sign. Doto, a dot-matrix variable face, draws every word out of dots on a ground of unlit dots. Prose stays on the system mono.
+
+<picture><source srcset="/images/themes/flipdot-dark.png" media="(prefers-color-scheme: dark)"><img src="/images/themes/flipdot-light.png" alt="The flipdot theme blog index: amber dot-matrix titles on a black board with a status column" width="1200" height="750" loading="lazy"></picture>
+
+[Live exhibition](https://themes.cherrybomb.dev/t/flipdot/)
+
+## transit
+
+The platform is the theme. Cross-document View Transitions carry a post's title from the index into the post page and back; a scroll timeline draws the reading progress under the mast; the post's title and meta sit in a left rail that stays with you while the body reads on the right. Not one line of script. Browsers without the APIs simply navigate.
+
+<picture><source srcset="/images/themes/transit-dark.png" media="(prefers-color-scheme: dark)"><img src="/images/themes/transit-light.png" alt="The transit theme post page: a sticky title rail on the left, the body on the right" width="1200" height="750" loading="lazy"></picture>
+
+[Live exhibition](https://themes.cherrybomb.dev/t/transit/)
+
+## loom
+
+The page is cloth on a loom: a simulated cloth hangs in a band behind the mast and ripples when the pointer brushes it or the page scrolls; the rules are warp threads; the nav hangs on the selvedge; the blog index is a weaver's draft, a row of cells per post encoding its tags with a key above. Young Serif headings over Atkinson Hyperlegible Next prose.
+
+<picture><source srcset="/images/themes/loom-dark.png" media="(prefers-color-scheme: dark)"><img src="/images/themes/loom-light.png" alt="The loom theme blog index: rows of small filled cells beside serif titles under a woven band" width="1200" height="750" loading="lazy"></picture>
+
+[Live exhibition](https://themes.cherrybomb.dev/t/loom/)
+
+## topo
+
+Relief. The whole page sits on a contour map drawn live: a layered noise field traced with marching squares at eight levels, drifting slowly, its amplitude dropping to zero under the reading column so the writing sits in a clearing while the land moves at the margins. Index contours in the accent, a scale bar in the footer. Alegreya for prose, Alegreya Sans for structure.
+
+<picture><source srcset="/images/themes/topo-dark.png" media="(prefers-color-scheme: dark)"><img src="/images/themes/topo-light.png" alt="The topo theme post page: contour lines at both margins around a clear reading column" width="1200" height="750" loading="lazy"></picture>
+
+[Live exhibition](https://themes.cherrybomb.dev/t/topo/)
+
+## desktop
+
+System 7 and Windows 98 chrome at real proportions: the page is a window with a pinstriped title bar, close and zoom gadgets, a bevelled frame and a button row, sitting on a stippled desktop; the blog index is a list view with Name, Date modified and Kind; 404 is a dialog with an OK button. Pixelify Sans for the chrome, the system stack for prose. No script of its own.
+
+<picture><source srcset="/images/themes/desktop-dark.png" media="(prefers-color-scheme: dark)"><img src="/images/themes/desktop-light.png" alt="The desktop theme blog index: a classic OS window with a list view of posts on a grey stippled desktop" width="1200" height="750" loading="lazy"></picture>
+
+[Live exhibition](https://themes.cherrybomb.dev/t/desktop/)
+
+## swiss
+
+The International Typographic Style, executed: a twelve-column grid faintly visible on the page and obeyed by every block; the name in the first columns, the nav from column four, the site name at poster size across eight columns with the description in the last four on the same baseline, the index as a numbered typographic table. Red, black, white. No radius, no shadow, no motion, no script.
+
+<picture><source srcset="/images/themes/swiss-dark.png" media="(prefers-color-scheme: dark)"><img src="/images/themes/swiss-light.png" alt="The swiss theme home page: a huge flush-left name on a visible twelve-column grid with red links" width="1200" height="750" loading="lazy"></picture>
+
+[Live exhibition](https://themes.cherrybomb.dev/t/swiss/)
+
+## sketchbook
+
+A field notebook: the page's structure is drawn by hand. Rules, underlines and the mast's baseline are wobbling strokes (an SVG mask on a token colour) that draw themselves as they scroll into view on a scroll timeline; the paper has grain; images are taped in at the corners. Shantell Sans, a face designed for exactly this, for display and notes; Atkinson Hyperlegible Next for prose. No script.
+
+<picture><source srcset="/images/themes/sketchbook-dark.png" media="(prefers-color-scheme: dark)"><img src="/images/themes/sketchbook-light.png" alt="The sketchbook theme post page: a handwritten title with a wobbly blue underline on grainy paper" width="1200" height="750" loading="lazy"></picture>
+
+[Live exhibition](https://themes.cherrybomb.dev/t/sketchbook/)
