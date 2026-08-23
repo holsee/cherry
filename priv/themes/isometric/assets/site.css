@@ -1486,9 +1486,20 @@ body {
   height: 100vh;
   height: 100dvh;
   padding: 0;
-  overflow: hidden;
   border-right: 1px solid var(--color-border);
   background: var(--color-surface);
+}
+
+/* The floor is clipped by the page, not the rail, so the search panel
+ * can leave the rail and lie over the writing. */
+body {
+  overflow-x: clip;
+}
+
+.site-search-open .site-search-results {
+  left: 0;
+  right: auto;
+  width: min(30rem, 88vw);
 }
 
 .site-header .wrap {
@@ -1541,12 +1552,13 @@ body {
 .site-header::after {
   content: "";
   position: absolute;
-  left: -40%;
-  right: -40%;
+  left: 0;
+  right: 0;
   bottom: -1rem;
   height: 26rem;
   z-index: 0;
   pointer-events: none;
+  overflow: hidden;
   background-image:
     linear-gradient(color-mix(in srgb, var(--color-accent) 55%, transparent) 1px, transparent 1px),
     linear-gradient(90deg, color-mix(in srgb, var(--color-accent) 55%, transparent) 1px, transparent 1px);
@@ -1624,9 +1636,10 @@ pre,
   }
 
   .site-header {
-    position: static;
+    position: relative;
     height: auto;
     border-right: 0;
+    z-index: 2;
     border-bottom: 1px solid var(--color-border);
     padding-bottom: 4rem;
   }
@@ -1644,7 +1657,12 @@ pre,
 
   .site-header::after {
     height: 12rem;
-    bottom: -1rem;
+    bottom: 0;
+  }
+
+  .site-search-open .site-search-results {
+    left: auto;
+    right: 0;
   }
 }
 
@@ -1661,5 +1679,55 @@ pre,
 
   .site-header::after {
     display: none;
+  }
+}
+
+/* ---------- search chrome: plain, whatever the nav does ---------- */
+
+.site-nav .site-search,
+.site-nav .site-search-input,
+.site-nav .site-search-results,
+.site-nav .site-search-results a,
+.site-nav .site-search-title,
+.site-nav .site-search-excerpt,
+.site-nav .site-search-empty {
+  font-family: var(--font-prose);
+  text-transform: none;
+  font-variant-caps: normal;
+  letter-spacing: normal;
+  font-style: normal;
+}
+
+.site-nav .site-search-input {
+  font-size: 0.9375rem;
+}
+
+.site-nav .site-search-results a {
+  font-size: 0.9375rem;
+  font-weight: 400;
+  line-height: 1.4;
+  text-decoration: none;
+}
+
+.site-nav .site-search-title {
+  font-weight: 600;
+}
+
+.site-nav .site-search-date {
+  font-family: var(--font-mono);
+  text-transform: none;
+  letter-spacing: normal;
+}
+
+.site-nav .site-search-results a::before,
+.site-nav .site-search-results a::after,
+.site-nav .site-search-input::before,
+.site-nav .site-search-input::after {
+  content: none;
+}
+
+@media (pointer: coarse) {
+  .site-nav .site-search-input {
+    font-size: 1rem;
   }
 }

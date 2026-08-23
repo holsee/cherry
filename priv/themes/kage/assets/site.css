@@ -1569,6 +1569,26 @@ main {
   padding-top: 8rem;
 }
 
+/* On a phone the mast wraps to three rows; it flows with the page
+ * instead of floating, so the title is never under it. */
+@media (max-width: 44rem) {
+  .site-header {
+    position: static;
+    background: var(--color-bg);
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+  }
+
+  .site-header.is-hidden {
+    transform: none;
+    opacity: 1;
+  }
+
+  main {
+    padding-top: 2.5rem;
+  }
+}
+
 h1,
 h2,
 h3,
@@ -1720,5 +1740,55 @@ html.kage-js .kage-scene.is-seen {
   .hero-home {
     min-height: 0;
     padding: 0;
+  }
+}
+
+/* ---------- search chrome: plain, whatever the nav does ---------- */
+
+.site-nav .site-search,
+.site-nav .site-search-input,
+.site-nav .site-search-results,
+.site-nav .site-search-results a,
+.site-nav .site-search-title,
+.site-nav .site-search-excerpt,
+.site-nav .site-search-empty {
+  font-family: var(--font-prose);
+  text-transform: none;
+  font-variant-caps: normal;
+  letter-spacing: normal;
+  font-style: normal;
+}
+
+.site-nav .site-search-input {
+  font-size: 0.9375rem;
+}
+
+.site-nav .site-search-results a {
+  font-size: 0.9375rem;
+  font-weight: 400;
+  line-height: 1.4;
+  text-decoration: none;
+}
+
+.site-nav .site-search-title {
+  font-weight: 600;
+}
+
+.site-nav .site-search-date {
+  font-family: var(--font-mono);
+  text-transform: none;
+  letter-spacing: normal;
+}
+
+.site-nav .site-search-results a::before,
+.site-nav .site-search-results a::after,
+.site-nav .site-search-input::before,
+.site-nav .site-search-input::after {
+  content: none;
+}
+
+@media (pointer: coarse) {
+  .site-nav .site-search-input {
+    font-size: 1rem;
   }
 }

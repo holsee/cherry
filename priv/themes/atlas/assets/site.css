@@ -1486,9 +1486,19 @@ body {
 }
 
 .site-header .wrap {
-  padding: 0.6rem 0;
+  padding-block: 0.6rem;
   border-top: 2px solid var(--color-fg);
   border-bottom: 1px solid var(--color-fg);
+}
+
+/* On a phone the rules sit inside the page margin, not on the edge. */
+@media (max-width: 44rem) {
+  .site-header .wrap,
+  .site-footer .wrap {
+    width: calc(100% - 2rem);
+    margin-inline: 1rem;
+    padding-inline: 0;
+  }
 }
 
 .site-title {
@@ -1873,5 +1883,55 @@ html.atlas-js .atlas:not(.is-list) .atlas-card a:hover {
   .atlas-hint,
   .sheet-north {
     display: none;
+  }
+}
+
+/* ---------- search chrome: plain, whatever the nav does ---------- */
+
+.site-nav .site-search,
+.site-nav .site-search-input,
+.site-nav .site-search-results,
+.site-nav .site-search-results a,
+.site-nav .site-search-title,
+.site-nav .site-search-excerpt,
+.site-nav .site-search-empty {
+  font-family: var(--font-prose);
+  text-transform: none;
+  font-variant-caps: normal;
+  letter-spacing: normal;
+  font-style: normal;
+}
+
+.site-nav .site-search-input {
+  font-size: 0.9375rem;
+}
+
+.site-nav .site-search-results a {
+  font-size: 0.9375rem;
+  font-weight: 400;
+  line-height: 1.4;
+  text-decoration: none;
+}
+
+.site-nav .site-search-title {
+  font-weight: 600;
+}
+
+.site-nav .site-search-date {
+  font-family: var(--font-mono);
+  text-transform: none;
+  letter-spacing: normal;
+}
+
+.site-nav .site-search-results a::before,
+.site-nav .site-search-results a::after,
+.site-nav .site-search-input::before,
+.site-nav .site-search-input::after {
+  content: none;
+}
+
+@media (pointer: coarse) {
+  .site-nav .site-search-input {
+    font-size: 1rem;
   }
 }
