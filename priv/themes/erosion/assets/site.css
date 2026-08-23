@@ -56,10 +56,10 @@
 
 @font-face {
   font-family: "Fraunces Fallback";
-  src: local("Arial");
-  size-adjust: 117.54%;
-  ascent-override: 83.21%;
-  descent-override: 21.69%;
+  src: local("Georgia");
+  size-adjust: 105.31%;
+  ascent-override: 98.00%;
+  descent-override: 26.00%;
   line-gap-override: 0.00%;
 }
 
