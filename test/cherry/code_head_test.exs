@@ -46,6 +46,7 @@ defmodule Cherry.CodeHeadTest do
       assert CodeHead.wrap("<pre/>", "sh", nil) =~ "code-icon--shell"
       assert CodeHead.wrap("<pre/>", "heex", nil) =~ "code-icon--phoenix"
       assert CodeHead.wrap("<pre/>", "yml", nil) =~ "code-icon--yaml"
+      assert CodeHead.wrap("<pre/>", "prompt", nil) =~ "code-icon--prompt"
     end
 
     test "an unknown language falls back to the file glyph" do

@@ -5,7 +5,7 @@ description: Write markdown, get a whole website. Cherry is a one-binary static 
 <section class="hero">
 <img class="hero-mark" src="/brand/cherrybomb-mark.webp" alt="CherryBomb: two cherries with a lit fuse and sunglasses" width="320" height="320">
 <h1>A static site generator<br>for all the <em>hackers</em></h1>
-<p class="hero-tagline">Write markdown files, get a whole website: a blog, your pages, and a developer portfolio with a print-ready CV. Cherry is the one binary that builds it, checks it, and deploys it to GitHub Pages or Cloudflare. No Node, no config safari. Fuse lit.</p>
+<p class="hero-tagline">Write markdown files, get a whole website: a blog, your pages, and a developer portfolio with a print-ready CV. Cherry is the one binary that builds it, checks it, and deploys it to GitHub Pages or Cloudflare. No Node, no config safari. <em>Fuse lit.</em></p>
 <p class="hero-actions"><a class="button" href="/guides/quick-start/">Quick-start</a> <a class="button button-ghost" href="/docs/">Docs</a> <a class="button button-ghost" href="https://github.com/holsee/cherry">GitHub</a></p>
 <div class="cmd" data-copy><span class="cmd-os">macOS / Linux</span><code>curl -fsSL https://cherrybomb.dev/install.sh | sh</code></div>
 <div class="cmd" data-copy><span class="cmd-os">Windows</span><code>irm https://cherrybomb.dev/install.ps1 | iex</code></div>
@@ -46,38 +46,38 @@ gh skill install holsee/cherry cherry --agent claude-code
 
 Then every step below is something you can simply ask for:
 
-```text
+```prompt
 Create a new cherry site for my blog and serve it locally.
 ```
 
-```text
+```prompt
 Scaffold my portfolio from my CV and this list of talks, then curate
 which entries make the /cv/ page.
 ```
 
-```text
+```prompt
 Set up deploys to Cloudflare on every push to main.
 ```
 
-```text
+```prompt
 Draft a post from these meeting notes and run cherry check before
 showing me anything.
 ```
 
-```text
+```prompt
 Migrate my old Jekyll posts into content/posts/ and fix whatever
 cherry check flags.
 ```
 
-```text
+```prompt
 Change the accent colour to match my logo, in light and dark.
 ```
 
-```text
+```prompt
 Change the footer to link my Mastodon and my GitHub.
 ```
 
-```text
+```prompt
 Scaffold a theme called porcelain from the default theme and make it
 mine: serif body, a muted sage accent as a light-dark pair, generous
 whitespace. Keep every token the manifest declares, run cherry check,
@@ -123,8 +123,8 @@ A fresh site wears `default`, quiet and typography-first. One config line swaps 
 <a href="/themes/swiss/"><picture><source srcset="/images/themes/swiss-dark.png" media="(prefers-color-scheme: dark)"><img src="/images/themes/swiss-light.png" alt="The swiss theme" width="1200" height="750" loading="lazy"></picture><span>swiss</span></a>
 <a href="/themes/flipdot/"><picture><source srcset="/images/themes/flipdot-dark.png" media="(prefers-color-scheme: dark)"><img src="/images/themes/flipdot-light.png" alt="The flipdot theme" width="1200" height="750" loading="lazy"></picture><span>flipdot</span></a>
 <a href="/themes/warp/"><picture><source srcset="/images/themes/warp-dark.png" media="(prefers-color-scheme: dark)"><img src="/images/themes/warp-light.png" alt="The warp theme" width="1200" height="750" loading="lazy"></picture><span>warp</span></a>
-<a href="/themes/sketchbook/"><picture><source srcset="/images/themes/sketchbook-dark.png" media="(prefers-color-scheme: dark)"><img src="/images/themes/sketchbook-light.png" alt="The sketchbook theme" width="1200" height="750" loading="lazy"></picture><span>sketchbook</span></a>
-<a href="/themes/desktop/"><picture><source srcset="/images/themes/desktop-dark.png" media="(prefers-color-scheme: dark)"><img src="/images/themes/desktop-light.png" alt="The desktop theme" width="1200" height="750" loading="lazy"></picture><span>desktop</span></a>
+<a href="/themes/cathode/"><picture><source srcset="/images/themes/cathode-dark.png" media="(prefers-color-scheme: dark)"><img src="/images/themes/cathode-light.png" alt="The cathode theme" width="1200" height="750" loading="lazy"></picture><span>cathode</span></a>
+<a href="/themes/kage/"><picture><source srcset="/images/themes/kage-dark.png" media="(prefers-color-scheme: dark)"><img src="/images/themes/kage-light.png" alt="The kage theme" width="1200" height="750" loading="lazy"></picture><span>kage</span></a>
 </div>
 
 <p class="theme-strip-more">All thirty live in <a href="/themes/">the gallery</a>, each with a page on making it yours.</p>
@@ -145,7 +145,7 @@ Pressing apples, mostly.
 
 is live at `/now/` the moment you save it. Markdown is GitHub-flavoured, and the things markdown is bad at are one directive away:
 
-```text
+```markdown
 ::figure{src="/images/harvest.jpg" alt="Crates at dusk" caption="Season one."}
 
 ::video{youtube="q6Yr9DkTn2k" title="The talk"}

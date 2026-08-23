@@ -68,6 +68,7 @@ defmodule Cherry.Content.CodeHead do
                    json: ~w(json jsonc),
                    yaml: ~w(yaml yml),
                    markdown: ~w(md markdown),
+                   prompt: ~w(prompt),
                    css: ~w(css),
                    html: ~w(html htm xml svg),
                    rust: ~w(rust rs),
