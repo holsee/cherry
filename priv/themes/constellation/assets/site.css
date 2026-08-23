@@ -1565,24 +1565,35 @@ body {
   border-color: transparent;
 }
 
+/* The search field is a pill inside the pill: filled, not outlined. */
+.site-search-input {
+  padding: 0.3rem 0.9rem;
+  border-color: transparent;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--color-fg) 6%, transparent);
+}
+
 /* Under 44rem the search drops to its own row inside the pill; a square
  * bordered field against the pill's curve reads as broken, so the field
  * becomes a pill too, filled rather than outlined. */
 @media (max-width: 44rem) {
+  /* Concentric corners: the field's radius is the container's minus the
+   * gap between them, so the two curves share a centre. */
   .site-nav {
-    padding: 0.35rem;
-    row-gap: 0.5rem;
+    padding: 0.4rem;
+    row-gap: 0.4rem;
+    border-radius: 1.75rem;
   }
 
   .site-search {
-    padding: 0 0.1rem 0.05rem;
+    padding: 0;
   }
 
   .site-search-input {
     padding: 0.55rem 1.1rem;
     text-align: center;
     border-color: transparent;
-    border-radius: 999px;
+    border-radius: 1.35rem;
     background: color-mix(in srgb, var(--color-fg) 6%, transparent);
   }
 
