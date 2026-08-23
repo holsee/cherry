@@ -1579,6 +1579,16 @@ pre,
   margin: 0;
 }
 
+/* In one column there is nothing for the hero to pin against, so on a
+ * phone it scrolls away like any tile and stays short enough that the
+ * first viewport shows the opening paragraph. */
+@media (max-width: 44rem) {
+  .tile-hero {
+    position: static;
+    min-height: 14rem;
+  }
+}
+
 .tile-kicker {
   margin: 0;
   font-family: var(--font-mono);

@@ -1653,6 +1653,16 @@ pre,
   .site-nav {
     flex-direction: row;
     flex-wrap: wrap;
+    align-items: center;
+  }
+
+  .site-nav a {
+    padding-inline: 0.5rem;
+  }
+
+  .theme-toggle {
+    align-self: center;
+    margin-top: 0;
   }
 
   .site-header::after {
