@@ -6,10 +6,14 @@
 <title>Page not found · Minimal</title>
 <link rel="stylesheet" href="/assets/site.css">
 <script>
-/* No-flash: apply the stored theme before first paint. */
+/* No-flash: apply the stored theme before first paint.
+   A ?theme=light|dark query param wins for this view without being
+   stored — shareable forced-rendition links, and what the screenshot
+   harness drives. */
 (function () {
   try {
-    var t = localStorage.getItem("cherry-theme");
+    var m = location.search.match(/[?&]theme=(light|dark)/);
+    var t = m ? m[1] : localStorage.getItem("cherry-theme");
     if (t === "light" || t === "dark") document.documentElement.dataset.theme = t;
   } catch (e) {}
 })();
