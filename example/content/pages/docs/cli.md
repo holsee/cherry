@@ -240,7 +240,7 @@ cherry version [--json]
 ```
 
 ```text
-cherry 0.5.0 (03dc4b8)
+cherry 0.6.0 (90780fc)
 ```
 
 The parenthesised value is the git commit the binary was compiled from, so a build from a branch is distinguishable from the release it was branched from. It is absent when Cherry was compiled from a hex package.
