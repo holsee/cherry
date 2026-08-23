@@ -1,0 +1,11 @@
+<% import Cherry.Theme.Helpers %><h1 class="swiss-index-title">Blog</h1>
+<table class="swiss-table">
+<tbody>
+<%= for {post, i} <- Enum.with_index(@posts, 1) do %><tr>
+<td class="st-n"><%= String.pad_leading(Integer.to_string(i), 2, "0") %></td>
+<td class="st-date"><time datetime="<%= Date.to_iso8601(post.meta.date) %>"><%= Date.to_iso8601(post.meta.date) %></time></td>
+<td class="st-title"><a href="<%= post.url %>"><%= h(post.meta.title) %></a></td>
+<td class="st-tags"><%= Enum.join(post.meta.tags, ", ") %></td>
+</tr>
+<% end %></tbody>
+</table>
