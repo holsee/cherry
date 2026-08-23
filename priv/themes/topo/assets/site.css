@@ -80,18 +80,18 @@
 
 @font-face {
   font-family: "Alegreya Fallback";
-  src: local("Arial");
-  size-adjust: 95.30%;
-  ascent-override: 106.61%;
-  descent-override: 36.20%;
+  src: local("Times New Roman");
+  size-adjust: 99.11%;
+  ascent-override: 102.00%;
+  descent-override: 35.00%;
   line-gap-override: 0.00%;
 }
 @font-face {
   font-family: "Alegreya Sans Fallback";
   src: local("Arial");
-  size-adjust: 94.18%;
-  ascent-override: 95.56%;
-  descent-override: 31.85%;
+  size-adjust: 85.82%;
+  ascent-override: 80.00%;
+  descent-override: 20.00%;
   line-gap-override: 0.00%;
 }
 
