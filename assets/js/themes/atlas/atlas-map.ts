@@ -52,7 +52,12 @@ if (root && viewport && plane) {
     ty = (bounds.y0 + bounds.y1) / 2;
   };
 
+  const isList = (): boolean => root.classList.contains("is-list");
   const apply = (): void => {
+    if (isList()) {
+      plane.style.transform = "";
+      return;
+    }
     const w = viewport.clientWidth;
     const h = viewport.clientHeight;
     plane.style.transform = `translate(${w / 2 - cx * zoom}px, ${h / 2 - cy * zoom}px) scale(${zoom})`;
@@ -139,6 +144,7 @@ if (root && viewport && plane) {
     apply();
   };
   viewport.addEventListener("pointerdown", (e) => {
+    if (isList()) return;
     if (e.pointerType === "mouse" && e.button !== 0) return;
     pointers.set(e.pointerId, { x: e.clientX, y: e.clientY });
     viewport.setPointerCapture(e.pointerId);
@@ -152,6 +158,7 @@ if (root && viewport && plane) {
     }
   });
   viewport.addEventListener("pointermove", (e) => {
+    if (isList()) return;
     const prev = pointers.get(e.pointerId);
     if (!prev) return;
     const cur = { x: e.clientX, y: e.clientY };
@@ -190,10 +197,12 @@ if (root && viewport && plane) {
   }, true);
   // Double tap or double click zooms in around the point.
   viewport.addEventListener("dblclick", (e) => {
+    if (isList()) return;
     const rect = viewport.getBoundingClientRect();
     zoomAt(zoom * 1.5, e.clientX - rect.left, e.clientY - rect.top);
   });
   viewport.addEventListener("wheel", (e) => {
+    if (isList()) return;
     e.preventDefault();
     if (e.ctrlKey || e.metaKey) {
       tz = Math.min(2.2, Math.max(0.3, tz * Math.exp(-e.deltaY * 0.0025)));
@@ -204,6 +213,7 @@ if (root && viewport && plane) {
     go();
   }, { passive: false });
   viewport.addEventListener("keydown", (e) => {
+    if (isList()) return;
     const step = 80 / zoom;
     switch (e.key) {
       case "ArrowLeft": tx -= step; break;
@@ -232,6 +242,9 @@ if (root && viewport && plane) {
     toggle.setAttribute("aria-pressed", String(list));
     toggle.textContent = list ? "Map view" : "List view";
     if (list) {
+      if (raf) cancelAnimationFrame(raf);
+      raf = 0;
+      pointers.clear();
       plane.style.transform = "";
     } else {
       fit();
