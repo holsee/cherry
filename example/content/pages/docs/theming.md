@@ -4,7 +4,7 @@ description: The styling ladder, design tokens, light-dark pairs, overlays, prov
 ---
 ## Theming
 
-Two convictions shape everything on this page. First, restyling a site should cost exactly as much ownership as you choose to take, never a fork. Second, whatever you do take ownership of should stay upgradeable, with the tool telling you the truth about what you own. Cherry ships four official themes (`default`, typography-first and quiet; `cherrybomb`, the one you are reading; `porcelain`, a glazed serif restyle; `teletype`, all-mono for the devlog crowd - the last two CSS-only, shipping no templates of their own) built from the same parts: a `theme.exs` manifest, a declared template inventory, one stylesheet whose every colour flows through tokens.
+Two convictions shape everything on this page. First, restyling a site should cost exactly as much ownership as you choose to take, never a fork. Second, whatever you do take ownership of should stay upgradeable, with the tool telling you the truth about what you own. Cherry ships five official themes (`default`, typography-first and quiet; `cherrybomb`, the one you are reading; `porcelain`, a glazed serif restyle; `teletype`, all-mono for the devlog crowd; `prism`, a WebGL gradient mesh under glass - porcelain and teletype are CSS-only, prism ships a single template) built from the same parts: a `theme.exs` manifest, a declared template inventory, one stylesheet whose every colour flows through tokens.
 
 ### The ladder
 
@@ -94,6 +94,33 @@ A theme does not have to ship templates at all. Declare the full inventory in th
 That makes a CSS-only theme real: a `theme.exs`, a `site.css`, and the fonts it self-hosts. Nothing copied means nothing to drift. The moment you want your own markup for one template, ship just that file; it wins over the inherited copy, and the rest keep falling through.
 
 `gen.theme --from` on an inheriting theme copies the resolved templates into your fork, so forks stay self-contained and editable.
+
+### Theme islands, and tokens beyond CSS
+
+A theme may ship behaviour as well as style: its `assets/*.js` files are its islands, included from its own layout template exactly like the official copy button and theme toggle. The conventions that keep them honest: built and self-hosted (no CDN scripts, zero third-party requests), lazy where heavy, frozen to their first frame under `prefers-reduced-motion`, and the page must be complete without them.
+
+Islands read the theme's tokens instead of carrying their own colours - the **token to uniform bridge**. Paint the token onto a probe element and let the browser resolve it (hex, `light-dark()`, `color-mix()` all included), then hand the rgb to your canvas or shader:
+
+```js title="the bridge, in full"
+const probe = document.createElement("div");
+probe.style.display = "none";
+document.body.appendChild(probe);
+
+function tokenRGB(name) {
+  probe.style.color = `var(${name})`;
+  const [r, g, b] = getComputedStyle(probe).color.match(/[\d.]+/g);
+  return [r / 255, g / 255, b / 255];
+}
+
+// Re-read when the rendition changes: the toggle writes [data-theme],
+// the OS flips prefers-color-scheme.
+new MutationObserver(reload).observe(document.documentElement, {
+  attributes: true, attributeFilter: ["data-theme"],
+});
+matchMedia("(prefers-color-scheme: dark)").addEventListener("change", reload);
+```
+
+This is how the prism theme's WebGL mesh follows `cherry config tokens.--color-accent` like any link would: the shader's uniforms come from the same API the stylesheet reads.
 
 ### Two template languages
 
