@@ -93,6 +93,8 @@ A theme does not have to ship templates at all. Declare the full inventory in th
 
 That makes a CSS-only theme real: a `theme.exs`, a `site.css`, and the fonts it self-hosts. Nothing copied means nothing to drift. The moment you want your own markup for one template, ship just that file; it wins over the inherited copy, and the rest keep falling through.
 
+Fonts load without a flash. Every `.woff2` a theme ships under `assets/fonts/` is preloaded from the framework-owned head of every page, so the fetch starts with the HTML rather than after the stylesheet is parsed; the official themes declare `font-display: block` (one paint, in the right face) and pair each family with a metric-matched local fallback (`"Geist Fallback"`, `size-adjust` and the ascent, descent and line-gap overrides computed from the font) so the rare swap after a slow fetch moves nothing. A theme of your own gets the preloads for free; the fallback faces are a pattern to copy.
+
 `gen.theme --from` on an inheriting theme copies the resolved templates into your fork, so forks stay self-contained and editable.
 
 ### Theme islands, and tokens beyond CSS
