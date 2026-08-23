@@ -269,7 +269,13 @@ main {
   color: var(--color-accent);
 }
 
-/* Theme toggle: hidden until its script runs; fails soft without JS. */
+/* Theme toggle: shown from first paint when JS will run (the head
+ * scriptlet stamps .js on the root), so it never pops in and shifts
+ * the mast; fails soft to hidden without JS. */
+html.js .theme-toggle {
+  display: inline-flex;
+}
+
 .theme-toggle {
   display: none;
   align-items: center;
