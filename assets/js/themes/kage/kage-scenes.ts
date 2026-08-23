@@ -34,6 +34,21 @@ if ("IntersectionObserver" in window) {
     el.classList.add("kage-scene");
     seen.observe(el);
   }
+  // Some engines skip the first observer tick for content already in
+  // view on a fresh navigation or a bfcache restore; anything in the
+  // first viewport is shown regardless, shortly after load.
+  const reveal = (): void => {
+    const h = window.innerHeight;
+    for (const el of blocks) {
+      if (el.classList.contains("is-seen")) continue;
+      if (el.getBoundingClientRect().top < h) {
+        el.classList.add("is-seen");
+        seen.unobserve(el);
+      }
+    }
+  };
+  window.addEventListener("load", () => setTimeout(reveal, 400));
+  window.addEventListener("pageshow", reveal);
 } else {
   for (const el of blocks) el.classList.add("kage-scene", "is-seen");
 }
