@@ -90,11 +90,30 @@ defmodule Cherry.Theme.Renderer do
         site: site,
         inner: inner,
         page_title: context.page_title,
-        head_extra: context.head_extra,
+        head_extra: font_preloads(site, theme) <> context.head_extra,
         nav: context.nav,
         search: context.search,
         page_class: context.page_class
       )
     end
+  end
+
+  # Every woff2 the theme ships under assets/fonts/ is preloaded from the
+  # head, so the fetch starts with the HTML instead of after the
+  # stylesheet has been parsed and the cascade has asked for the face.
+  # Framework-owned for the same reason the SEO head is: a theme cannot
+  # forget it, and a CSS-only theme has no layout to put it in.
+  @spec font_preloads(Site.t(), Theme.t()) :: String.t()
+  defp font_preloads(%Site{} = site, %Theme{root: root}) do
+    fonts_dir = root |> Path.join("assets/fonts") |> String.replace("\\", "/")
+
+    fonts_dir
+    |> Path.join("*.woff2")
+    |> Path.wildcard()
+    |> Enum.sort()
+    |> Enum.map_join(fn abs ->
+      href = Site.href(site, "assets/fonts/" <> Path.basename(abs))
+      ~s(<link rel="preload" href="#{href}" as="font" type="font/woff2" crossorigin>\n)
+    end)
   end
 end

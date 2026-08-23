@@ -37,7 +37,7 @@
   font-family: "Archivo";
   font-style: normal;
   font-weight: 400 900;
-  font-display: swap;
+  font-display: block;
   src: url("fonts/archivo-latin.woff2") format("woff2");
   unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6,
     U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122,
@@ -48,11 +48,28 @@
   font-family: "Archivo Expanded";
   font-style: normal;
   font-weight: 700 900;
-  font-display: swap;
+  font-display: block;
   src: url("fonts/archivo-expanded-latin.woff2") format("woff2");
   unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6,
     U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122,
     U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+@font-face {
+  font-family: "Archivo Fallback";
+  src: local("Arial");
+  size-adjust: 106.26%;
+  ascent-override: 82.63%;
+  descent-override: 19.76%;
+  line-gap-override: 0.00%;
+}
+@font-face {
+  font-family: "Archivo Expanded Fallback";
+  src: local("Arial");
+  size-adjust: 136.98%;
+  ascent-override: 64.10%;
+  descent-override: 15.33%;
+  line-gap-override: 0.00%;
 }
 
 
@@ -77,7 +94,7 @@
   --syn-variable: #1a1a1a;
   --syn-punct: #5c5248;
 
-  --font-prose: "Archivo", system-ui, "Segoe UI", Roboto, sans-serif;
+  --font-prose: "Archivo", "Archivo Fallback", system-ui, "Segoe UI", Roboto, sans-serif;
   --font-mono: ui-monospace, "Cascadia Code", "SF Mono", Consolas, "DejaVu Sans Mono", monospace;
   --measure: 46rem;
 
@@ -917,7 +934,7 @@ video.video-local {
 /* iOS zooms any focused input under 16px; keep the compact look on
  * pointer-precise screens and go 16px where it matters. */
 @media (pointer: coarse) {
-  .site-search-input {
+  .site-search .site-search-input {
     font-size: 1rem;
   }
 }
@@ -1520,7 +1537,7 @@ body {
 }
 
 .site-title {
-  font-family: "Archivo Expanded", "Archivo", system-ui, sans-serif;
+  font-family: "Archivo Expanded", "Archivo Expanded Fallback", "Archivo", "Archivo Fallback", system-ui, sans-serif;
   font-weight: 900;
   font-size: 1.125rem;
   text-transform: uppercase;
@@ -1563,7 +1580,7 @@ h2,
 h3,
 .profile h1,
 .cv-header h1 {
-  font-family: "Archivo Expanded", "Archivo", system-ui, sans-serif;
+  font-family: "Archivo Expanded", "Archivo Expanded Fallback", "Archivo", "Archivo Fallback", system-ui, sans-serif;
   font-weight: 900;
   text-transform: uppercase;
   letter-spacing: -0.01em;
@@ -1589,6 +1606,36 @@ pre,
 .code-block {
   border: 2px solid var(--color-border);
   border-radius: 0;
+}
+
+/* Nothing in the print shop is rounded: the code header, the copy
+ * button, inline code, video frames and the search results too. */
+.code-head,
+.copy-code,
+code,
+.video-embed,
+.video-embed-frame,
+video.video-local,
+.site-search-results a,
+.site-search-open .site-search-results,
+#search .pagefind-ui__drawer:not(.pagefind-ui__hidden),
+#search .pagefind-ui__result-excerpt mark,
+.cv-tags a,
+.cv-careers .cv-skills a,
+a:focus-visible {
+  border-radius: 0;
+}
+
+.code-head {
+  border-width: 0 0 2px;
+}
+
+.code-block pre {
+  border: 0;
+}
+
+.copy-code {
+  border-width: 2px;
 }
 
 blockquote {
@@ -1634,7 +1681,7 @@ hr {
 }
 
 .post-cards a {
-  font-family: "Archivo Expanded", "Archivo", system-ui, sans-serif;
+  font-family: "Archivo Expanded", "Archivo Expanded Fallback", "Archivo", "Archivo Fallback", system-ui, sans-serif;
   font-weight: 800;
   font-size: 1.125rem;
   line-height: 1.15;

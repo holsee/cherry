@@ -37,7 +37,7 @@
   font-family: "Unbounded";
   font-style: normal;
   font-weight: 400 900;
-  font-display: swap;
+  font-display: block;
   src: url("fonts/unbounded-latin.woff2") format("woff2");
   unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6,
     U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122,
@@ -48,11 +48,28 @@
   font-family: "Geist";
   font-style: normal;
   font-weight: 400 700;
-  font-display: swap;
+  font-display: block;
   src: url("fonts/geist-latin.woff2") format("woff2");
   unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6,
     U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122,
     U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+@font-face {
+  font-family: "Unbounded Fallback";
+  src: local("Arial");
+  size-adjust: 140.45%;
+  ascent-override: 70.84%;
+  descent-override: 17.44%;
+  line-gap-override: 0.00%;
+}
+@font-face {
+  font-family: "Geist Fallback";
+  src: local("Arial");
+  size-adjust: 109.05%;
+  ascent-override: 92.16%;
+  descent-override: 27.05%;
+  line-gap-override: 0.00%;
 }
 
 
@@ -77,7 +94,7 @@
   --syn-variable: #141a2e;
   --syn-punct: #5b6382;
 
-  --font-prose: "Geist", system-ui, "Segoe UI", Roboto, sans-serif;
+  --font-prose: "Geist", "Geist Fallback", system-ui, "Segoe UI", Roboto, sans-serif;
   --font-mono: ui-monospace, "Cascadia Code", "SF Mono", Consolas, "DejaVu Sans Mono", monospace;
   --measure: 44rem;
 
@@ -917,7 +934,7 @@ video.video-local {
 /* iOS zooms any focused input under 16px; keep the compact look on
  * pointer-precise screens and go 16px where it matters. */
 @media (pointer: coarse) {
-  .site-search-input {
+  .site-search .site-search-input {
     font-size: 1rem;
   }
 }
@@ -1498,6 +1515,8 @@ body {
 
 /* Centred mast: name on top, pill nav beneath. */
 .site-header {
+  position: relative;
+  z-index: 50;
   padding: 1.75rem 0 0;
 }
 
@@ -1507,7 +1526,7 @@ body {
 }
 
 .site-title {
-  font-family: "Unbounded", "Geist", system-ui, sans-serif;
+  font-family: "Unbounded", "Unbounded Fallback", "Geist", "Geist Fallback", system-ui, sans-serif;
   font-weight: 600;
   font-size: 1rem;
   letter-spacing: 0.08em;
@@ -1546,13 +1565,54 @@ body {
   border-color: transparent;
 }
 
+/* The search field is a pill inside the pill: filled, not outlined. */
+.site-search-input {
+  padding: 0.3rem 0.9rem;
+  border-color: transparent;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--color-fg) 6%, transparent);
+}
+
+/* Under 44rem the search drops to its own row inside the pill; a square
+ * bordered field against the pill's curve reads as broken, so the field
+ * becomes a pill too, filled rather than outlined. */
+@media (max-width: 44rem) {
+  /* Concentric corners: the field's radius is the container's minus the
+   * gap between them, so the two curves share a centre. */
+  .site-nav {
+    padding: 0.4rem;
+    row-gap: 0.4rem;
+    border-radius: 1.75rem;
+  }
+
+  .site-search {
+    padding: 0;
+  }
+
+  .site-search-input {
+    padding: 0.55rem 1.1rem;
+    text-align: center;
+    border-color: transparent;
+    border-radius: 1.35rem;
+    background: color-mix(in srgb, var(--color-fg) 6%, transparent);
+  }
+
+  .site-search-input:focus-visible {
+    outline-offset: 2px;
+  }
+
+  #search .pagefind-ui__drawer:not(.pagefind-ui__hidden) {
+    border-radius: 1.25rem;
+  }
+}
+
 /* Display face on every heading, tight tracking. */
 h1,
 h2,
 h3,
 .profile h1,
 .cv-header h1 {
-  font-family: "Unbounded", "Geist", system-ui, sans-serif;
+  font-family: "Unbounded", "Unbounded Fallback", "Geist", "Geist Fallback", system-ui, sans-serif;
   letter-spacing: -0.02em;
 }
 
@@ -1616,7 +1676,7 @@ pre,
 
 .hero-title {
   margin: 0;
-  font-family: "Unbounded", "Geist", system-ui, sans-serif;
+  font-family: "Unbounded", "Unbounded Fallback", "Geist", "Geist Fallback", system-ui, sans-serif;
   font-weight: 800;
   font-size: clamp(2.5rem, 2rem + 6vw, 7rem);
   line-height: 0.98;

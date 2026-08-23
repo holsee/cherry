@@ -39,7 +39,7 @@
   font-family: "Big Shoulders Display";
   font-style: normal;
   font-weight: 400 900;
-  font-display: swap;
+  font-display: block;
   src: url("fonts/big-shoulders-latin.woff2") format("woff2");
   unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6,
     U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122,
@@ -50,11 +50,28 @@
   font-family: "Manrope";
   font-style: normal;
   font-weight: 400 800;
-  font-display: swap;
+  font-display: block;
   src: url("fonts/manrope-latin.woff2") format("woff2");
   unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6,
     U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122,
     U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+@font-face {
+  font-family: "Big Shoulders Display Fallback";
+  src: local("Arial");
+  size-adjust: 66.75%;
+  ascent-override: 147.41%;
+  descent-override: 31.91%;
+  line-gap-override: 0.00%;
+}
+@font-face {
+  font-family: "Manrope Fallback";
+  src: local("Arial");
+  size-adjust: 106.77%;
+  ascent-override: 99.84%;
+  descent-override: 28.10%;
+  line-gap-override: 0.00%;
 }
 
 
@@ -79,7 +96,7 @@
   --syn-variable: #111111;
   --syn-punct: #5a5a5a;
 
-  --font-prose: "Manrope", system-ui, "Segoe UI", Roboto, sans-serif;
+  --font-prose: "Manrope", "Manrope Fallback", system-ui, "Segoe UI", Roboto, sans-serif;
   --font-mono: ui-monospace, "Cascadia Code", "SF Mono", Consolas, "DejaVu Sans Mono", monospace;
   --measure: 44rem;
 
@@ -919,7 +936,7 @@ video.video-local {
 /* iOS zooms any focused input under 16px; keep the compact look on
  * pointer-precise screens and go 16px where it matters. */
 @media (pointer: coarse) {
-  .site-search-input {
+  .site-search .site-search-input {
     font-size: 1rem;
   }
 }
@@ -1486,7 +1503,7 @@ body {
 }
 
 .site-title {
-  font-family: "Big Shoulders Display", Impact, sans-serif;
+  font-family: "Big Shoulders Display", "Big Shoulders Display Fallback", Impact, sans-serif;
   font-weight: 800;
   font-size: 1.5rem;
   text-transform: uppercase;
@@ -1506,7 +1523,7 @@ h2,
 h3,
 .profile h1,
 .cv-header h1 {
-  font-family: "Big Shoulders Display", Impact, sans-serif;
+  font-family: "Big Shoulders Display", "Big Shoulders Display Fallback", Impact, sans-serif;
   font-weight: 800;
   text-transform: uppercase;
   letter-spacing: 0.01em;
@@ -1657,7 +1674,7 @@ h3 {
 }
 
 .post-list a {
-  font-family: "Big Shoulders Display", Impact, sans-serif;
+  font-family: "Big Shoulders Display", "Big Shoulders Display Fallback", Impact, sans-serif;
   font-weight: 700;
   font-size: 1.75rem;
   line-height: 1;
