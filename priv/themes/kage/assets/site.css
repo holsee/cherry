@@ -1683,6 +1683,15 @@ html.kage-js .kage-scene.is-seen {
   background: var(--color-accent);
 }
 
+/* With the mast in flow, a full-height hero lands the name on the
+ * second screen; on a phone it sits under the mast instead. */
+@media (max-width: 44rem) {
+  .hero-home {
+    min-height: 0;
+    padding: 3rem 0 3rem;
+  }
+}
+
 /* Post list: a reel. */
 .post-list li {
   display: block;
