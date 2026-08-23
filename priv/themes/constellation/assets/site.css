@@ -1546,6 +1546,36 @@ body {
   border-color: transparent;
 }
 
+/* Under 44rem the search drops to its own row inside the pill; a square
+ * bordered field against the pill's curve reads as broken, so the field
+ * becomes a pill too, filled rather than outlined. */
+@media (max-width: 44rem) {
+  .site-nav {
+    padding: 0.35rem;
+    row-gap: 0.5rem;
+  }
+
+  .site-search {
+    padding: 0 0.1rem 0.05rem;
+  }
+
+  .site-search-input {
+    padding: 0.55rem 1.1rem;
+    text-align: center;
+    border-color: transparent;
+    border-radius: 999px;
+    background: color-mix(in srgb, var(--color-fg) 6%, transparent);
+  }
+
+  .site-search-input:focus-visible {
+    outline-offset: 2px;
+  }
+
+  #search .pagefind-ui__drawer:not(.pagefind-ui__hidden) {
+    border-radius: 1.25rem;
+  }
+}
+
 /* Display face on every heading, tight tracking. */
 h1,
 h2,
