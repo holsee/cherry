@@ -1,0 +1,9 @@
+<% import Cherry.Theme.Helpers %><% all_tags = @posts |> Enum.flat_map(& &1.meta.tags) |> Enum.uniq() |> Enum.sort() %><h1>Blog</h1>
+<p class="draft-key"><%= for tag <- all_tags do %><a href="<%= href(@site, "blog/tags/" <> tag_slug(tag) <> "/") %>"><span class="draft-cell is-on" aria-hidden="true"></span><%= h(tag) %></a><% end %></p>
+<ul class="post-list draft">
+<%= for post <- @posts do %><li>
+<span class="draft-row" aria-hidden="true"><%= for tag <- all_tags do %><span class="draft-cell <%= if tag in post.meta.tags, do: "is-on", else: "" %>"></span><% end %></span>
+<time datetime="<%= Date.to_iso8601(post.meta.date) %>"><%= Date.to_iso8601(post.meta.date) %></time>
+<a href="<%= post.url %>"><%= h(post.meta.title) %></a>
+</li>
+<% end %></ul>
