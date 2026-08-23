@@ -1,0 +1,10 @@
+<% import Cherry.Theme.Helpers %><h1 class="so-gradient">Blog</h1>
+<ul class="so-cards">
+<%= for post <- @posts do %><li class="so-card">
+<a href="<%= post.url %>">
+<time datetime="<%= Date.to_iso8601(post.meta.date) %>"><%= format_date(post.meta.date) %></time>
+<span class="so-card-title"><%= h(post.meta.title) %></span>
+<%= if desc = Map.get(post.meta, :description) do %><span class="so-card-desc"><%= h(desc) %></span>
+<% end %></a>
+</li>
+<% end %></ul>
