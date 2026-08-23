@@ -18,6 +18,7 @@ const toggle = root?.querySelector<HTMLButtonElement>("[data-atlas-toggle]");
 
 if (root && viewport && plane) {
   document.documentElement.classList.add("atlas-js");
+  const view: HTMLElement = viewport;
   const still = window.matchMedia("(prefers-reduced-motion: reduce)");
   const rem = parseFloat(getComputedStyle(document.documentElement).fontSize) || 16;
 
@@ -110,8 +111,8 @@ if (root && viewport && plane) {
       mctx.arc(ox + c.x * s, oy + c.y * s, 1.6, 0, Math.PI * 2);
       mctx.fill();
     }
-    const vw = (viewport.clientWidth / zoom) * s;
-    const vh = (viewport.clientHeight / zoom) * s;
+    const vw = (view.clientWidth / zoom) * s;
+    const vh = (view.clientHeight / zoom) * s;
     mctx.strokeStyle = `rgba(${accent}, 0.9)`;
     mctx.lineWidth = 1;
     mctx.strokeRect(ox + cx * s - vw / 2, oy + cy * s - vh / 2, vw, vh);
