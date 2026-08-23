@@ -17,6 +17,10 @@ Entries are terse one-liners linked to their PR: `- Thing that changed. (#12)`
 - A `?theme=light|dark` query param forces that rendition for the view without touching the stored preference - shareable forced-theme links, and what the new screenshot harness (`scripts/theme_shots.mjs`: standard page set, two true-CSS-pixel viewports via CDP emulation, both renditions, print PDF of `/cv/`) drives for theme QA. (#132)
 - Template inheritance (theme contract 1.1): a theme may declare `inherit_templates: true` and skip shipping template files - unshipped templates render with the default theme's copies, `theme.list` marks them `inherited (framework)`, and `gen.theme --from` materialises them into forks. CSS-only themes are now a manifest, a stylesheet, and fonts. (#131)
 
+### Fixed
+- Root-absolute links and sources written in markdown (`[blog](/blog/)`, `<img src="/images/x.png">`) now move under `base_path` like every other internal URL; they used to 404 on a project-pages site. `cherry check` now reports a root-absolute link that escapes the base path as `broken-link` instead of skipping it as external. External (`https://`, `//host/`) URLs are untouched as before. (#140)
+- Phone search: the field no longer zooms the page on focus on iOS in any theme (the 16px coarse-pointer rule lost the cascade); constellation's results panel no longer paints under the page, and its field is a pill on its own row. Halftone squares its code block header, copy button, and the rest of its chrome, and the block wears one frame instead of two. (#140)
+
 ## [0.5.0] — 2026-08-22
 
 ### Added

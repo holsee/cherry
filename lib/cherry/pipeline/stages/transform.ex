@@ -54,6 +54,7 @@ defmodule Cherry.Pipeline.Stages.Transform do
         |> decorate_code_blocks()
         |> MDEx.to_html!(@mdex_options)
         |> wrap_tables()
+        |> rebase_links(base_path)
 
       %Document{doc | html: html}
     else
@@ -94,5 +95,24 @@ defmodule Cherry.Pipeline.Stages.Transform do
     html
     |> String.replace("<table>", ~s(<div class="table-scroll"><table>))
     |> String.replace("</table>", "</table></div>")
+  end
+
+  # Root-absolute links and sources written in markdown (`[blog](/blog/)`,
+  # `<img src="/images/x.png">`) mean "this site", so under a `base_path`
+  # they move with it - the same rule the layout and the components apply.
+  # Protocol-relative URLs (`//host/…`) and paths already under the base
+  # are left alone.
+  @rootlink ~r/\b(href|src)="\/(?!\/)([^"]*)"/
+
+  defp rebase_links(html, "/"), do: html
+
+  defp rebase_links(html, base_path) do
+    Regex.replace(@rootlink, html, fn whole, attr, rest ->
+      if String.starts_with?("/" <> rest, base_path) do
+        whole
+      else
+        ~s(#{attr}="#{base_path}#{rest}")
+      end
+    end)
   end
 end

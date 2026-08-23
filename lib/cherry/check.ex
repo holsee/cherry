@@ -85,23 +85,30 @@ defmodule Cherry.Check do
     |> Enum.filter(&internal?(&1, base))
   end
 
-  # Protocol-relative URLs (`//host/…`) are external even though they
-  # start with the base path.
-  defp internal?(url, base) do
-    String.starts_with?(url, base) and not String.starts_with?(url, "//")
+  # Every root-absolute URL is a claim about this site, including one that
+  # escapes the base path (`/blog/` on a site built under `/t/prism/`):
+  # that page is not emitted either. Protocol-relative URLs (`//host/…`)
+  # are external.
+  defp internal?(url, _base) do
+    String.starts_with?(url, "/") and not String.starts_with?(url, "//")
   end
 
   defp resolve_link(url, base) do
-    rel =
-      url
-      |> String.trim_leading(base)
-      |> String.split(~r/[?#]/, parts: 2)
-      |> hd()
+    if String.starts_with?(url, base) do
+      rel =
+        url
+        |> String.trim_leading(base)
+        |> String.split(~r/[?#]/, parts: 2)
+        |> hd()
 
-    cond do
-      rel == "" -> "index.html"
-      String.ends_with?(rel, "/") -> rel <> "index.html"
-      true -> rel
+      cond do
+        rel == "" -> "index.html"
+        String.ends_with?(rel, "/") -> rel <> "index.html"
+        true -> rel
+      end
+    else
+      # Outside the base: nothing in the build can satisfy it.
+      {:outside_base, url}
     end
   end
 
