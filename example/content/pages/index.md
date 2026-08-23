@@ -18,7 +18,7 @@ description: Write markdown, get a whole website. Cherry is a one-binary static 
 <li><strong>Typed content.</strong> Unknown frontmatter is a build error, not a mystery.</li>
 <li><strong>Deterministic builds.</strong> Same tree in, same bytes out, gated in CI.</li>
 <li><strong>A real verifier.</strong> <code>cherry check --strict</code> returns structured diagnostics, not vibes.</li>
-<li><strong>Themes that survive upgrades.</strong> Tokens are the styling API; ejected templates carry provenance.</li>
+<li><strong>Themes that survive upgrades.</strong> <a href="/themes/">Thirty ship built in</a>; tokens are the styling API; ejected templates carry provenance.</li>
 <li><strong>Light and dark as one value.</strong> Colour tokens are <code>light-dark()</code> pairs; print stays clean.</li>
 <li><strong>Content components.</strong> Figures, privacy-preserving video facades, and callouts as directives.</li>
 <li><strong>Two template languages.</strong> EEx or HEEx, decided by file extension.</li>
@@ -115,6 +115,19 @@ Your orchard is planted at junovale. Next:
 Nine files, three of which you will actually touch: `cherry.exs` is the config, `content/pages/` holds your pages, `content/posts/` your posts. `cherry serve` gives you live reload from the first second, and `AGENTS.md` teaches the workflow to whatever coding agent you point at it.
 
 The [quick-start](/guides/quick-start/) goes from here to a deployed site in fifteen minutes.
+
+A fresh site wears `default`, quiet and typography-first. One config line swaps the whole look: thirty official themes ship inside the binary, from newsprint to WebGL, all on the same token API.
+
+<div class="theme-strip">
+<a href="/themes/constellation/"><picture><source srcset="/images/themes/constellation-dark.png" media="(prefers-color-scheme: dark)"><img src="/images/themes/constellation-light.png" alt="The constellation theme" width="1200" height="750" loading="lazy"></picture><span>constellation</span></a>
+<a href="/themes/swiss/"><picture><source srcset="/images/themes/swiss-dark.png" media="(prefers-color-scheme: dark)"><img src="/images/themes/swiss-light.png" alt="The swiss theme" width="1200" height="750" loading="lazy"></picture><span>swiss</span></a>
+<a href="/themes/flipdot/"><picture><source srcset="/images/themes/flipdot-dark.png" media="(prefers-color-scheme: dark)"><img src="/images/themes/flipdot-light.png" alt="The flipdot theme" width="1200" height="750" loading="lazy"></picture><span>flipdot</span></a>
+<a href="/themes/warp/"><picture><source srcset="/images/themes/warp-dark.png" media="(prefers-color-scheme: dark)"><img src="/images/themes/warp-light.png" alt="The warp theme" width="1200" height="750" loading="lazy"></picture><span>warp</span></a>
+<a href="/themes/sketchbook/"><picture><source srcset="/images/themes/sketchbook-dark.png" media="(prefers-color-scheme: dark)"><img src="/images/themes/sketchbook-light.png" alt="The sketchbook theme" width="1200" height="750" loading="lazy"></picture><span>sketchbook</span></a>
+<a href="/themes/desktop/"><picture><source srcset="/images/themes/desktop-dark.png" media="(prefers-color-scheme: dark)"><img src="/images/themes/desktop-light.png" alt="The desktop theme" width="1200" height="750" loading="lazy"></picture><span>desktop</span></a>
+</div>
+
+<p class="theme-strip-more">All thirty live in <a href="/themes/">the gallery</a>, each with a page on making it yours.</p>
 
 ### 2 · Create a page
 
