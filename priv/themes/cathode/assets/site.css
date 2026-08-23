@@ -1583,6 +1583,11 @@ h2::before {
   font-weight: 400;
 }
 
+/* The timeline's year heading keeps its dot on the rail, not a hash. */
+.year-mark::before {
+  content: "";
+}
+
 h3 {
   font-size: 1rem;
 }
