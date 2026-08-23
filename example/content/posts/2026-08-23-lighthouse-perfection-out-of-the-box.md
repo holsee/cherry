@@ -1,5 +1,5 @@
 ---
-title: "Lighthouse perfection out of the box"
+title: "Lighthouse perfection, out of the box"
 description: Perfect Lighthouse scores for performance, accessibility, best practices and SEO, plus a full agentic-browsing pass - and why a Cherry site gets all five without configuring anything.
 tags: [design, performance, seo, agents]
 ---
