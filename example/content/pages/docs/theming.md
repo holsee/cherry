@@ -4,40 +4,53 @@ description: The styling ladder, design tokens, light-dark pairs, overlays, prov
 ---
 ## Theming
 
-Two convictions shape everything on this page. First, restyling a site should cost exactly as much ownership as you choose to take, never a fork. Second, whatever you do take ownership of should stay upgradeable, with the tool telling you the truth about what you own. Cherry ships twenty official themes (from `default`, typography-first and quiet, and `cherrybomb`, the one you are reading, through CSS-only restyles like `porcelain`, `teletype`, `halftone` and `broadsheet`, to canvas and WebGL worlds like `prism`, `constellation`, `warp` and `showoff`; the [gallery](/themes/) shows every one) built from the same parts: a `theme.exs` manifest, a declared template inventory, one stylesheet whose every colour flows through tokens.
+Two convictions shape everything on this page. First, restyling a site should cost exactly as much ownership as you choose to take, never a fork. Second, whatever you do take ownership of should stay upgradeable, with the tool telling you the truth about what you own. Cherry ships thirty official themes (from `default`, typography-first and quiet, and `cherrybomb`, the one you are reading, through CSS-only restyles like `porcelain`, `teletype`, `halftone` and `broadsheet`, to canvas and WebGL worlds like `prism`, `constellation`, `warp` and `showoff`; the [gallery](/themes/) shows every one, and each links to a "Using" page with that theme's full token API) built from the same parts: a `theme.exs` manifest, a declared template inventory, one stylesheet whose every colour flows through tokens.
 
 ### The ladder
 
-<div class="diagram" role="img" aria-label="The five rungs of the styling ladder, each costing more ownership: tokens, custom.css, overlay, eject, new theme.">
-<svg viewBox="0 0 720 250" xmlns="http://www.w3.org/2000/svg" style="font-family: var(--font-mono); font-size: 13px;">
-  <g fill="var(--color-surface)" stroke="var(--color-border)">
-    <rect x="10"  y="190" width="128" height="40" rx="8"/>
-    <rect x="152" y="150" width="128" height="80" rx="8"/>
-    <rect x="294" y="110" width="128" height="120" rx="8"/>
-    <rect x="436" y="70"  width="128" height="160" rx="8"/>
-    <rect x="578" y="30"  width="128" height="200" rx="8" stroke="var(--color-accent)"/>
-  </g>
-  <g fill="var(--color-fg)" text-anchor="middle">
-    <text x="74"  y="214">tokens</text>
-    <text x="216" y="174">custom.css</text>
-    <text x="358" y="134">overlay</text>
-    <text x="500" y="94">eject</text>
-    <text x="642" y="54" fill="var(--color-accent)">new theme</text>
-  </g>
-  <g fill="var(--color-muted)" font-size="11px" text-anchor="middle">
-    <text x="74"  y="230">one config line</text>
-    <text x="216" y="190">one CSS file</text>
-    <text x="358" y="150">one template</text>
-    <text x="500" y="110">that file's future</text>
-    <text x="642" y="70">everything, deliberately</text>
-    <text x="360" y="16" font-size="12px">ownership you take on →</text>
-  </g>
+<div class="diagram" role="img" aria-label="The styling ladder as a staircase of five treads, each costing more ownership: 1 tokens, one config line; 2 custom.css, one CSS file; 3 overlay, one template; 4 eject, that file's future; 5 new theme, everything, deliberately. An axis underneath reads: ownership you take on.">
+<svg viewBox="0 0 840 316" xmlns="http://www.w3.org/2000/svg" style="font-family: var(--font-mono); font-size: 13px;">
+  <path d="M 12 274 L 12 192 L 12 192 L 162 192 L 174 152 L 324 152 L 336 112 L 486 112 L 498 72 L 648 72 L 660 32 L 810 32 L 810 12" fill="none" stroke="color-mix(in srgb, var(--color-accent) 45%, transparent)" stroke-width="2" stroke-linejoin="round"/>
+  <path d="M 804 21 L 810 11 L 816 21" fill="none" stroke="var(--color-accent)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+  <rect x="12" y="192" width="150" height="76" rx="10" fill="var(--color-surface)" stroke="var(--color-border)"/>
+  <circle cx="31" cy="211" r="10" fill="color-mix(in srgb, var(--color-accent) 14%, var(--color-surface))" stroke="var(--color-accent)"/>
+  <text x="31" y="215" text-anchor="middle" font-size="11" fill="var(--color-accent)">1</text>
+  <text x="87" y="230" text-anchor="middle" font-weight="600" fill="var(--color-fg)">tokens</text>
+  <text x="87" y="246" text-anchor="middle" font-size="11" fill="var(--color-muted)">one config line</text>
+  <text x="87" y="260" text-anchor="middle" font-size="10.5" fill="var(--color-accent)">cherry config</text>
+  <rect x="174" y="152" width="150" height="76" rx="10" fill="var(--color-surface)" stroke="var(--color-border)"/>
+  <circle cx="193" cy="171" r="10" fill="color-mix(in srgb, var(--color-accent) 14%, var(--color-surface))" stroke="var(--color-accent)"/>
+  <text x="193" y="175" text-anchor="middle" font-size="11" fill="var(--color-accent)">2</text>
+  <text x="249" y="190" text-anchor="middle" font-weight="600" fill="var(--color-fg)">custom.css</text>
+  <text x="249" y="206" text-anchor="middle" font-size="11" fill="var(--color-muted)">one CSS file</text>
+  <text x="249" y="220" text-anchor="middle" font-size="10.5" fill="var(--color-accent)">always wins</text>
+  <rect x="336" y="112" width="150" height="76" rx="10" fill="var(--color-surface)" stroke="var(--color-border)"/>
+  <circle cx="355" cy="131" r="10" fill="color-mix(in srgb, var(--color-accent) 14%, var(--color-surface))" stroke="var(--color-accent)"/>
+  <text x="355" y="135" text-anchor="middle" font-size="11" fill="var(--color-accent)">3</text>
+  <text x="411" y="150" text-anchor="middle" font-weight="600" fill="var(--color-fg)">overlay</text>
+  <text x="411" y="166" text-anchor="middle" font-size="11" fill="var(--color-muted)">one template</text>
+  <text x="411" y="180" text-anchor="middle" font-size="10.5" fill="var(--color-accent)">EEx or HEEx</text>
+  <rect x="498" y="72" width="150" height="76" rx="10" fill="var(--color-surface)" stroke="var(--color-border)"/>
+  <circle cx="517" cy="91" r="10" fill="color-mix(in srgb, var(--color-accent) 14%, var(--color-surface))" stroke="var(--color-accent)"/>
+  <text x="517" y="95" text-anchor="middle" font-size="11" fill="var(--color-accent)">4</text>
+  <text x="573" y="110" text-anchor="middle" font-weight="600" fill="var(--color-fg)">eject</text>
+  <text x="573" y="126" text-anchor="middle" font-size="11" fill="var(--color-muted)">that file's future</text>
+  <text x="573" y="140" text-anchor="middle" font-size="10.5" fill="var(--color-accent)">provenance kept</text>
+  <rect x="660" y="32" width="150" height="76" rx="10" fill="color-mix(in srgb, var(--color-accent) 8%, var(--color-surface))" stroke="var(--color-accent)"/>
+  <circle cx="679" cy="51" r="10" fill="color-mix(in srgb, var(--color-accent) 14%, var(--color-surface))" stroke="var(--color-accent)"/>
+  <text x="679" y="55" text-anchor="middle" font-size="11" fill="var(--color-accent)">5</text>
+  <text x="735" y="70" text-anchor="middle" font-weight="600" fill="var(--color-accent)">new theme</text>
+  <text x="735" y="86" text-anchor="middle" font-size="11" fill="var(--color-muted)">everything,</text>
+  <text x="735" y="100" text-anchor="middle" font-size="10.5" fill="var(--color-muted)">deliberately</text>
+  <line x1="12" y1="286" x2="820" y2="286" stroke="var(--color-border)"/>
+  <path d="M 814 282 L 822 286 L 814 290" fill="none" stroke="var(--color-border)" stroke-linecap="round" stroke-linejoin="round"/>
+  <text x="416" y="304" text-anchor="middle" font-size="12" fill="var(--color-muted)">ownership you take on</text>
 </svg>
 </div>
 
 **Rung 1: tokens.** Every theme publishes its tokens as an API. List them, then override from config or the CLI:
 
-```text
+```sh
 $ cherry theme.tokens
 tokens of theme default:
   --color-bg             light-dark(#ffffff, #15171b)
@@ -103,14 +116,15 @@ A theme may ship behaviour as well as style: its `assets/*.js` files are its isl
 
 Islands read the theme's tokens instead of carrying their own colours - the **token to uniform bridge**. Paint the token onto a probe element and let the browser resolve it (hex, `light-dark()`, `color-mix()` all included), then hand the rgb to your canvas or shader:
 
-```js title="the bridge, in full"
+```ts title="the bridge, in full"
 const probe = document.createElement("div");
 probe.style.display = "none";
 document.body.appendChild(probe);
 
-function tokenRGB(name) {
+function tokenRGB(name: string): [number, number, number] {
   probe.style.color = `var(${name})`;
-  const [r, g, b] = getComputedStyle(probe).color.match(/[\d.]+/g);
+  const m = getComputedStyle(probe).color.match(/[\d.]+/g) ?? ["0", "0", "0"];
+  const [r, g, b] = m.map(Number);
   return [r / 255, g / 255, b / 255];
 }
 

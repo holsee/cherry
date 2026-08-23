@@ -1,0 +1,13 @@
+<% import Cherry.Theme.Helpers %><h1>Blog</h1>
+<table class="listview">
+<thead>
+<tr><th scope="col" class="lv-name">Name</th><th scope="col" class="lv-date">Date modified</th><th scope="col" class="lv-kind">Kind</th></tr>
+</thead>
+<tbody>
+<%= for post <- @posts do %><tr>
+<td class="lv-name"><span class="lv-icon" aria-hidden="true"></span><a href="<%= post.url %>"><%= h(post.meta.title) %></a></td>
+<td class="lv-date"><time datetime="<%= Date.to_iso8601(post.meta.date) %>"><%= Date.to_iso8601(post.meta.date) %></time></td>
+<td class="lv-kind"><%= case post.meta.tags do [] -> "Post"; [t | _] -> h(t) end %></td>
+</tr>
+<% end %></tbody>
+</table>

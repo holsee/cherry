@@ -1284,6 +1284,10 @@ video.video-local {
   --icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 128 128'%3E%3Cpath style='line-height:normal;font-variant-ligatures:normal;font-variant-position:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-alternates:normal;font-variant-east-asian:normal;font-feature-settings:normal;font-variation-settings:normal;text-indent:0;text-align:start;text-decoration-line:none;text-decoration-style:solid;text-decoration-color:%23000;text-transform:none;text-orientation:mixed;white-space:normal;shape-padding:0;shape-margin:0;inline-size:0;isolation:auto;mix-blend-mode:normal;solid-color:%23000;solid-opacity:1' d='M11.95 24.348c-5.836 0-10.618 4.867-10.618 10.681v57.942c0 5.814 4.782 10.681 10.617 10.681h104.102c5.835 0 10.617-4.867 10.617-10.681V35.03c0-5.814-4.783-10.681-10.617-10.681H14.898l-.002-.002H11.95zm-.007 9.543h104.108c.625 0 1.076.423 1.076 1.14v57.94c0 .717-.453 1.14-1.076 1.14H11.949c-.623 0-1.076-.423-1.076-1.14V35.029c0-.715.451-1.135 1.07-1.138z' color='%23000' font-weight='400' font-family='sans-serif' overflow='visible'/%3E%3Cpath d='M20.721 84.1V43.9H32.42l11.697 14.78L55.81 43.9h11.696v40.2H55.81V61.044l-11.694 14.78-11.698-14.78V84.1H20.722zm73.104 0L76.28 64.591h11.697V43.9h11.698v20.69h11.698zm0 0'/%3E%3C/svg%3E");
 }
 
+.code-icon--prompt {
+  --icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 128 128'%3E%3Cpath fill-rule='evenodd' d='M64 6a9 9 0 0 1 4.5 16.79V34H92a18 18 0 0 1 18 18v38a18 18 0 0 1-18 18H36a18 18 0 0 1-18-18V52a18 18 0 0 1 18-18h23.5V22.79A9 9 0 0 1 64 6zM36 44a8 8 0 0 0-8 8v38a8 8 0 0 0 8 8h56a8 8 0 0 0 8-8V52a8 8 0 0 0-8-8H36zm8 17a10 10 0 1 1 0 20 10 10 0 0 1 0-20zm40 0a10 10 0 1 1 0 20 10 10 0 0 1 0-20zM8 58a6 6 0 0 1 6 6v14a6 6 0 0 1-12 0V64a6 6 0 0 1 6-6zm112 0a6 6 0 0 1 6 6v14a6 6 0 0 1-12 0V64a6 6 0 0 1 6-6zm-70 56h28a6 6 0 0 1 0 12H50a6 6 0 0 1 0-12z'/%3E%3C/svg%3E");
+}
+
 .code-icon--css {
   --icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 128 128'%3E%3Cpath d='M8.76 1l10.055 112.883 45.118 12.58 45.244-12.626L119.24 1H8.76zm89.591 25.862l-3.347 37.605.01.203-.014.467v-.004l-2.378 26.294-.262 2.336L64 101.607v.001l-.022.019-28.311-7.888L33.75 72h13.883l.985 11.054 15.386 4.17-.004.008v-.002l15.443-4.229L81.075 65H48.792l-.277-3.043-.631-7.129L47.553 51h34.749l1.264-14H30.64l-.277-3.041-.63-7.131L29.401 23h69.281l-.331 3.862z'/%3E%3C/svg%3E");
 }
@@ -1345,6 +1349,226 @@ video.video-local {
   margin-top: 4rem;
 }
 
+/* The theme strip on the landing: six faces of the same site, each a
+ * card linking to that theme's Using page. */
+.theme-strip {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1rem;
+  margin: 1.75rem 0 0;
+}
+
+.theme-strip a {
+  display: block;
+  overflow: hidden;
+  text-decoration: none;
+  border: 1px solid var(--color-border);
+  border-radius: 0.75rem;
+  background: var(--color-surface);
+  box-shadow: 0 1px 2px color-mix(in srgb, var(--color-fg) 6%, transparent);
+  transition: transform 160ms ease, border-color 160ms ease, box-shadow 160ms ease;
+}
+
+.theme-strip a:hover,
+.theme-strip a:focus-visible {
+  transform: translateY(-2px);
+  border-color: var(--color-accent);
+  box-shadow: 0 10px 26px -12px color-mix(in srgb, var(--color-accent) 55%, transparent);
+}
+
+.theme-strip img {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 1200 / 750;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.theme-strip span {
+  display: block;
+  padding: 0.45rem 0.75rem;
+  font-family: var(--font-mono);
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: var(--color-fg);
+}
+
+.theme-strip a:hover span {
+  color: var(--color-accent);
+}
+
+.theme-strip-more {
+  margin: 0.75rem 0 0;
+  font-size: 0.9375rem;
+  color: var(--color-muted);
+}
+
+@media (max-width: 44rem) {
+  .theme-strip {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.75rem;
+  }
+}
+
+/* The gallery: hub-style cards on a wide grid, each screenshot in its
+ * browser window, name and blurb below, demo and customise links. */
+.page-themes main .wrap {
+  max-width: 72rem;
+}
+
+.theme-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(20rem, 1fr));
+  gap: 2rem;
+  margin-top: 2rem;
+}
+
+.tcard {
+  display: flex;
+  flex-direction: column;
+  border: 1px solid var(--color-border);
+  border-radius: 0.9rem;
+  background: var(--color-surface);
+  overflow: hidden;
+  transition: transform 150ms ease, box-shadow 150ms ease, border-color 150ms ease;
+}
+
+.tcard:hover {
+  transform: translateY(-3px);
+  border-color: color-mix(in srgb, var(--color-accent) 55%, var(--color-border));
+  box-shadow: 0 12px 34px color-mix(in srgb, var(--color-accent) 38%, transparent);
+}
+
+.tcard-meta {
+  padding: 0.9rem 1.1rem 1.1rem;
+}
+
+.page-themes .theme-hero {
+  margin: 2rem 0 2.5rem;
+  max-width: 46rem;
+}
+
+.page-themes .theme-hero-actions {
+  margin: 1.25rem 0 0;
+}
+
+.tcard h2 {
+  margin: 0 0 0.25rem;
+  font-family: var(--font-mono);
+  font-size: 1.125rem;
+}
+
+.tcard h2::after {
+  content: none;
+}
+
+.tcard-tech {
+  display: inline-block;
+  margin-left: 0.35rem;
+  padding: 0.1rem 0.55rem;
+  border: 1px solid color-mix(in srgb, var(--color-accent) 35%, var(--color-border));
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--color-accent) 10%, var(--color-bg));
+  color: color-mix(in srgb, var(--color-accent) 80%, var(--color-fg));
+  font-size: 0.6875rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  vertical-align: 0.15em;
+  white-space: nowrap;
+}
+
+.tcard p {
+  margin: 0;
+  font-size: 0.9375rem;
+  color: var(--color-muted);
+}
+
+.tcard-links {
+  display: flex;
+  gap: 1rem;
+  margin-top: 0.7rem;
+}
+
+.tcard-links a {
+  font-family: var(--font-mono);
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: var(--color-accent);
+  text-decoration: none;
+}
+
+.tcard-links a::after {
+  content: " →";
+}
+
+.tcard-links a:hover {
+  text-decoration: underline;
+  text-underline-offset: 0.2em;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tcard,
+  .tcard:hover {
+    transition: none;
+    transform: none;
+  }
+}
+
+/* The gallery's screenshots sit in little browser windows: a chrome
+ * bar with three lights and an address pill, all drawn from tokens. */
+.page-themes article picture,
+.tcard picture {
+  display: block;
+  margin: 1.25rem 0;
+  border: 1px solid var(--color-border);
+  border-radius: 0.9rem;
+  overflow: hidden;
+  background: var(--color-surface);
+  /* The same glow the hero mark wears on the landing page. */
+  box-shadow:
+    0 1px 2px color-mix(in srgb, var(--color-fg) 8%, transparent),
+    0 12px 34px color-mix(in srgb, var(--color-accent) 38%, transparent);
+}
+
+.page-themes article picture::before,
+.tcard picture::before {
+  content: "";
+  display: block;
+  height: 2.1rem;
+  border-bottom: 1px solid var(--color-border);
+  background:
+    /* the three lights */
+    radial-gradient(circle at 1.1rem 50%, var(--color-accent) calc(0.3rem - 0.75px), transparent 0.3rem),
+    radial-gradient(circle at 2.15rem 50%, color-mix(in srgb, var(--color-accent) 45%, var(--color-muted)) calc(0.3rem - 0.75px), transparent 0.3rem),
+    radial-gradient(circle at 3.2rem 50%, var(--color-border) calc(0.3rem - 0.75px), transparent 0.3rem),
+    /* the address pill */
+    linear-gradient(var(--color-bg), var(--color-bg)) 50% 50% / 42% 1.1rem no-repeat,
+    var(--color-surface);
+  border-start-start-radius: 0.9rem;
+  border-start-end-radius: 0.9rem;
+}
+
+.page-themes article picture img,
+.tcard picture img {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: 0;
+}
+
+@media (max-width: 44rem) {
+  .page-themes article picture::before,
+  .tcard picture::before {
+    height: 1.6rem;
+    background:
+      radial-gradient(circle at 0.9rem 50%, var(--color-accent) calc(0.24rem - 0.75px), transparent 0.24rem),
+      radial-gradient(circle at 1.75rem 50%, color-mix(in srgb, var(--color-accent) 45%, var(--color-muted)) calc(0.24rem - 0.75px), transparent 0.24rem),
+      radial-gradient(circle at 2.6rem 50%, var(--color-border) calc(0.24rem - 0.75px), transparent 0.24rem),
+      linear-gradient(var(--color-bg), var(--color-bg)) 50% 50% / 46% 0.9rem no-repeat,
+      var(--color-surface);
+  }
+}
+
 .hero {
   text-align: center;
   padding: 1rem 0 2.5rem;
@@ -1368,6 +1592,13 @@ video.video-local {
 
 .hero h1 em {
   font-style: italic;
+  color: var(--color-accent);
+}
+
+/* The tagline's sign-off wears the title's italic accent. */
+.hero-tagline em {
+  font-style: italic;
+  font-weight: 800;
   color: var(--color-accent);
 }
 
@@ -1695,6 +1926,11 @@ video.video-local {
 
 } /* @layer theme */
 
+/* The theme's own voice — still the theme layer, so the site's unlayered
+ * overrides (`tokens:` block, custom.css) keep winning by declaration
+ * order, never by specificity arithmetic. */
+@layer theme {
+
 /* ---------- the careers layout: default portfolio view + the CV ---------- */
 
 .page-cv main .wrap {
@@ -1844,3 +2080,15 @@ video.video-local {
     gap: 0.3rem 0.9rem;
   }
 }
+
+/* Inside a card the window is the card's top half: flush, square
+ * bottom, the glow belongs to the card. */
+.tcard picture {
+  margin: 0;
+  border: 0;
+  border-bottom: 1px solid var(--color-border);
+  border-radius: 0.9rem 0.9rem 0 0;
+  box-shadow: none;
+}
+
+} /* @layer theme */

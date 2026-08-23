@@ -1,0 +1,12 @@
+<% import Cherry.Theme.Helpers %><% vt = "post-" <> String.replace(@doc.path, ~r/[^a-zA-Z0-9]+/, "-") %><article class="transit-post">
+<header class="transit-rail">
+<h1 style="view-transition-name: <%= vt %>"><%= h(@doc.meta.title) %></h1>
+<p class="post-meta">
+<time datetime="<%= Date.to_iso8601(@doc.meta.date) %>"><%= format_date(@doc.meta.date) %></time><%= for tag <- @doc.meta.tags do %> · <a href="<%= href(@site, "blog/tags/" <> tag_slug(tag) <> "/") %>"><%= h(tag) %></a><% end %>
+</p>
+<%= if desc = Map.get(@doc.meta, :description) do %><p class="transit-standfirst"><%= h(desc) %></p>
+<% end %></header>
+<div class="transit-body">
+<%= @doc.html %>
+</div>
+</article>

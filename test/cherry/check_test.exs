@@ -29,6 +29,18 @@ defmodule Cherry.CheckTest do
       assert diagnostic.message =~ "/nope/"
     end
 
+    test "a link under a declared deploy path is the deployment's promise" do
+      site = %{site([]) | deploy_paths: ["t/"]}
+
+      build =
+        build_token(
+          site: site,
+          pages: [html_page("about/index.html", ~s(<a href="/t/prism/">demo</a>))]
+        )
+
+      assert [] = errors(Check.run(build))
+    end
+
     test "links to emitted pages, assets, anchors, and external URLs all pass" do
       build =
         build_token(

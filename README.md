@@ -26,9 +26,9 @@
 ---
 
 CherryBomb is a modern take on [Octopress](http://octopress.org): your site is a repo,
-publishing is a task, everything is hackable — without the part where upgrading the
+publishing is a task/push, everything is hackable — without the part where upgrading the
 framework ruins your week. The engine is Elixir, the CLI is `cherry`, and the output
-is plain HTML you can host anywhere.
+is **plain HTML** you can host anywhere.
 
 ## Install
 

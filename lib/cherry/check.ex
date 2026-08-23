@@ -48,10 +48,12 @@ defmodule Cherry.Check do
   defp broken_links(build) do
     targets = link_targets(build)
     base = build.site.base_path
+    deployed = deploy_prefixes(build.site)
 
     for %Page{} = page <- html_pages(build),
         url <- internal_urls(page.content, base),
-        not MapSet.member?(targets, resolve_link(url, base)) do
+        not MapSet.member?(targets, resolve_link(url, base)),
+        not deployed?(url, deployed) do
       %Diagnostic{
         file: page.source,
         rule: "broken-link",
@@ -59,6 +61,19 @@ defmodule Cherry.Check do
         severity: :error
       }
     end
+  end
+
+  # `deploy_paths:` names root-relative prefixes the deployment serves
+  # from beside this build (a sibling build mounted under the same
+  # origin); links under them are the deployment's promise, not ours.
+  defp deploy_prefixes(site) do
+    for prefix <- site.deploy_paths do
+      "/" <> String.trim_leading(prefix, "/")
+    end
+  end
+
+  defp deployed?(url, prefixes) do
+    Enum.any?(prefixes, &String.starts_with?(url, &1))
   end
 
   defp html_pages(build) do

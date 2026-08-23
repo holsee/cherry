@@ -1213,6 +1213,10 @@ video.video-local {
   --icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 128 128'%3E%3Cpath style='line-height:normal;font-variant-ligatures:normal;font-variant-position:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-alternates:normal;font-variant-east-asian:normal;font-feature-settings:normal;font-variation-settings:normal;text-indent:0;text-align:start;text-decoration-line:none;text-decoration-style:solid;text-decoration-color:%23000;text-transform:none;text-orientation:mixed;white-space:normal;shape-padding:0;shape-margin:0;inline-size:0;isolation:auto;mix-blend-mode:normal;solid-color:%23000;solid-opacity:1' d='M11.95 24.348c-5.836 0-10.618 4.867-10.618 10.681v57.942c0 5.814 4.782 10.681 10.617 10.681h104.102c5.835 0 10.617-4.867 10.617-10.681V35.03c0-5.814-4.783-10.681-10.617-10.681H14.898l-.002-.002H11.95zm-.007 9.543h104.108c.625 0 1.076.423 1.076 1.14v57.94c0 .717-.453 1.14-1.076 1.14H11.949c-.623 0-1.076-.423-1.076-1.14V35.029c0-.715.451-1.135 1.07-1.138z' color='%23000' font-weight='400' font-family='sans-serif' overflow='visible'/%3E%3Cpath d='M20.721 84.1V43.9H32.42l11.697 14.78L55.81 43.9h11.696v40.2H55.81V61.044l-11.694 14.78-11.698-14.78V84.1H20.722zm73.104 0L76.28 64.591h11.697V43.9h11.698v20.69h11.698zm0 0'/%3E%3C/svg%3E");
 }
 
+.code-icon--prompt {
+  --icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 128 128'%3E%3Cpath fill-rule='evenodd' d='M64 6a9 9 0 0 1 4.5 16.79V34H92a18 18 0 0 1 18 18v38a18 18 0 0 1-18 18H36a18 18 0 0 1-18-18V52a18 18 0 0 1 18-18h23.5V22.79A9 9 0 0 1 64 6zM36 44a8 8 0 0 0-8 8v38a8 8 0 0 0 8 8h56a8 8 0 0 0 8-8V52a8 8 0 0 0-8-8H36zm8 17a10 10 0 1 1 0 20 10 10 0 0 1 0-20zm40 0a10 10 0 1 1 0 20 10 10 0 0 1 0-20zM8 58a6 6 0 0 1 6 6v14a6 6 0 0 1-12 0V64a6 6 0 0 1 6-6zm112 0a6 6 0 0 1 6 6v14a6 6 0 0 1-12 0V64a6 6 0 0 1 6-6zm-70 56h28a6 6 0 0 1 0 12H50a6 6 0 0 1 0-12z'/%3E%3C/svg%3E");
+}
+
 .code-icon--css {
   --icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 128 128'%3E%3Cpath d='M8.76 1l10.055 112.883 45.118 12.58 45.244-12.626L119.24 1H8.76zm89.591 25.862l-3.347 37.605.01.203-.014.467v-.004l-2.378 26.294-.262 2.336L64 101.607v.001l-.022.019-28.311-7.888L33.75 72h13.883l.985 11.054 15.386 4.17-.004.008v-.002l15.443-4.229L81.075 65H48.792l-.277-3.043-.631-7.129L47.553 51h34.749l1.264-14H30.64l-.277-3.041-.63-7.131L29.401 23h69.281l-.331 3.862z'/%3E%3C/svg%3E");
 }
@@ -1338,6 +1342,11 @@ video.video-local {
 }
 
 } /* @layer theme */
+
+/* The theme's own voice — still the theme layer, so the site's unlayered
+ * overrides (`tokens:` block, custom.css) keep winning by declaration
+ * order, never by specificity arithmetic. */
+@layer theme {
 
 /* ---------- the careers layout: default portfolio view + the CV ---------- */
 
@@ -1761,3 +1770,54 @@ pre,
     margin-inline: 0;
   }
 }
+
+/* ---------- search chrome: plain, whatever the nav does ---------- */
+
+.site-nav .site-search,
+.site-nav .site-search-input,
+.site-nav .site-search-results,
+.site-nav .site-search-results a,
+.site-nav .site-search-title,
+.site-nav .site-search-excerpt,
+.site-nav .site-search-empty {
+  font-family: var(--font-prose);
+  text-transform: none;
+  font-variant-caps: normal;
+  letter-spacing: normal;
+  font-style: normal;
+}
+
+.site-nav .site-search-input {
+  font-size: 0.9375rem;
+}
+
+.site-nav .site-search-results a {
+  font-size: 0.9375rem;
+  font-weight: 400;
+  line-height: 1.4;
+  text-decoration: none;
+}
+
+.site-nav .site-search-title {
+  font-weight: 600;
+}
+
+.site-nav .site-search-date {
+  font-family: var(--font-mono);
+  text-transform: none;
+  letter-spacing: normal;
+}
+
+.site-nav .site-search-results a::before,
+.site-nav .site-search-results a::after,
+.site-nav .site-search-input::before,
+.site-nav .site-search-input::after {
+  content: none;
+}
+
+@media (pointer: coarse) {
+  .site-nav .site-search-input {
+    font-size: 1rem;
+  }
+}
+} /* @layer theme */

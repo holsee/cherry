@@ -1,0 +1,7 @@
+<% import Cherry.Theme.Helpers %><h1>Blog</h1>
+<ul class="post-list transit-list">
+<%= for post <- @posts do %><% vt = "post-" <> String.replace(post.path, ~r/[^a-zA-Z0-9]+/, "-") %><li>
+<time datetime="<%= Date.to_iso8601(post.meta.date) %>"><%= Date.to_iso8601(post.meta.date) %></time>
+<a href="<%= post.url %>" style="view-transition-name: <%= vt %>"><%= h(post.meta.title) %></a>
+</li>
+<% end %></ul>
