@@ -1,0 +1,51 @@
+<% import Cherry.Theme.Helpers %><%
+  # Deterministic survey: posts grouped by their first tag into regions
+  # laid around a ring, each post on a staggered two-column grid inside
+  # its region. Pure data, so the same tree always draws the same map.
+  groups =
+    @posts
+    |> Enum.group_by(fn p -> List.first(p.meta.tags) || "notes" end)
+    |> Enum.sort_by(fn {t, ps} -> {-length(ps), t} end)
+  n = length(groups)
+  radius = fn count -> max(19.0, div(count + 1, 2) * 9.0 + 8.0) end
+  maxrr = groups |> Enum.map(fn {_, ps} -> radius.(length(ps)) end) |> Enum.max(fn -> 0.0 end)
+  ring = if n < 2, do: 0.0, else: 1.05 * maxrr / :math.sin(:math.pi() / n)
+  f = fn v -> :erlang.float_to_binary(v / 1, decimals: 2) end
+%><div class="atlas" data-atlas>
+<header class="atlas-head">
+<h1>Blog</h1>
+<p class="atlas-legend"><span><%= length(@posts) %> posts</span><span><%= n %> regions</span><span class="atlas-hint" data-atlas-hint>drag to pan · wheel to zoom · arrows on the keyboard</span></p>
+<button type="button" class="atlas-toggle" data-atlas-toggle aria-pressed="false">List view</button>
+</header>
+<div class="atlas-viewport" data-atlas-viewport tabindex="0" aria-label="Map of posts; use the arrow keys to pan">
+<div class="atlas-plane" data-atlas-plane>
+<%= for {{tag, posts}, gi} <- Enum.with_index(groups) do %><%
+  a = gi * 2 * :math.pi() / max(n, 1) - :math.pi() / 2
+  cx = ring * :math.cos(a)
+  cy = ring * :math.sin(a) * 0.75
+  count = length(posts)
+  rr = radius.(count)
+%><section class="atlas-region" style="--rx: <%= f.(cx) %>rem; --ry: <%= f.(cy) %>rem; --rr: <%= f.(rr) %>rem">
+<h2 class="atlas-region-name"><a href="<%= href(@site, "blog/tags/" <> tag_slug(tag) <> "/") %>"><%= h(tag) %></a><span><%= count %></span></h2>
+<ul class="atlas-cards">
+<%= for {post, pi} <- Enum.with_index(posts) do %><%
+  rows = div(count + 1, 2)
+  col = rem(pi, 2)
+  row = div(pi, 2)
+  px = cx + (col - 0.5) * 16.5 + (if rem(row, 2) == 1, do: 1.5, else: -1.5)
+  py = cy + (row - (rows - 1) / 2) * 14.0 + (col - 0.5) * 2.0
+  lx = px - cx + rr
+  ly = py - cy + rr * 0.825
+%><li class="atlas-card" style="--ax: <%= f.(px) %>rem; --ay: <%= f.(py) %>rem; --lx: <%= f.(lx) %>rem; --ly: <%= f.(ly) %>rem">
+<a href="<%= post.url %>">
+<time datetime="<%= Date.to_iso8601(post.meta.date) %>"><%= Date.to_iso8601(post.meta.date) %></time>
+<span class="atlas-card-title"><%= h(post.meta.title) %></span>
+<%= if desc = Map.get(post.meta, :description) do %><span class="atlas-card-desc"><%= h(desc) %></span>
+<% end %></a>
+</li>
+<% end %></ul>
+</section>
+<% end %></div>
+<canvas class="atlas-minimap" data-atlas-minimap width="160" height="110" aria-hidden="true"></canvas>
+</div>
+</div>

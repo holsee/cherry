@@ -1,0 +1,16 @@
+<% import Cherry.Theme.Helpers %><%= if @doc.path == "index.html" do %><section class="sheet sheet-home">
+<div class="sheet-block">
+<p class="sheet-ref">SHEET 01 · <%= h(@site.title) %></p>
+<h1 class="sheet-title"><%= h(@doc.meta.title) %></h1>
+<%= if desc = Map.get(@doc.meta, :description) || @site.description do %><p class="sheet-lede"><%= h(desc) %></p>
+<% end %><p class="sheet-actions"><a class="sheet-open" href="<%= href(@site, "blog/") %>">Open the map</a><a class="sheet-read" href="#read">or read the sheet</a></p>
+</div>
+<svg class="sheet-north" viewBox="0 0 40 60" aria-hidden="true"><path d="M20 4 L28 40 L20 34 L12 40 Z" fill="currentColor"/><path d="M20 34 L20 58" stroke="currentColor" stroke-width="1.5"/><text x="20" y="54" text-anchor="middle" font-size="10" font-family="inherit" fill="currentColor">N</text></svg>
+</section>
+<article id="read">
+<%= @doc.html %>
+</article>
+<% else %><article>
+<%= @doc.html %>
+</article>
+<% end %>
