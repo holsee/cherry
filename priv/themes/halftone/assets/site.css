@@ -1591,6 +1591,36 @@ pre,
   border-radius: 0;
 }
 
+/* Nothing in the print shop is rounded: the code header, the copy
+ * button, inline code, video frames and the search results too. */
+.code-head,
+.copy-code,
+code,
+.video-embed,
+.video-embed-frame,
+video.video-local,
+.site-search-results a,
+.site-search-open .site-search-results,
+#search .pagefind-ui__drawer:not(.pagefind-ui__hidden),
+#search .pagefind-ui__result-excerpt mark,
+.cv-tags a,
+.cv-careers .cv-skills a,
+a:focus-visible {
+  border-radius: 0;
+}
+
+.code-head {
+  border-width: 0 0 2px;
+}
+
+.code-block pre {
+  border: 0;
+}
+
+.copy-code {
+  border-width: 2px;
+}
+
 blockquote {
   border-left: 6px solid var(--color-accent);
   font-weight: 600;
