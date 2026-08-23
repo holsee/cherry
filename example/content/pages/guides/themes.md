@@ -13,7 +13,7 @@ Octopress froze every customised blog in time: hand-copied theme files that coul
 theme: "cherrybomb"
 ```
 
-Two ship built-in: `default` (typography-first, Charter serif, quiet) and `cherrybomb` (the brand: neon night wall by dark, poster paper by day, and the one this site wears). Inspect any theme's full API:
+Three ship built-in: `default` (typography-first, Charter serif, quiet), `cherrybomb` (the brand: neon night wall by dark, poster paper by day, and the one this site wears), and `porcelain` (glazed-ceramic ground, Literata serif, sage accent - CSS-only, inheriting the default templates). Inspect any theme's full API:
 
 ```sh
 cherry theme.list

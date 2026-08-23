@@ -6,8 +6,9 @@ defmodule Cherry.Commands.GenTheme do
 
       mix cherry.gen.theme NAME [--from THEME] [--source DIR] [--json]
 
-  Copies the official theme (`--from default`, or `cherrybomb`) into
-  `themes/NAME/` — manifest, templates, stylesheet, islands — and
+  Copies the official theme (`--from default`, `cherrybomb`, or
+  `porcelain`) into `themes/NAME/` — manifest, templates, stylesheet,
+  islands; templates a CSS-only theme inherits are materialised — and
   renames it. Point `cherry.exs` at it with `theme: "themes/NAME"` and
   every file is yours; the swap contract keeps the site building
   throughout.
