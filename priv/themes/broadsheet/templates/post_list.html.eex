@@ -1,0 +1,8 @@
+<% import Cherry.Theme.Helpers %><h1 class="front-head">The latest</h1>
+<div class="front-page">
+<%= for post <- @posts do %><article class="lead">
+<time class="dateline" datetime="<%= Date.to_iso8601(post.meta.date) %>"><%= format_date(post.meta.date) %></time>
+<h2 class="headline"><a href="<%= post.url %>"><%= h(post.meta.title) %></a></h2>
+<%= if desc = Map.get(post.meta, :description) do %><p class="lead-standfirst"><%= h(desc) %></p>
+<% end %></article>
+<% end %></div>

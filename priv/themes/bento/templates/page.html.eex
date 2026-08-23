@@ -1,0 +1,14 @@
+<% import Cherry.Theme.Helpers %><%= if @doc.path == "index.html" do %><section class="bento bento-home">
+<div class="tile tile-hero">
+<%= if @doc.meta.title != @site.title do %><p class="tile-kicker"><%= h(@site.title) %></p>
+<% end %><h1><%= h(@doc.meta.title) %></h1>
+<%= if desc = Map.get(@doc.meta, :description) || @site.description do %><p class="tile-lede"><%= h(desc) %></p>
+<% end %></div>
+<article class="tile tile-body">
+<%= @doc.html %>
+</article>
+</section>
+<% else %><article>
+<%= @doc.html %>
+</article>
+<% end %>

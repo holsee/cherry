@@ -1,0 +1,12 @@
+<% import Cherry.Theme.Helpers %><%= if @doc.path == "index.html" do %><section class="hero hero-show">
+<%= if @doc.meta.title != @site.title do %><p class="hero-kicker"><%= h(@site.title) %></p>
+<% end %><h1 class="hero-title"><%= h(@doc.meta.title) %></h1>
+<%= if desc = Map.get(@doc.meta, :description) || @site.description do %><p class="hero-lede"><%= h(desc) %></p>
+<% end %></section>
+<article class="so-panel">
+<%= @doc.html %>
+</article>
+<% else %><article class="so-panel">
+<%= @doc.html %>
+</article>
+<% end %>
