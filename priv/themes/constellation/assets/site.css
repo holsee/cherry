@@ -917,7 +917,7 @@ video.video-local {
 /* iOS zooms any focused input under 16px; keep the compact look on
  * pointer-precise screens and go 16px where it matters. */
 @media (pointer: coarse) {
-  .site-search-input {
+  .site-search .site-search-input {
     font-size: 1rem;
   }
 }
@@ -1498,6 +1498,8 @@ body {
 
 /* Centred mast: name on top, pill nav beneath. */
 .site-header {
+  position: relative;
+  z-index: 50;
   padding: 1.75rem 0 0;
 }
 
