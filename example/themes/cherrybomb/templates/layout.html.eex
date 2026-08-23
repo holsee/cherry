@@ -1,4 +1,4 @@
-<%!-- cherry:eject theme=cherrybomb version=0.1.0 sha256=d1d200440e383d716a5e42c760022e875b78b0d4b2af16ab56815f56737f4407 --%>
+<%!-- cherry:eject theme=cherrybomb version=0.1.0 sha256=e35349bd72499fd5a72c4cc3d14cd12158ee71d0a87203b03e5e3475ccaa15a6 --%>
 <% import Cherry.Theme.Helpers %><!doctype html>
 <html lang="en">
 <head>
