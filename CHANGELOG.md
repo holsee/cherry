@@ -5,7 +5,7 @@ All notable changes to Cherry are documented here. Format follows
 
 Entries are terse one-liners linked to their PR: `- Thing that changed. (#12)`
 
-## [Unreleased]
+## [0.6.1] — 2026-08-23
 
 ### Fixed
 - topo and erosion no longer shift the page when a slow connection delivers their prose faces after the block window: their metric-matched fallbacks were tuned against the wrong skeleton (Arial standing in for a serif), and are now measured against the loaded faces (Times New Roman for Alegreya at 99.11%, Georgia for Fraunces at 105.31%), taking the late-swap layout shift from 0.13 to under 0.002. (#145)
