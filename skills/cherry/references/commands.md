@@ -157,9 +157,10 @@ Scaffolds a site-local theme from an official one.
 
     mix cherry.gen.theme NAME [--from THEME] [--source DIR] [--json]
 
-Copies the official theme (`--from default`, `cherrybomb`, or
-`porcelain`) into `themes/NAME/` — manifest, templates, stylesheet,
-islands; templates a CSS-only theme inherits are materialised — and
+Copies an official theme (`--from NAME`, default: `default`; the
+error for an unknown name lists them all) into `themes/NAME/` —
+manifest, templates, stylesheet, islands; templates a CSS-only theme
+inherits are materialised into the copy — and
 renames it. Point `cherry.exs` at it with `theme: "themes/NAME"` and
 every file is yours; the swap contract keeps the site building
 throughout.
