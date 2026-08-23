@@ -1579,6 +1579,20 @@ body {
   font-family: inherit;
 }
 
+/* On a phone the field takes its own row under the buttons: the slab
+ * frame is its border, and a rule above separates it from the row. */
+@media (max-width: 44rem) {
+  .slab .site-search {
+    margin-left: 0;
+    border-top: 3px solid var(--color-border);
+  }
+
+  .site-search-input,
+  #search input {
+    border-left: 0;
+  }
+}
+
 .site-footer {
   border: 3px solid var(--color-border);
   border-width: 3px 0;
