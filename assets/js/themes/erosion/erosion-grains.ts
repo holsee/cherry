@@ -70,8 +70,9 @@ if (canvas && ctx) {
   }
 
   function frame(t: number, steps: number): void {
-    // Dim, never clear: the trail is the deposit.
-    ctx!.globalAlpha = 0.06;
+    // Dim, never clear: the trail is the deposit. A faster dim keeps
+    // the tracers short; fainter grains keep them quiet.
+    ctx!.globalAlpha = 0.14;
     ctx!.fillStyle = ground;
     ctx!.fillRect(0, 0, w, h);
     ctx!.globalAlpha = 1;
@@ -82,7 +83,7 @@ if (canvas && ctx) {
         g.y += fy * 0.9 + 0.15;
         g.life -= 1;
         if (g.life <= 0 || g.x < 0 || g.x > w || g.y < 0 || g.y > h) Object.assign(g, born());
-        const a = Math.min(1, g.life / 60) * 0.3;
+        const a = Math.min(1, g.life / 60) * 0.16;
         ctx!.fillStyle = g.hue > 0.82 ? `rgba(${accent}, ${a})` : `rgba(${ink}, ${a * 0.6})`;
         ctx!.fillRect(g.x, g.y, 1.2, 1.2);
       }
