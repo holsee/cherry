@@ -4,7 +4,7 @@
 // existing — the byte-identity test (theme_assets_sync_test) then holds
 // for free.
 import { buildSync } from "esbuild";
-import { readdirSync } from "node:fs";
+import { existsSync, readdirSync } from "node:fs";
 
 const opts = {
   bundle: true,
@@ -27,6 +27,20 @@ for (const theme of themes) {
       entryPoints: [`assets/js/${island}.ts`],
       outfile: `priv/themes/${theme}/assets/${island}.js`,
     });
+  }
+
+  // Theme-local islands (the island convention): a theme owning extra
+  // behaviour keeps its sources in assets/js/themes/<theme>/ and its
+  // layout includes the built file from assets/ like any island.
+  const local = `assets/js/themes/${theme}`;
+  if (existsSync(local)) {
+    for (const entry of readdirSync(local).filter((f) => f.endsWith(".ts"))) {
+      buildSync({
+        ...opts,
+        entryPoints: [`${local}/${entry}`],
+        outfile: `priv/themes/${theme}/assets/${entry.replace(/\.ts$/, ".js")}`,
+      });
+    }
   }
 }
 
