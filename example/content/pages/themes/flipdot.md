@@ -6,7 +6,7 @@ description: "Install, override, and extend the flipdot theme the Cherry way: it
 
 The departure board: titles flip in character by character, the blog index is the board, Doto's dot-matrix face on a dot-grid ground.
 
-See it live in the [exhibition](https://themes.cherrybomb.dev/t/flipdot/), or back in [the gallery](/themes/). Like every official theme, flipdot implements theme contract 1.1: every colour flows through the tokens below, the stylesheet lives in the `theme` cascade layer so your unlayered overrides always win, and any template it does not ship falls back to the default theme's copy.
+See it live in the [exhibition](https://cherrybomb.dev/t/flipdot/), or back in [the gallery](/themes/). Like every official theme, flipdot implements theme contract 1.1: every colour flows through the tokens below, the stylesheet lives in the `theme` cascade layer so your unlayered overrides always win, and any template it does not ship falls back to the default theme's copy.
 
 ### Install
 

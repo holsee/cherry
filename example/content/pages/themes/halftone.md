@@ -6,7 +6,7 @@ description: "Install, override, and extend the halftone theme the Cherry way: i
 
 Risograph: halftone dot screens, hard offset shadows, poster cards and Archivo set wide and loud - a print shop with no JavaScript at all.
 
-See it live in the [exhibition](https://themes.cherrybomb.dev/t/halftone/), or back in [the gallery](/themes/). Like every official theme, halftone implements theme contract 1.1: every colour flows through the tokens below, the stylesheet lives in the `theme` cascade layer so your unlayered overrides always win, and any template it does not ship falls back to the default theme's copy.
+See it live in the [exhibition](https://cherrybomb.dev/t/halftone/), or back in [the gallery](/themes/). Like every official theme, halftone implements theme contract 1.1: every colour flows through the tokens below, the stylesheet lives in the `theme` cascade layer so your unlayered overrides always win, and any template it does not ship falls back to the default theme's copy.
 
 ### Install
 

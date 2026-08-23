@@ -6,7 +6,7 @@ description: "Install, override, and extend the brutalist theme the Cherry way: 
 
 Raw: 3px black borders, Anton headlines the width of the page, a marquee ticker, a table for the index - blue links by day, hazard yellow by night.
 
-See it live in the [exhibition](https://themes.cherrybomb.dev/t/brutalist/), or back in [the gallery](/themes/). Like every official theme, brutalist implements theme contract 1.1: every colour flows through the tokens below, the stylesheet lives in the `theme` cascade layer so your unlayered overrides always win, and any template it does not ship falls back to the default theme's copy.
+See it live in the [exhibition](https://cherrybomb.dev/t/brutalist/), or back in [the gallery](/themes/). Like every official theme, brutalist implements theme contract 1.1: every colour flows through the tokens below, the stylesheet lives in the `theme` cascade layer so your unlayered overrides always win, and any template it does not ship falls back to the default theme's copy.
 
 ### Install
 

@@ -6,7 +6,7 @@ description: "Install, override, and extend the prism theme the Cherry way: its 
 
 Gradient-mesh atmosphere under glass — a live WebGL shader driven by the same tokens as the links.
 
-See it live in the [exhibition](https://themes.cherrybomb.dev/t/prism/), or back in [the gallery](/themes/). Like every official theme, prism implements theme contract 1.1: every colour flows through the tokens below, the stylesheet lives in the `theme` cascade layer so your unlayered overrides always win, and any template it does not ship falls back to the default theme's copy.
+See it live in the [exhibition](https://cherrybomb.dev/t/prism/), or back in [the gallery](/themes/). Like every official theme, prism implements theme contract 1.1: every colour flows through the tokens below, the stylesheet lives in the `theme` cascade layer so your unlayered overrides always win, and any template it does not ship falls back to the default theme's copy.
 
 ### Install
 

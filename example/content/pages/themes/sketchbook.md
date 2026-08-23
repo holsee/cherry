@@ -6,7 +6,7 @@ description: "Install, override, and extend the sketchbook theme the Cherry way:
 
 Drawn by hand: wobbling rules and underlines that draw themselves as they scroll into view, paper grain, taped corners; Shantell Sans over Atkinson Hyperlegible Next.
 
-See it live in the [exhibition](https://themes.cherrybomb.dev/t/sketchbook/), or back in [the gallery](/themes/). Like every official theme, sketchbook implements theme contract 1.1: every colour flows through the tokens below, the stylesheet lives in the `theme` cascade layer so your unlayered overrides always win, and any template it does not ship falls back to the default theme's copy.
+See it live in the [exhibition](https://cherrybomb.dev/t/sketchbook/), or back in [the gallery](/themes/). Like every official theme, sketchbook implements theme contract 1.1: every colour flows through the tokens below, the stylesheet lives in the `theme` cascade layer so your unlayered overrides always win, and any template it does not ship falls back to the default theme's copy.
 
 ### Install
 

@@ -6,7 +6,7 @@ description: "Install, override, and extend the cherrybomb theme the Cherry way:
 
 The brand theme — neon night wall by dark, poster paper by day.
 
-See it live in the [exhibition](https://themes.cherrybomb.dev/t/cherrybomb/), or back in [the gallery](/themes/). Like every official theme, cherrybomb implements theme contract 1.0: every colour flows through the tokens below, the stylesheet lives in the `theme` cascade layer so your unlayered overrides always win, and any template it does not ship falls back to the default theme's copy.
+See it live in the [exhibition](https://cherrybomb.dev/t/cherrybomb/), or back in [the gallery](/themes/). Like every official theme, cherrybomb implements theme contract 1.0: every colour flows through the tokens below, the stylesheet lives in the `theme` cascade layer so your unlayered overrides always win, and any template it does not ship falls back to the default theme's copy.
 
 ### Install
 

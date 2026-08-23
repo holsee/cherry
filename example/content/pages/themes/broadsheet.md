@@ -6,7 +6,7 @@ description: "Install, override, and extend the broadsheet theme the Cherry way:
 
 A newspaper: a centred masthead between double rules, a three-column front page with drop caps, Playfair Display over the system serif.
 
-See it live in the [exhibition](https://themes.cherrybomb.dev/t/broadsheet/), or back in [the gallery](/themes/). Like every official theme, broadsheet implements theme contract 1.1: every colour flows through the tokens below, the stylesheet lives in the `theme` cascade layer so your unlayered overrides always win, and any template it does not ship falls back to the default theme's copy.
+See it live in the [exhibition](https://cherrybomb.dev/t/broadsheet/), or back in [the gallery](/themes/). Like every official theme, broadsheet implements theme contract 1.1: every colour flows through the tokens below, the stylesheet lives in the `theme` cascade layer so your unlayered overrides always win, and any template it does not ship falls back to the default theme's copy.
 
 ### Install
 

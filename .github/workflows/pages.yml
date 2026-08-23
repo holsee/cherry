@@ -38,6 +38,21 @@ jobs:
 
       - run: mix deps.get
       - run: mix cherry.build --source example --out _site
+
+      # The theme exhibition: one demo site per official theme, served
+      # under cherrybomb.dev/t/<theme>/ from the same Pages deployment.
+      - uses: actions/checkout@v7
+        with:
+          repository: holsee/cherry-exhibition
+          path: exhibition
+
+      - run: CHERRY_SRC="$GITHUB_WORKSPACE" bash exhibition/build.sh
+      - run: |
+          mkdir -p _site/t
+          cp -r exhibition/dist/t/. _site/t/
+          cp exhibition/dist/index.html _site/t/index.html
+          cp -r exhibition/dist/shots _site/t/shots
+
       - run: touch _site/.nojekyll
       - run: echo "cherrybomb.dev" > _site/CNAME
 

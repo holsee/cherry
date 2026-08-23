@@ -58,7 +58,7 @@ defmodule GenThemeDocs do
 
     #{description}
 
-    See it live in the [exhibition](https://themes.cherrybomb.dev/t/#{name}/), or back in [the gallery](/themes/). Like every official theme, #{name} implements theme contract #{contract}: every colour flows through the tokens below, the stylesheet lives in the `theme` cascade layer so your unlayered overrides always win, and any template it does not ship falls back to the default theme's copy.
+    See it live in the [exhibition](https://cherrybomb.dev/t/#{name}/), or back in [the gallery](/themes/). Like every official theme, #{name} implements theme contract #{contract}: every colour flows through the tokens below, the stylesheet lives in the `theme` cascade layer so your unlayered overrides always win, and any template it does not ship falls back to the default theme's copy.
 
     ### Install
 

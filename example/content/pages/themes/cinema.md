@@ -6,7 +6,7 @@ description: "Install, override, and extend the cinema theme the Cherry way: its
 
 A film opening: a looping video background under the home title, a transparent mast, Big Shoulders Display over Manrope.
 
-See it live in the [exhibition](https://themes.cherrybomb.dev/t/cinema/), or back in [the gallery](/themes/). Like every official theme, cinema implements theme contract 1.1: every colour flows through the tokens below, the stylesheet lives in the `theme` cascade layer so your unlayered overrides always win, and any template it does not ship falls back to the default theme's copy.
+See it live in the [exhibition](https://cherrybomb.dev/t/cinema/), or back in [the gallery](/themes/). Like every official theme, cinema implements theme contract 1.1: every colour flows through the tokens below, the stylesheet lives in the `theme` cascade layer so your unlayered overrides always win, and any template it does not ship falls back to the default theme's copy.
 
 ### Install
 

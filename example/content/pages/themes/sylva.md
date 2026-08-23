@@ -6,7 +6,7 @@ description: "Install, override, and extend the sylva theme the Cherry way: its 
 
 A living season: leaves, petals or snow drifting behind a serif index grouped by year - the canvas knows what month it is.
 
-See it live in the [exhibition](https://themes.cherrybomb.dev/t/sylva/), or back in [the gallery](/themes/). Like every official theme, sylva implements theme contract 1.1: every colour flows through the tokens below, the stylesheet lives in the `theme` cascade layer so your unlayered overrides always win, and any template it does not ship falls back to the default theme's copy.
+See it live in the [exhibition](https://cherrybomb.dev/t/sylva/), or back in [the gallery](/themes/). Like every official theme, sylva implements theme contract 1.1: every colour flows through the tokens below, the stylesheet lives in the `theme` cascade layer so your unlayered overrides always win, and any template it does not ship falls back to the default theme's copy.
 
 ### Install
 

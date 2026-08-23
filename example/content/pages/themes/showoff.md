@@ -6,7 +6,7 @@ description: "Install, override, and extend the showoff theme the Cherry way: it
 
 Everything at once: an aurora shader, a comet cursor, gradient type, tilting cards, a marquee, magnetic nav and scroll reveals - the theme that shows what the contract allows.
 
-See it live in the [exhibition](https://themes.cherrybomb.dev/t/showoff/), or back in [the gallery](/themes/). Like every official theme, showoff implements theme contract 1.1: every colour flows through the tokens below, the stylesheet lives in the `theme` cascade layer so your unlayered overrides always win, and any template it does not ship falls back to the default theme's copy.
+See it live in the [exhibition](https://cherrybomb.dev/t/showoff/), or back in [the gallery](/themes/). Like every official theme, showoff implements theme contract 1.1: every colour flows through the tokens below, the stylesheet lives in the `theme` cascade layer so your unlayered overrides always win, and any template it does not ship falls back to the default theme's copy.
 
 ### Install
 

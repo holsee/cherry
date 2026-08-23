@@ -1406,6 +1406,141 @@ video.video-local {
   }
 }
 
+/* The gallery: hub-style cards on a wide grid, each screenshot in its
+ * browser window, name and blurb below, demo and customise links. */
+.page-themes main .wrap {
+  max-width: 72rem;
+}
+
+.theme-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(20rem, 1fr));
+  gap: 2rem;
+  margin-top: 2rem;
+}
+
+.tcard {
+  display: flex;
+  flex-direction: column;
+  border: 1px solid var(--color-border);
+  border-radius: 0.9rem;
+  background: var(--color-surface);
+  overflow: hidden;
+  transition: transform 150ms ease, box-shadow 150ms ease, border-color 150ms ease;
+}
+
+.tcard:hover {
+  transform: translateY(-3px);
+  border-color: color-mix(in srgb, var(--color-accent) 55%, var(--color-border));
+  box-shadow: 0 12px 34px color-mix(in srgb, var(--color-accent) 38%, transparent);
+}
+
+.tcard-meta {
+  padding: 0.9rem 1.1rem 1.1rem;
+}
+
+.tcard h2 {
+  margin: 0 0 0.25rem;
+  font-family: var(--font-mono);
+  font-size: 1.125rem;
+}
+
+.tcard h2::after {
+  content: none;
+}
+
+.tcard p {
+  margin: 0;
+  font-size: 0.9375rem;
+  color: var(--color-muted);
+}
+
+.tcard-links {
+  display: flex;
+  gap: 1rem;
+  margin-top: 0.7rem;
+}
+
+.tcard-links a {
+  font-family: var(--font-mono);
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: var(--color-accent);
+  text-decoration: none;
+}
+
+.tcard-links a::after {
+  content: " →";
+}
+
+.tcard-links a:hover {
+  text-decoration: underline;
+  text-underline-offset: 0.2em;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tcard,
+  .tcard:hover {
+    transition: none;
+    transform: none;
+  }
+}
+
+/* The gallery's screenshots sit in little browser windows: a chrome
+ * bar with three lights and an address pill, all drawn from tokens. */
+.page-themes article picture,
+.tcard picture {
+  display: block;
+  margin: 1.25rem 0;
+  border: 1px solid var(--color-border);
+  border-radius: 0.9rem;
+  overflow: hidden;
+  background: var(--color-surface);
+  /* The same glow the hero mark wears on the landing page. */
+  box-shadow:
+    0 1px 2px color-mix(in srgb, var(--color-fg) 8%, transparent),
+    0 12px 34px color-mix(in srgb, var(--color-accent) 38%, transparent);
+}
+
+.page-themes article picture::before,
+.tcard picture::before {
+  content: "";
+  display: block;
+  height: 2.1rem;
+  border-bottom: 1px solid var(--color-border);
+  background:
+    /* the three lights */
+    radial-gradient(circle at 1.1rem 50%, var(--color-accent) calc(0.3rem - 0.75px), transparent 0.3rem),
+    radial-gradient(circle at 2.15rem 50%, color-mix(in srgb, var(--color-accent) 45%, var(--color-muted)) calc(0.3rem - 0.75px), transparent 0.3rem),
+    radial-gradient(circle at 3.2rem 50%, var(--color-border) calc(0.3rem - 0.75px), transparent 0.3rem),
+    /* the address pill */
+    linear-gradient(var(--color-bg), var(--color-bg)) 50% 50% / 42% 1.1rem no-repeat,
+    var(--color-surface);
+  border-start-start-radius: 0.9rem;
+  border-start-end-radius: 0.9rem;
+}
+
+.page-themes article picture img,
+.tcard picture img {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: 0;
+}
+
+@media (max-width: 44rem) {
+  .page-themes article picture::before,
+  .tcard picture::before {
+    height: 1.6rem;
+    background:
+      radial-gradient(circle at 0.9rem 50%, var(--color-accent) calc(0.24rem - 0.75px), transparent 0.24rem),
+      radial-gradient(circle at 1.75rem 50%, color-mix(in srgb, var(--color-accent) 45%, var(--color-muted)) calc(0.24rem - 0.75px), transparent 0.24rem),
+      radial-gradient(circle at 2.6rem 50%, var(--color-border) calc(0.24rem - 0.75px), transparent 0.24rem),
+      linear-gradient(var(--color-bg), var(--color-bg)) 50% 50% / 46% 0.9rem no-repeat,
+      var(--color-surface);
+  }
+}
+
 .hero {
   text-align: center;
   padding: 1rem 0 2.5rem;
@@ -1910,4 +2045,15 @@ video.video-local {
     gap: 0.3rem 0.9rem;
   }
 }
+
+/* Inside a card the window is the card's top half: flush, square
+ * bottom, the glow belongs to the card. */
+.tcard picture {
+  margin: 0;
+  border: 0;
+  border-bottom: 1px solid var(--color-border);
+  border-radius: 0.9rem 0.9rem 0 0;
+  box-shadow: none;
+}
+
 } /* @layer theme */
