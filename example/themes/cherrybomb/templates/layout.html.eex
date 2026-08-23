@@ -9,10 +9,14 @@
      unlayered vendor stylesheet would beat everything in @layer theme. --%><%= @head_extra %><%= if @search == "pagefind" do %><style>@import url("<%= href(@site, "pagefind/pagefind-ui.css") %>") layer(pagefind);</style>
 <% end %><link rel="stylesheet" href="<%= href(@site, "assets/site.css") %>">
 <script>
-/* No-flash: apply the stored theme before first paint. */
+/* No-flash: apply the stored theme before first paint.
+   A ?theme=light|dark query param wins for this view without being
+   stored — shareable forced-rendition links, and what the screenshot
+   harness drives. */
 (function () {
   try {
-    var t = localStorage.getItem("cherry-theme");
+    var m = location.search.match(/[?&]theme=(light|dark)/);
+    var t = m ? m[1] : localStorage.getItem("cherry-theme");
     if (t === "light" || t === "dark") document.documentElement.dataset.theme = t;
   } catch (e) {}
 })();
