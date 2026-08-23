@@ -1604,6 +1604,9 @@ h1 {
   font-size: clamp(3rem, 9vw, 7.5rem);
   line-height: 0.95;
   margin: 0 0 1.5rem;
+  /* Instrument Serif's italic J and f swing left of the em box; a
+   * small inset keeps the first letter on the margin. */
+  padding-left: 0.06em;
 }
 
 h2 {
