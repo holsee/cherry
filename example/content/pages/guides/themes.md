@@ -13,7 +13,7 @@ Octopress froze every customised blog in time: hand-copied theme files that coul
 theme: "cherrybomb"
 ```
 
-Five ship built-in: `default` (typography-first, Charter serif, quiet), `cherrybomb` (the brand: neon night wall by dark, poster paper by day, and the one this site wears), `porcelain` (glazed-ceramic ground, Literata serif, sage accent), `teletype` (all-mono, paper printout by day, amber-phosphor terminal by night), and `prism` (a live gradient mesh under glass surfaces, painted by a 5 KB WebGL shader from the same tokens your links use). Porcelain and teletype are CSS-only; prism ships one template. All inherit the rest from the default theme. Inspect any theme's full API:
+Five ship built-in: `default` (typography-first, Charter serif, quiet), `cherrybomb` (the brand: neon night wall by dark, poster paper by day, and the one this site wears), `porcelain` (glazed-ceramic ground, Literata serif, sage accent), `teletype` (all-mono, paper printout by day, amber-phosphor terminal by night), and `prism` (a live gradient mesh under glass surfaces, painted by a 5 KB WebGL shader from the same tokens your links use). Porcelain and teletype are CSS-only; prism ships one template. All inherit the rest from the default theme. See them all side by side in the [gallery](/themes/) or live at the [exhibition](https://themes.cherrybomb.dev). Inspect any theme's full API:
 
 ```sh
 cherry theme.list

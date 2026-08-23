@@ -8,6 +8,7 @@
   social_image: "og-card.png",
   nav: [
     [label: "Guides", href: "guides/", position: :start],
-    [label: "Docs", href: "docs/", position: :start]
+    [label: "Docs", href: "docs/", position: :start],
+    [label: "Themes", href: "themes/", position: :start]
   ]
 ]
