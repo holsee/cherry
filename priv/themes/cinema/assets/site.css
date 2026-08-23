@@ -1341,6 +1341,11 @@ video.video-local {
 
 } /* @layer theme */
 
+/* The theme's own voice — still the theme layer, so the site's unlayered
+ * overrides (`tokens:` block, custom.css) keep winning by declaration
+ * order, never by specificity arithmetic. */
+@layer theme {
+
 /* ---------- the careers layout: default portfolio view + the CV ---------- */
 
 .page-cv main .wrap {
@@ -1762,3 +1767,4 @@ h3 {
     font-size: 1rem;
   }
 }
+} /* @layer theme */
