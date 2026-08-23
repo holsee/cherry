@@ -118,39 +118,69 @@ if (root && viewport && plane) {
     mctx.strokeRect(ox + cx * s - vw / 2, oy + cy * s - vh / 2, vw, vh);
   }
 
-  // ---- input ----
-  let dragging = false;
+  // ---- input: one pointer pans, two pinch ----
+  const pointers = new Map<number, { x: number; y: number }>();
   let moved = false;
-  let lx = 0;
-  let ly = 0;
+  let pinchDist = 0;
+  let pinchZoom = 1;
+  const zoomAt = (factor: number, px: number, py: number): void => {
+    // Keep the map point under (px, py) fixed while the scale changes.
+    const w = viewport.clientWidth;
+    const h = viewport.clientHeight;
+    const next = Math.min(2.2, Math.max(0.3, factor));
+    const mx = cx + (px - w / 2) / zoom;
+    const my = cy + (py - h / 2) / zoom;
+    cx = mx - (px - w / 2) / next;
+    cy = my - (py - h / 2) / next;
+    zoom = next;
+    tx = cx;
+    ty = cy;
+    tz = zoom;
+    apply();
+  };
   viewport.addEventListener("pointerdown", (e) => {
-    if (e.button !== 0) return;
-    dragging = true;
-    moved = false;
-    lx = e.clientX;
-    ly = e.clientY;
+    if (e.pointerType === "mouse" && e.button !== 0) return;
+    pointers.set(e.pointerId, { x: e.clientX, y: e.clientY });
     viewport.setPointerCapture(e.pointerId);
+    if (pointers.size === 1) {
+      moved = false;
+      root.classList.toggle("is-dragging", true);
+    } else if (pointers.size === 2) {
+      const [p, q] = Array.from(pointers.values()) as [{ x: number; y: number }, { x: number; y: number }];
+      pinchDist = Math.hypot(q.x - p.x, q.y - p.y);
+      pinchZoom = zoom;
+    }
   });
   viewport.addEventListener("pointermove", (e) => {
-    if (!dragging) return;
-    const dx = e.clientX - lx;
-    const dy = e.clientY - ly;
-    if (Math.abs(dx) + Math.abs(dy) > 3) moved = true;
-    lx = e.clientX;
-    ly = e.clientY;
-    tx -= dx / zoom;
-    ty -= dy / zoom;
-    cx = tx;
-    cy = ty;
-    apply();
+    const prev = pointers.get(e.pointerId);
+    if (!prev) return;
+    const cur = { x: e.clientX, y: e.clientY };
+    pointers.set(e.pointerId, cur);
+    if (pointers.size === 1) {
+      const dx = cur.x - prev.x;
+      const dy = cur.y - prev.y;
+      if (Math.abs(dx) + Math.abs(dy) > 3) moved = true;
+      tx -= dx / zoom;
+      ty -= dy / zoom;
+      cx = tx;
+      cy = ty;
+      apply();
+    } else if (pointers.size === 2) {
+      moved = true;
+      const [p, q] = Array.from(pointers.values()) as [{ x: number; y: number }, { x: number; y: number }];
+      const dist = Math.hypot(q.x - p.x, q.y - p.y);
+      const rect = viewport.getBoundingClientRect();
+      if (pinchDist > 0) zoomAt(pinchZoom * (dist / pinchDist), (p.x + q.x) / 2 - rect.left, (p.y + q.y) / 2 - rect.top);
+    }
   });
-  const release = (): void => {
-    dragging = false;
-    root.classList.toggle("is-dragging", false);
+  const release = (e: PointerEvent): void => {
+    pointers.delete(e.pointerId);
+    if (pointers.size === 0) root.classList.toggle("is-dragging", false);
+    if (pointers.size < 2) pinchDist = 0;
   };
   viewport.addEventListener("pointerup", release);
   viewport.addEventListener("pointercancel", release);
-  // A drag must not open the card under the pointer.
+  // A drag or pinch must not open the card under the pointer.
   viewport.addEventListener("click", (e) => {
     if (moved) {
       e.preventDefault();
@@ -158,6 +188,11 @@ if (root && viewport && plane) {
       moved = false;
     }
   }, true);
+  // Double tap or double click zooms in around the point.
+  viewport.addEventListener("dblclick", (e) => {
+    const rect = viewport.getBoundingClientRect();
+    zoomAt(zoom * 1.5, e.clientX - rect.left, e.clientY - rect.top);
+  });
   viewport.addEventListener("wheel", (e) => {
     e.preventDefault();
     if (e.ctrlKey || e.metaKey) {
@@ -196,7 +231,9 @@ if (root && viewport && plane) {
     const list = root.classList.toggle("is-list");
     toggle.setAttribute("aria-pressed", String(list));
     toggle.textContent = list ? "Map view" : "List view";
-    if (!list) {
+    if (list) {
+      plane.style.transform = "";
+    } else {
       fit();
       cx = tx;
       cy = ty;
@@ -206,8 +243,14 @@ if (root && viewport && plane) {
   });
 
   // Paper gets the list.
-  window.addEventListener("beforeprint", () => root.classList.add("is-list"));
-  window.addEventListener("afterprint", () => root.classList.remove("is-list"));
+  window.addEventListener("beforeprint", () => {
+    root.classList.add("is-list");
+    plane.style.transform = "";
+  });
+  window.addEventListener("afterprint", () => {
+    root.classList.remove("is-list");
+    apply();
+  });
 
   window.addEventListener("resize", () => {
     if (!root.classList.contains("is-list")) apply();
