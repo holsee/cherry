@@ -4,7 +4,7 @@ description: The styling ladder, design tokens, light-dark pairs, overlays, prov
 ---
 ## Theming
 
-Two convictions shape everything on this page. First, restyling a site should cost exactly as much ownership as you choose to take, never a fork. Second, whatever you do take ownership of should stay upgradeable, with the tool telling you the truth about what you own. Cherry ships three official themes (`default`, typography-first and quiet; `cherrybomb`, the one you are reading; `porcelain`, a glazed serif restyle that ships no templates of its own) built from the same parts: a `theme.exs` manifest, a declared template inventory, one stylesheet whose every colour flows through tokens.
+Two convictions shape everything on this page. First, restyling a site should cost exactly as much ownership as you choose to take, never a fork. Second, whatever you do take ownership of should stay upgradeable, with the tool telling you the truth about what you own. Cherry ships four official themes (`default`, typography-first and quiet; `cherrybomb`, the one you are reading; `porcelain`, a glazed serif restyle; `teletype`, all-mono for the devlog crowd - the last two CSS-only, shipping no templates of their own) built from the same parts: a `theme.exs` manifest, a declared template inventory, one stylesheet whose every colour flows through tokens.
 
 ### The ladder
 
