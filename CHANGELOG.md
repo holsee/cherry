@@ -5,6 +5,12 @@ All notable changes to Cherry are documented here. Format follows
 
 Entries are terse one-liners linked to their PR: `- Thing that changed. (#12)`
 
+## [Unreleased]
+
+### Fixed
+- topo and erosion no longer shift the page when a slow connection delivers their prose faces after the block window: their metric-matched fallbacks were tuned against the wrong skeleton (Arial standing in for a serif), and are now measured against the loaded faces (Times New Roman for Alegreya at 99.11%, Georgia for Fraunces at 105.31%), taking the late-swap layout shift from 0.13 to under 0.002. (#145)
+- topo's still contour texture (the no-JS ground) no longer flashes for a second before the live relief: the head scriptlet marks the root before first paint, so JS-capable browsers go straight from plain ground to the canvas fade-in. (#145)
+
 ## [0.6.0] — 2026-08-23
 
 ### Added

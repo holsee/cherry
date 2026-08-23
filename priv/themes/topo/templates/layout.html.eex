@@ -18,6 +18,9 @@
     var t = m ? m[1] : localStorage.getItem("cherry-theme");
     if (t === "light" || t === "dark") document.documentElement.dataset.theme = t;
   } catch (e) {}
+  // JS will draw the relief: skip the still CSS contour ground so it
+  // never flashes before the canvas fades in.
+  document.documentElement.className += " js";
 })();
 </script>
 </head>
