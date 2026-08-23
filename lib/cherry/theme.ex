@@ -7,6 +7,11 @@ defmodule Cherry.Theme do
   token manifest. Themes are plain directories so binary-mode sites get
   full themes; the default theme ships in Cherry's `priv/` and goes
   through the exact same loader — theme #1, not privileged code.
+
+  Contract 1.1 adds `inherit_templates: true`: the theme still declares
+  the full inventory but may skip shipping template files, which then
+  resolve to the default theme's copies. A CSS-only theme is a manifest,
+  a `site.css`, and its fonts.
   """
 
   alias Cherry.Site
@@ -22,7 +27,8 @@ defmodule Cherry.Theme do
                      description: [type: :string],
                      cherry_contract: [type: :string, required: true],
                      templates: [type: :keyword_list, required: true],
-                     tokens: [type: :keyword_list, default: []]
+                     tokens: [type: :keyword_list, default: []],
+                     inherit_templates: [type: :boolean, default: false]
                    )
 
   @enforce_keys [:name, :version, :contract, :root, :templates]
@@ -32,7 +38,8 @@ defmodule Cherry.Theme do
             contract: nil,
             root: nil,
             templates: [],
-            tokens: []
+            tokens: [],
+            inherit_templates: false
 
   @type t :: %__MODULE__{
           name: String.t(),
@@ -41,7 +48,8 @@ defmodule Cherry.Theme do
           contract: String.t(),
           root: Path.t(),
           templates: [TemplateSpec.t()],
-          tokens: keyword()
+          tokens: keyword(),
+          inherit_templates: boolean()
         }
 
   @doc "The template names every contract-1.x theme must provide."
@@ -167,7 +175,8 @@ defmodule Cherry.Theme do
          contract: contract,
          root: root,
          templates: TemplateSpec.from_manifest(validated[:templates]),
-         tokens: validated[:tokens]
+         tokens: validated[:tokens],
+         inherit_templates: validated[:inherit_templates]
        }}
     else
       {:error,
@@ -176,6 +185,12 @@ defmodule Cherry.Theme do
     end
   end
 
+  # A theme must declare every required template — the inventory (fixed
+  # names, fixed assigns) is the swap contract. Whether it must also *ship*
+  # them depends on `inherit_templates:` (contract 1.1): an inheriting
+  # theme's declared-but-unshipped templates resolve through the resolver's
+  # framework level (the default theme), so a CSS-only theme is just a
+  # manifest, a stylesheet, and fonts.
   defp conformance_check(%__MODULE__{} = theme) do
     declared = Enum.map(theme.templates, & &1.name)
 
@@ -193,10 +208,11 @@ defmodule Cherry.Theme do
          "theme #{theme.name} does not declare required template(s): " <>
            Enum.map_join(missing_declarations, ", ", &to_string/1)}
 
-      missing_files != [] ->
+      missing_files != [] and not theme.inherit_templates ->
         {:error,
          "theme #{theme.name} declares but does not ship template(s): " <>
-           Enum.map_join(missing_files, ", ", &to_string/1)}
+           Enum.map_join(missing_files, ", ", &to_string/1) <>
+           " — ship them, or set `inherit_templates: true` to fall back to the default theme's"}
 
       true ->
         {:ok, theme}

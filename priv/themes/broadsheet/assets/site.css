@@ -1,0 +1,1754 @@
+/* Cherry broadsheet theme.
+ *
+ * THESIS: the editorial lane - a broadsheet. A centred masthead sits
+ * between double rules with the site's standfirst beneath it; the blog
+ * index is a front page set in three columns with column rules and
+ * drop caps; posts read as a single column with a running head. No
+ * script of its own, and nothing moves.
+ * OWN-WORLD: newsprint daylight / late-edition night dual ground,
+ * oxblood accent, Playfair Display upright + italic (400-900, 34 + 33
+ * KB latin subsets, OFL) for the masthead and headlines, the system
+ * serif for body copy, system mono for datelines; 46rem measure.
+ * STORY: a reader unfolds the front page - masthead, standfirst, three
+ * columns of leads - and turns to a story set wide with a drop cap.
+ * FIRST VIEWPORT: double rule, masthead, standfirst, rule, the nav row,
+ * rule, the first headline.
+ *
+ * Every color lives in a custom property below — templates and component
+ * rules never carry a literal color (gate-enforced). Each color token is
+ * defined twice: a plain light value first (the complete fallback world
+ * for engines without light-dark()), then a light-dark() pair inside
+ * @supports. Forcing a rendition is one property — the toggle sets
+ * [data-theme], which flips color-scheme, and every token follows.
+ *
+ * Everything lives in `@layer theme`, so the site's own overrides — the
+ * `tokens:` config block and `assets/custom.css`, both unlayered — win
+ * the cascade by declaration, never by specificity arithmetic.
+ */
+
+/* The webfont broadsheet ships: Playfair Display, latin subset, upright
+ * + italic variable woff2 (34 + 33 KB), weights 400-900, self-hosted
+ * beside this file; body copy is the system serif. Licence: SIL Open
+ * Font License 1.1 (Copyright 2017 The Playfair Display Project
+ * Authors, github.com/clauseggers/Playfair). */
+@font-face {
+  font-family: "Playfair Display";
+  font-style: normal;
+  font-weight: 400 900;
+  font-display: block;
+  src: url("fonts/playfair-latin.woff2") format("woff2");
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6,
+    U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122,
+    U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+@font-face {
+  font-family: "Playfair Display";
+  font-style: italic;
+  font-weight: 400 900;
+  font-display: block;
+  src: url("fonts/playfair-italic-latin.woff2") format("woff2");
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6,
+    U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122,
+    U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+@font-face {
+  font-family: "Playfair Display Fallback";
+  src: local("Arial");
+  size-adjust: 104.02%;
+  ascent-override: 104.02%;
+  descent-override: 24.13%;
+  line-gap-override: 0.00%;
+}
+
+
+@layer theme {
+
+:root {
+  --color-bg: #f9f7f1;
+  --color-surface: #efece3;
+  --color-fg: #161412;
+  --color-muted: #5a5650;
+  --color-border: #161412;
+  --color-accent: #8a1c1c;
+  --color-accent-strong: #5e1111;
+  --color-selection: #f1dcdc;
+
+  --syn-keyword: #8a1c1c;
+  --syn-string: #1f5f3a;
+  --syn-comment: #7c786f;
+  --syn-function: #5a3a8e;
+  --syn-constant: #1f4f8e;
+  --syn-type: #8a5a12;
+  --syn-variable: #161412;
+  --syn-punct: #5a5650;
+
+  --font-prose: Charter, "Iowan Old Style", "Palatino Linotype", Georgia, serif;
+  --font-mono: ui-monospace, "Cascadia Code", "SF Mono", Consolas, "DejaVu Sans Mono", monospace;
+  --measure: 46rem;
+
+  color-scheme: light;
+}
+
+@supports (color: light-dark(#fff, #000)) {
+  :root {
+    --color-bg: light-dark(#f9f7f1, #141311);
+    --color-surface: light-dark(#efece3, #1d1b18);
+    --color-fg: light-dark(#161412, #e9e4d8);
+    --color-muted: light-dark(#5a5650, #a39d91);
+    --color-border: light-dark(#161412, #e9e4d8);
+    --color-accent: light-dark(#8a1c1c, #e36b6b);
+    --color-accent-strong: light-dark(#5e1111, #f09a9a);
+    --color-selection: light-dark(#f1dcdc, #4a2424);
+
+    --syn-keyword: light-dark(#8a1c1c, #e36b6b);
+    --syn-string: light-dark(#1f5f3a, #86cf9f);
+    --syn-comment: light-dark(#7c786f, #837e74);
+    --syn-function: light-dark(#5a3a8e, #c9a8ff);
+    --syn-constant: light-dark(#1f4f8e, #8fb5f0);
+    --syn-type: light-dark(#8a5a12, #e6b36a);
+    --syn-variable: light-dark(#161412, #e9e4d8);
+    --syn-punct: light-dark(#5a5650, #a39d91);
+
+    color-scheme: light dark;
+  }
+
+  :root[data-theme="light"] {
+    color-scheme: light;
+  }
+
+  :root[data-theme="dark"] {
+    color-scheme: dark;
+  }
+}
+
+/* ---------- base ---------- */
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;
+  background: var(--color-bg);
+  color: var(--color-fg);
+  font-family: var(--font-prose);
+  font-size: 1.125rem;
+  line-height: 1.7;
+}
+
+::selection {
+  background: var(--color-selection);
+}
+
+.wrap {
+  max-width: var(--measure);
+  margin: 0 auto;
+  padding: 0 1.25rem;
+}
+
+a {
+  color: var(--color-accent);
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.15em;
+}
+
+a:hover {
+  color: var(--color-accent-strong);
+}
+
+a:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+
+/* ---------- header / footer ---------- */
+
+.site-header {
+  padding: 2rem 0 0;
+}
+
+.site-header .wrap {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.site-title {
+  font-weight: 700;
+  font-size: 1.0625rem;
+  color: var(--color-fg);
+  text-decoration: none;
+}
+
+.site-title:hover {
+  color: var(--color-accent);
+}
+
+.site-nav {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  font-family: var(--font-mono);
+  font-size: 0.8125rem;
+}
+
+.site-nav a {
+  color: var(--color-muted);
+  text-decoration: none;
+}
+
+.site-nav a:hover {
+  color: var(--color-accent);
+}
+
+main {
+  padding: 3rem 0 4rem;
+}
+
+.site-footer {
+  border-top: 1px solid var(--color-border);
+  padding: 1.25rem 0 2.5rem;
+  font-family: var(--font-mono);
+  font-size: 0.8125rem;
+  color: var(--color-muted);
+}
+
+.site-footer .wrap {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.site-footer a {
+  color: var(--color-muted);
+}
+
+.site-footer a:hover {
+  color: var(--color-accent);
+}
+
+/* Theme toggle: hidden until its script runs; fails soft without JS. */
+.theme-toggle {
+  display: none;
+  align-items: center;
+  gap: 0.4rem;
+  border: 1px solid var(--color-border);
+  border-radius: 999px;
+  background: transparent;
+  color: var(--color-muted);
+  font: inherit;
+  padding: 0.2rem 0.75rem;
+  cursor: pointer;
+}
+
+.theme-toggle[data-ready] {
+  display: inline-flex;
+}
+
+.theme-toggle:hover {
+  color: var(--color-fg);
+  border-color: var(--color-muted);
+}
+
+.theme-toggle:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+}
+
+.theme-toggle svg {
+  width: 0.875rem;
+  height: 0.875rem;
+}
+
+/* ---------- prose ---------- */
+
+h1,
+h2,
+h3 {
+  line-height: 1.25;
+  text-wrap: balance;
+}
+
+h1 {
+  font-size: 1.875rem;
+  font-weight: 700;
+  margin: 0 0 0.75rem;
+}
+
+h2 {
+  font-size: 1.375rem;
+  font-weight: 700;
+  margin: 2.5rem 0 0.75rem;
+}
+
+h3 {
+  font-size: 1.125rem;
+  font-weight: 700;
+  margin: 2rem 0 0.5rem;
+}
+
+p,
+ul,
+ol {
+  margin: 0 0 1.25rem;
+}
+
+blockquote {
+  margin: 1.5rem 0;
+  padding: 0.25rem 0 0.25rem 1.25rem;
+  border-left: 1px solid var(--color-border);
+  color: var(--color-muted);
+}
+
+hr {
+  border: 0;
+  border-top: 1px solid var(--color-border);
+  margin: 2.5rem 0;
+}
+
+img {
+  max-width: 100%;
+  height: auto;
+}
+
+/* Heading deep links: the transform stage appends an empty a.anchor to
+ * every heading. Quiet by default, a # on hover — never in the way. */
+a.anchor {
+  margin-left: 0.35em;
+  text-decoration: none;
+  opacity: 0;
+  transition: opacity 120ms ease;
+}
+
+a.anchor::before {
+  content: "#";
+  color: var(--color-muted);
+}
+
+h1:hover a.anchor,
+h2:hover a.anchor,
+h3:hover a.anchor,
+h4:hover a.anchor,
+a.anchor:focus-visible {
+  opacity: 1;
+}
+
+a.anchor:hover::before,
+a.anchor:focus-visible::before {
+  color: var(--color-accent);
+}
+
+/* GitHub-style alerts (> [!NOTE] …) from the transform stage. Each
+ * variant borrows a hue from the syntax palette — no new tokens. */
+.markdown-alert {
+  --alert-hue: var(--color-accent);
+  margin: 1.5rem 0;
+  padding: 0.75rem 1.25rem 0.5rem;
+  border-left: 1px solid var(--alert-hue);
+  background: color-mix(in srgb, var(--alert-hue) 7%, transparent);
+}
+
+.markdown-alert > p {
+  margin-bottom: 0.75rem;
+}
+
+.markdown-alert-title {
+  font-weight: 700;
+  font-size: 0.8125rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--alert-hue);
+}
+
+.markdown-alert-note {
+  --alert-hue: var(--syn-type);
+}
+
+.markdown-alert-tip {
+  --alert-hue: var(--syn-string);
+}
+
+.markdown-alert-important {
+  --alert-hue: var(--syn-function);
+}
+
+.markdown-alert-warning {
+  --alert-hue: var(--syn-constant);
+}
+
+.markdown-alert-caution {
+  --alert-hue: var(--syn-keyword);
+}
+
+/* The transform stage wraps every table in .table-scroll, so tables keep
+ * their semantics for assistive tech and still scroll on narrow screens. */
+.table-scroll {
+  overflow-x: auto;
+  margin: 0 0 1.25rem;
+}
+
+table {
+  border-collapse: collapse;
+  width: 100%;
+  font-size: 0.9375rem;
+}
+
+.table-scroll table {
+  margin: 0;
+}
+
+th,
+td {
+  text-align: left;
+  padding: 0.5rem 0.75rem;
+  border-bottom: 1px solid var(--color-border);
+}
+
+th {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--color-muted);
+}
+
+/* ---------- metadata ---------- */
+
+.post-meta {
+  font-family: var(--font-mono);
+  font-size: 0.8125rem;
+  color: var(--color-muted);
+  margin: 0 0 2.5rem;
+}
+
+.post-meta a {
+  color: var(--color-muted);
+}
+
+.post-meta a:hover {
+  color: var(--color-accent);
+}
+
+/* ---------- post list ---------- */
+
+.post-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.post-list li {
+  display: flex;
+  align-items: baseline;
+  gap: 1.25rem;
+  padding: 0.45rem 0;
+}
+
+.post-list time {
+  font-family: var(--font-mono);
+  font-size: 0.8125rem;
+  color: var(--color-muted);
+  flex-shrink: 0;
+}
+
+.post-list a {
+  color: var(--color-fg);
+  text-decoration: none;
+}
+
+.post-list a:hover {
+  color: var(--color-accent);
+}
+
+@media (max-width: 34rem) {
+  .post-list li {
+    flex-direction: column;
+    gap: 0.1rem;
+    padding: 0.65rem 0;
+  }
+}
+
+/* ---------- code: the memory moment ---------- */
+
+code {
+  font-family: var(--font-mono);
+  font-size: 0.875em;
+}
+
+:not(pre) > code {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: 4px;
+  padding: 0.1em 0.35em;
+}
+
+pre {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: 6px;
+  padding: 1rem 1.25rem;
+  overflow-x: auto;
+  margin: 1.5rem 0;
+  line-height: 1.6;
+}
+
+pre code {
+  font-size: 0.8125rem;
+  background: none;
+  border: 0;
+  padding: 0;
+}
+
+/* Lumis (html_linked) token classes, colored from the theme's own tokens
+ * so the toggle swaps code and prose as one world. */
+pre.lumis {
+  color: var(--syn-variable);
+}
+
+[class^="l-keyword"],
+[class*=" l-keyword"] {
+  color: var(--syn-keyword);
+}
+
+[class^="l-string"],
+[class*=" l-string"],
+[class^="l-character"] {
+  color: var(--syn-string);
+}
+
+[class^="l-comment"],
+[class*=" l-comment"] {
+  color: var(--syn-comment);
+  font-style: italic;
+}
+
+[class^="l-function"],
+[class*=" l-function"],
+[class^="l-method"] {
+  color: var(--syn-function);
+}
+
+[class^="l-constant"],
+[class*=" l-constant"],
+[class^="l-number"],
+[class^="l-boolean"] {
+  color: var(--syn-constant);
+}
+
+[class^="l-type"],
+[class*=" l-type"],
+[class^="l-module"],
+[class^="l-namespace"],
+[class^="l-attribute"],
+[class^="l-tag"] {
+  color: var(--syn-type);
+}
+
+[class^="l-variable"],
+[class*=" l-variable"],
+[class^="l-property"] {
+  color: var(--syn-variable);
+}
+
+[class^="l-punctuation"],
+[class*=" l-punctuation"],
+[class^="l-operator"] {
+  color: var(--syn-punct);
+}
+
+/* String interpolation symbols read as strings. */
+.l-string-special-symbol {
+  color: var(--syn-constant);
+}
+
+/* ---------- portfolio: the developer story ---------- */
+
+.profile {
+  margin: 0 0 3rem;
+}
+
+.profile h1 {
+  margin-bottom: 0.25rem;
+}
+
+.profile-headline {
+  font-size: 1.125rem;
+  color: var(--color-muted);
+  margin: 0 0 0.75rem;
+}
+
+.profile-meta {
+  font-family: var(--font-mono);
+  font-size: 0.8125rem;
+  color: var(--color-muted);
+  margin: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem 1.1rem;
+}
+
+.profile-meta a {
+  color: var(--color-muted);
+}
+
+.profile-meta a:hover {
+  color: var(--color-accent);
+}
+
+/* The rail: years as waypoints, entries hanging off a hairline. */
+
+.timeline-year {
+  position: relative;
+  border-left: 1px solid var(--color-border);
+  padding: 0 0 1.5rem 1.75rem;
+  margin: 0;
+}
+
+.year-mark {
+  font-family: var(--font-mono);
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--color-muted);
+  margin: 0 0 1.25rem;
+  position: relative;
+}
+
+.year-mark::before {
+  content: "";
+  position: absolute;
+  left: calc(-1.75rem - 4.5px);
+  top: 50%;
+  transform: translateY(-50%);
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--color-accent);
+}
+
+.timeline-entry {
+  margin: 0 0 1.75rem;
+}
+
+.timeline-entry h3 {
+  font-size: 1.0625rem;
+  margin: 0 0 0.2rem;
+}
+
+.entry-kind {
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--color-accent);
+  margin: 0 0 0.15rem;
+}
+
+.entry-meta {
+  font-family: var(--font-mono);
+  font-size: 0.8125rem;
+  color: var(--color-muted);
+  margin: 0 0 0.4rem;
+}
+
+.entry-meta a {
+  color: var(--color-muted);
+  text-decoration-color: var(--color-border);
+}
+
+.entry-meta a:hover {
+  color: var(--color-accent);
+}
+
+.entry-highlights {
+  margin: 0.4rem 0 0.5rem;
+  padding-left: 1.1rem;
+}
+
+.entry-highlights li {
+  margin: 0.15rem 0;
+}
+
+.entry-tags {
+  font-family: var(--font-mono);
+  font-size: 0.8125rem;
+  margin: 0.3rem 0 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.3rem 0.8rem;
+}
+
+.entry-tags a {
+  color: var(--color-muted);
+  text-decoration: none;
+}
+
+.entry-tags a::before {
+  content: "#";
+  opacity: 0.6;
+}
+
+.entry-tags a:hover {
+  color: var(--color-accent);
+}
+
+/* Standing roles, not events: open source sits beside the timeline. */
+
+.oss h2,
+.story-section h2 {
+  font-size: 1.25rem;
+  margin: 2.5rem 0 1rem;
+}
+
+.oss-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.oss-list li {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 0.35rem 0.8rem;
+  padding: 0.35rem 0;
+}
+
+.oss-role {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--color-muted);
+  border: 1px solid var(--color-border);
+  border-radius: 999px;
+  padding: 0.05rem 0.55rem;
+}
+
+.story-lede {
+  color: var(--color-muted);
+  margin-top: -0.5rem;
+}
+
+.story-link {
+  font-family: var(--font-mono);
+  font-size: 0.875rem;
+  margin: -1rem 0 2rem;
+}
+
+/* ---------- the CV: employer-shaped, print-first ---------- */
+
+.cv-header h1 {
+  margin-bottom: 0.25rem;
+}
+
+.cv-headline {
+  font-size: 1.125rem;
+  color: var(--color-muted);
+  margin: 0 0 0.75rem;
+}
+
+.cv-contact {
+  font-family: var(--font-mono);
+  font-size: 0.8125rem;
+  color: var(--color-muted);
+  margin: 0 0 0.3rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem 1.1rem;
+}
+
+.cv-contact a {
+  color: var(--color-muted);
+}
+
+.cv-contact a:hover {
+  color: var(--color-accent);
+}
+
+.cv-updated {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--color-muted);
+  margin: 0 0 2rem;
+}
+
+.cv-section h2 {
+  font-size: 1rem;
+  font-family: var(--font-mono);
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--color-muted);
+  border-bottom: 1px solid var(--color-border);
+  padding-bottom: 0.35rem;
+  margin: 2.25rem 0 1rem;
+}
+
+.cv-entry {
+  margin: 0 0 1.25rem;
+}
+
+.cv-entry h3 {
+  font-size: 1.0625rem;
+  margin: 0 0 0.15rem;
+}
+
+/* Skills are claims with receipts: each links to its story page. */
+
+.cv-skills {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 1.4rem;
+}
+
+.cv-skills li {
+  font-family: var(--font-mono);
+  font-size: 0.875rem;
+}
+
+.cv-skill-years {
+  color: var(--color-muted);
+}
+
+/* ---------- content components ---------- */
+
+/* ::figure — an image that owns its caption. */
+figure {
+  margin: 1.75rem 0;
+}
+
+figure img {
+  display: block;
+}
+
+figcaption {
+  margin-top: 0.5rem;
+  font-family: var(--font-mono);
+  font-size: 0.8125rem;
+  color: var(--color-muted);
+}
+
+/* ::video — a facade at rest: no request leaves the page until the
+ * reader clicks. The island swaps the link for the real embed. */
+.video-embed {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  aspect-ratio: 16 / 9;
+  margin: 1.75rem 0;
+  border: 1px solid var(--color-border);
+  border-radius: 6px;
+  background: var(--color-surface);
+  text-decoration: none;
+}
+
+.video-embed:hover {
+  border-color: var(--color-accent);
+}
+
+.video-embed:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+}
+
+.video-embed-play {
+  position: relative;
+  width: 3.25rem;
+  height: 3.25rem;
+  border-radius: 999px;
+  background: var(--color-accent);
+}
+
+.video-embed-play::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-40%, -50%);
+  border-style: solid;
+  border-width: 0.55rem 0 0.55rem 0.95rem;
+  border-color: transparent transparent transparent var(--color-bg);
+}
+
+.video-embed:hover .video-embed-play {
+  background: var(--color-accent-strong);
+}
+
+.video-embed-title {
+  padding: 0 1rem;
+  font-family: var(--font-mono);
+  font-size: 0.875rem;
+  text-align: center;
+  color: var(--color-fg);
+}
+
+.video-embed-frame,
+video.video-local {
+  display: block;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  margin: 1.75rem 0;
+  border: 1px solid var(--color-border);
+  border-radius: 6px;
+}
+
+video.video-local {
+  background: var(--color-surface);
+}
+
+/* ---------- touch ---------- */
+
+/* Hit areas, not layout: padding grows the target, the negative margin
+ * gives the space back, so nothing moves and small mono links still
+ * clear the WCAG 2.5.8 floor on touch screens. */
+.site-nav a,
+.site-footer a,
+.post-meta a {
+  padding: 0.55rem 0.25rem;
+  margin: -0.55rem -0.25rem;
+}
+
+/* iOS zooms any focused input under 16px; keep the compact look on
+ * pointer-precise screens and go 16px where it matters. */
+@media (pointer: coarse) {
+  .site-search .site-search-input {
+    font-size: 1rem;
+  }
+}
+
+/* Print: black on white, no chrome, never split an entry. */
+
+@media print {
+  :root,
+  :root[data-theme="dark"] {
+    /* One property flips every light-dark() token to its light value —
+     * including the syntax palette, which the pre-light-dark print
+     * rendition could not reach. */
+    color-scheme: light;
+
+    --color-bg: #ffffff;
+    --color-fg: #000000;
+    --color-muted: #444444;
+    --color-border: #bbbbbb;
+    --color-accent: #000000;
+    --color-accent-strong: #000000;
+  }
+
+  .site-header,
+  .site-footer,
+  .theme-toggle,
+  .video-embed {
+    display: none;
+  }
+
+  body {
+    font-size: 11pt;
+  }
+
+  .cv-entry,
+  .cv-section h2 {
+    break-inside: avoid;
+  }
+
+  .cv a {
+    text-decoration: none;
+    color: inherit;
+  }
+
+  .cv-json-link {
+    display: none;
+  }
+}
+
+/* --- Search (Pagefind, opt-in via `search: "pagefind"`) --------------- */
+/* The Pagefind UI colors itself from these bridges to our tokens, so it
+   follows both renditions for free. */
+
+.site-search {
+  position: relative;
+  min-width: 14rem;
+}
+
+#search {
+  --pagefind-ui-primary: var(--color-accent);
+  --pagefind-ui-text: var(--color-fg);
+  --pagefind-ui-background: var(--color-bg);
+  --pagefind-ui-border: var(--color-border);
+  --pagefind-ui-tag: var(--color-surface);
+  --pagefind-ui-font: var(--font-prose);
+  --pagefind-ui-scale: 0.85;
+}
+
+/* The drawer becomes a panel anchored under the input, overlaying the
+   page instead of pushing it down. */
+#search .pagefind-ui__drawer:not(.pagefind-ui__hidden) {
+  position: absolute;
+  top: calc(100% + 0.625rem);
+  right: 0;
+  z-index: 60;
+  width: min(30rem, 88vw);
+  max-height: min(65vh, 30rem);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding: 0.5rem 1.25rem 1.25rem;
+  background: var(--color-bg);
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  box-shadow: 0 14px 40px color-mix(in srgb, black 25%, transparent);
+}
+
+#search .pagefind-ui__message {
+  font-size: 0.8125rem;
+  color: var(--color-muted);
+}
+
+#search .pagefind-ui__result {
+  border-top: 1px solid var(--color-border);
+}
+
+#search .pagefind-ui__result-excerpt mark {
+  background: color-mix(in srgb, var(--color-accent) 22%, transparent);
+  color: var(--color-fg);
+  padding: 0 0.15em;
+  border-radius: 3px;
+}
+
+@media (max-width: 44rem) {
+  .site-header .wrap {
+    flex-wrap: wrap;
+  }
+
+  .site-nav {
+    flex-wrap: wrap;
+  }
+
+  .site-search {
+    order: 10;
+    flex: 1 1 100%;
+    min-width: 0;
+  }
+
+  #search .pagefind-ui__drawer:not(.pagefind-ui__hidden) {
+    left: 0;
+    right: 0;
+    width: auto;
+  }
+}
+
+/* --- Copy buttons on code blocks (copy-code.js island) ---------------- */
+/* The island wraps each pre in .code-copy so the button anchors to the
+   block while the code scrolls beneath it. */
+
+.code-copy {
+  position: relative;
+}
+
+.copy-code {
+  position: absolute;
+  top: 0.5rem;
+  right: 0.5rem;
+  z-index: 2;
+  /* An icon-only square: 28px meets the WCAG 2.5.8 tap floor and covers
+     almost none of the code beneath it. */
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.75rem;
+  height: 1.75rem;
+  padding: 0;
+  color: var(--color-muted);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: 6px;
+  cursor: pointer;
+  /* Visible at rest so blocks read as copyable; full strength on hover. */
+  opacity: 0.55;
+  transition: opacity 120ms ease, color 120ms ease, border-color 120ms ease;
+}
+
+.code-copy:hover .copy-code,
+.code-block:hover .copy-code,
+[data-copy]:hover .copy-code,
+.copy-code:focus-visible {
+  opacity: 1;
+}
+
+.copy-code:hover,
+.copy-code-done {
+  color: var(--color-accent);
+  border-color: color-mix(in srgb, var(--color-accent) 45%, var(--color-border));
+  opacity: 1;
+}
+
+@media (hover: none) {
+  .copy-code {
+    opacity: 1;
+  }
+
+  /* No hover to reveal on touch, so the button is always there: reserve
+     the corner so it never sits on top of the first line of code. */
+  .code-copy pre {
+    padding-top: 2.6rem;
+  }
+}
+
+@media print {
+  .copy-code {
+    display: none;
+  }
+}
+
+/* --- Code block headers (fence info: ```lang title="path") ----------- */
+/* The transform stage wraps a fenced block that names a language or a
+   title in figure.code-block with this bar on top. Icon glyphs are CSS
+   masks painted with currentColor, sourced from devicon (MIT) - the
+   same set editor file trees draw from; .code-icon's own glyph is the
+   generic-file fallback for languages without one. */
+
+.code-block {
+  margin: 1.5rem 0;
+}
+
+.code-block pre {
+  margin: 0;
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+}
+
+.code-head {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin: 0;
+  padding: 0.3rem 0.65rem 0.3rem 1.25rem;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  line-height: 1.6;
+  color: var(--color-muted);
+  background: color-mix(in srgb, var(--color-surface) 55%, var(--color-bg));
+  border: 1px solid var(--color-border);
+  border-bottom: 0;
+  border-radius: 6px 6px 0 0;
+}
+
+.code-lang {
+  color: var(--color-fg);
+  font-weight: 500;
+}
+
+.code-title {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* In the bar the button rides the row; 1.5rem keeps the bar slim while
+   holding the WCAG 24px tap floor. */
+.code-head .copy-code {
+  position: static;
+  margin-left: auto;
+  width: 1.5rem;
+  height: 1.5rem;
+}
+
+.code-icon {
+  width: 0.875rem;
+  height: 0.875rem;
+  flex-shrink: 0;
+  background: currentColor;
+  -webkit-mask: var(--icon) center / contain no-repeat;
+  mask: var(--icon) center / contain no-repeat;
+  --icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 128 128'%3E%3Cpath d='M74 4H28a8 8 0 0 0-8 8v104a8 8 0 0 0 8 8h72a8 8 0 0 0 8-8V38L74 4zm0 14 20 20H74V18zM32 60h64v8H32v-8zm0 20h64v8H32v-8zm0 20h44v8H32v-8z'/%3E%3C/svg%3E");
+}
+
+.code-icon--elixir {
+  --icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 128 128'%3E%3Cpath d='M90.1 80c.8-.5 1.7-1 2.5-1.5 5.6-4.8 3.6-13.5-5.9-25.7.2 6.1 1.2 12.4 2.2 19.1.4 2.6.8 5.3 1.2 8.1zM36 103.2c3.2 13.7 11.3 21.1 20.5 24.2 5.1.9 10.2.7 15.3-.4.8-.4 1.5-.9 2.2-1.4 2-1.3 3.7-2.8 5.3-4.3-6.5-2.8-13.1-8.2-19.3-14.6-4.8-.3-9.5-.8-13.6-1.4-4-.4-7.4-1.1-10.4-2.1zm-1.4-64.5l-.2 1.4c-1.4 7.9-1.5 15-.4 21.2 1.1-7.4 2.6-15 4.7-22.3.3-1.1.6-2.3 1-3.5h.1c1.6-5 3.4-9.8 5.5-14.3-4 5.3-7.5 11.2-10.7 17.5z'/%3E%3Cpath d='M33.9 114c3.5 4.4 7.5 7.6 11.9 9.9-5.6-4.6-10-11.5-12-21.4-3.8-1.4-6.8-3.3-9.1-5.7 1.6 6.4 4.6 12.3 9.2 17.2zm-.6-47c-1.8-5.9-2.4-12.7-1.8-20.4-1.1 2.3-2.1 4.8-3.2 7.3-4.5 13.1-6.5 26.7-4.6 38.7 2.1 3.2 5.2 5.8 9.6 7.6-1.4-7.7-1.5-19.9 0-33.2zm2.2 33.8c0 .1 0 .1 0 0 3.2 1.2 6.8 2 11.1 2.5 3.5.6 7.3 1 11.3 1.3-8.3-9.1-15.6-19.8-20.3-28.6-1.1-1.6-2-3.3-2.8-5-1.1 12.2-.8 23.1.7 29.8zm51.4-28.7c-1.1-7.5-2.3-15.1-2.3-22.3C71.9 38 59.6 25.4 60.1 5.1c-.4.3-.8.6-1.1.9-2.2 1.9-4.4 4-6.5 6.3-4.5 6.4-8.1 14.6-10.9 23.5-1.6 11.6 9.6 34.3 24.5 51.7 7.2-.3 14.8-2.5 22.1-6.5-.4-2.9-.8-5.9-1.3-8.9zm10 39.7c-2.6-.5-5.2-1.4-7.8-2.6-1.3 4.1-3.4 7.9-6.4 11.4 1.1.3 2.1.6 3.1.7 4.2-2.5 8-5.8 11.1-9.5z'/%3E%3Cpath d='M62.1 3.6C61 23.1 72.2 35.5 84.4 46.8 73.7 32.6 67.5 24.1 67.5.3c-1.7.9-3.5 2-5.4 3.3zm21.1 102.2c-5.3.8-10.8 1.1-16.2 1.1-1.4 0-2.9 0-4.3-.1 5.8 5.8 12 10.6 18 13 3.2-3.5 5.3-7.4 6.6-11.6-1.4-.7-2.8-1.5-4.1-2.4zm-2.4-1.6c-2-1.4-3.8-2.9-5.5-4.4-3.5-3.1-6.9-6.5-10.1-10.2-7.1.1-13.7-1.6-19.1-5.1-.8-.5-1.6-1.1-2.3-1.7 4.6 7.3 10.5 15.3 16.9 22 6.5.3 13.5.2 20.1-.6zm9.6.2c-.2 1-.4 1.9-.7 2.9 2.8 1.4 5.7 2.4 8.6 2.7 2.5-3.4 4.5-7.2 5.7-11.3-3.7 2.5-8.4 4.4-13.6 5.7z'/%3E%3Cpath d='M47.2 82.8c4.7 3 10.3 4.6 16.3 4.8-12.3-14.6-21.8-32.4-23.7-45-2.3 8.9-3.1 14.4-4.4 23.6v.2c.9 2.3 2.1 5.1 3.7 8.1 2.1 3.4 4.8 6.2 8.1 8.3zm41.3.4c-6.8 3.7-13.9 5.8-20.7 6.3 2.9 3.2 5.8 6.2 8.8 8.8 2.1 1.9 4.5 3.8 7.1 5.5 1.7-.3 3.3-.6 4.9-.9 1-6.3.7-12.9-.1-19.7zm2.2 19.1c5.6-1.5 10.5-3.6 14.1-6.6 1.5-6.9 1-14.4-2.3-22.4-2.9-4.9-5.7-9.2-8.3-13 4.8 8.8 4.7 15.2-.4 19.6l-.1.1c-1.1.7-2.2 1.4-3.4 2.1.9 6.9 1.3 13.8.4 20.2z'/%3E%3C/svg%3E");
+}
+
+.code-icon--shell {
+  --icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 128 128'%3E%3Cpath d='M112.205 26.129 71.8 2.142A15.326 15.326 0 0 0 64.005 0c-2.688 0-5.386.717-7.796 2.152L15.795 26.14C10.976 28.999 8 34.289 8 40.018v47.975c0 5.729 2.967 11.019 7.796 13.878L56.2 125.858A15.193 15.193 0 0 0 63.995 128a15.32 15.32 0 0 0 7.796-2.142l40.414-23.987c4.819-2.86 7.796-8.16 7.796-13.878V40.007c0-5.718-2.967-11.019-7.796-13.878zm-31.29 74.907.063 3.448c0 .418-.267.889-.588 1.06l-2.046 1.178c-.321.16-.6-.032-.6-.45l-.032-3.394c-1.745.728-3.523.9-4.647.45-.214-.086-.31-.397-.225-.761l.739-3.116c.064-.246.193-.493.364-.643a.725.725 0 0 1 .193-.139c.117-.064.235-.075.332-.032 1.22.407 2.773.214 4.272-.535 1.907-.964 3.18-2.913 3.16-4.84-.022-1.757-.964-2.474-3.267-2.496-2.934.01-5.675-.567-5.718-4.894-.032-3.555 1.81-7.26 4.744-9.595l-.032-3.48c0-.428.257-.9.589-1.07l1.98-1.264c.322-.161.6.043.6.46l.033 3.48c1.456-.578 2.72-.738 3.865-.47.247.064.364.406.257.802l-.77 3.084a1.372 1.372 0 0 1-.354.622.825.825 0 0 1-.203.15c-.108.053-.204.064-.3.053-.525-.118-1.767-.385-3.727.6-2.056 1.038-2.773 2.827-2.763 4.155.022 1.585.825 2.066 3.63 2.11 3.738.064 5.344 1.691 5.387 5.45.053 3.684-1.917 7.657-4.937 10.077zm21.18-5.794c0 .322-.042.621-.31.771l-10.216 6.211c-.267.161-.482.022-.482-.3V99.29c0-.321.193-.492.46-.653l10.067-6.018c.268-.16.482-.022.482.3zm7.026-58.993L70.89 59.86c-4.765 2.784-8.278 5.911-8.288 11.662v47.107c0 3.437 1.392 5.665 3.523 6.318a12.81 12.81 0 0 1-2.12.204c-2.239 0-4.445-.61-6.383-1.757L17.219 99.408c-3.951-2.345-6.403-6.725-6.403-11.426V40.007c0-4.7 2.452-9.08 6.403-11.426L57.634 4.594a12.555 12.555 0 0 1 6.382-1.756c2.238 0 4.444.61 6.382 1.756l40.415 23.987c3.33 1.981 5.579 5.397 6.21 9.242-1.36-2.86-4.38-3.63-7.902-1.574z'/%3E%3C/svg%3E");
+}
+
+.code-icon--javascript {
+  --icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 128 128'%3E%3Cpath d='M2 1v125h125V1H2zm66.119 106.513c-1.845 3.749-5.367 6.212-9.448 7.401-6.271 1.44-12.269.619-16.731-2.059-2.986-1.832-5.318-4.652-6.901-7.901l9.52-5.83c.083.035.333.487.667 1.071 1.214 2.034 2.261 3.474 4.319 4.485 2.022.69 6.461 1.131 8.175-2.427 1.047-1.81.714-7.628.714-14.065C58.433 78.073 58.48 68 58.48 58h11.709c0 11 .06 21.418 0 32.152.025 6.58.596 12.446-2.07 17.361zm48.574-3.308c-4.07 13.922-26.762 14.374-35.83 5.176-1.916-2.165-3.117-3.296-4.26-5.795 4.819-2.772 4.819-2.772 9.508-5.485 2.547 3.915 4.902 6.068 9.139 6.949 5.748.702 11.531-1.273 10.234-7.378-1.333-4.986-11.77-6.199-18.873-11.531-7.211-4.843-8.901-16.611-2.975-23.335 1.975-2.487 5.343-4.343 8.877-5.235l3.688-.477c7.081-.143 11.507 1.727 14.756 5.355.904.916 1.642 1.904 3.022 4.045-3.772 2.404-3.76 2.381-9.163 5.879-1.154-2.486-3.069-4.046-5.093-4.724-3.142-.952-7.104.083-7.926 3.403-.285 1.023-.226 1.975.227 3.665 1.273 2.903 5.545 4.165 9.377 5.926 11.031 4.474 14.756 9.271 15.672 14.981.882 4.916-.213 8.105-.38 8.581z'/%3E%3C/svg%3E");
+}
+
+.code-icon--typescript {
+  --icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 128 128'%3E%3Cpath d='M2 63.91v62.5h125v-125H2zm100.73-5a15.56 15.56 0 017.82 4.5 20.58 20.58 0 013 4c0 .16-5.4 3.81-8.69 5.85-.12.08-.6-.44-1.13-1.23a7.09 7.09 0 00-5.87-3.53c-3.79-.26-6.23 1.73-6.21 5a4.58 4.58 0 00.54 2.34c.83 1.73 2.38 2.76 7.24 4.86 8.95 3.85 12.78 6.39 15.16 10 2.66 4 3.25 10.46 1.45 15.24-2 5.2-6.9 8.73-13.83 9.9a38.32 38.32 0 01-9.52-.1A23 23 0 0180 109.19c-1.15-1.27-3.39-4.58-3.25-4.82a9.34 9.34 0 011.15-.73l4.6-2.64 3.59-2.08.75 1.11a16.78 16.78 0 004.74 4.54c4 2.1 9.46 1.81 12.16-.62a5.43 5.43 0 00.69-6.92c-1-1.39-3-2.56-8.59-5-6.45-2.78-9.23-4.5-11.77-7.24a16.48 16.48 0 01-3.43-6.25 25 25 0 01-.22-8c1.33-6.23 6-10.58 12.82-11.87a31.66 31.66 0 019.49.26zm-29.34 5.24v5.12H57.16v46.23H45.65V69.26H29.38v-5a49.19 49.19 0 01.14-5.16c.06-.08 10-.12 22-.1h21.81z'/%3E%3C/svg%3E");
+}
+
+.code-icon--json {
+  --icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 128 128'%3E%3Cpath d='M45.949 63.71c0 22.998 17.853 30.038 18.223 30.175l.016.005a.823.823 0 0 0-.05.021h-.001v.001h.001c20.306 6.899 40.668-10.261 40.668-41.251 0-17.054-7.595-37.361-27.7-48.894C105.528 10.083 126 34.393 126 63.903c0 35.822-30.182 62.003-61.873 62.003-2.078 0-37.078-10.935-37.216-51.164-.103-30.18 19.208-40.406 32.72-38.442.009.003-13.682 7.806-13.682 27.41z'/%3E%3Cpath fill-rule='evenodd' d='M82.051 64.29c0-22.998-17.853-30.038-18.223-30.175l-.016-.005a.823.823 0 0 0 .05-.021h.001v-.001h-.001C43.556 27.19 23.193 44.35 23.193 75.34c0 17.054 7.595 37.361 27.7 48.894C22.472 117.917 2 93.607 2 64.097 2 28.275 32.182 2.094 63.873 2.094c2.078 0 37.078 10.935 37.216 51.164.103 30.18-19.207 40.406-32.72 38.443-.009-.004 13.682-7.807 13.682-27.411z' clip-rule='evenodd'/%3E%3C/svg%3E");
+}
+
+.code-icon--yaml {
+  --icon: url("data:image/svg+xml,%3Csvg viewBox='0 0 128 128' xmlns='http://www.w3.org/2000/svg'%3E %3Cpath d='m0.5 5.6289 21.754 34.15v21.646h13.959v-21.646l22.775-34.15h-15.02l-13.947 21.988-13.832-21.988h-15.689zm63.994 0.13086-23.66 55.797h11.189l5.1387-12.408h25.266l4.252 12.408h11.957l-22.699-55.797h-11.443zm5.9922 11.773 7.7441 20.475h-16.387l8.6426-20.475zm16.195 50.139v54.451h40.818v-11.635-0.00195h-28.863v-42.814h-11.955zm-64.428 0.011719v54.687h11.734v-37.723l12.279 25.355h9.2344l12.699-26.246v38.602h11.256v-54.676h-15.369l-13.637 24.732-12.986-24.732h-15.211z'/%3E %3C/svg%3E");
+}
+
+.code-icon--markdown {
+  --icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 128 128'%3E%3Cpath style='line-height:normal;font-variant-ligatures:normal;font-variant-position:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-alternates:normal;font-variant-east-asian:normal;font-feature-settings:normal;font-variation-settings:normal;text-indent:0;text-align:start;text-decoration-line:none;text-decoration-style:solid;text-decoration-color:%23000;text-transform:none;text-orientation:mixed;white-space:normal;shape-padding:0;shape-margin:0;inline-size:0;isolation:auto;mix-blend-mode:normal;solid-color:%23000;solid-opacity:1' d='M11.95 24.348c-5.836 0-10.618 4.867-10.618 10.681v57.942c0 5.814 4.782 10.681 10.617 10.681h104.102c5.835 0 10.617-4.867 10.617-10.681V35.03c0-5.814-4.783-10.681-10.617-10.681H14.898l-.002-.002H11.95zm-.007 9.543h104.108c.625 0 1.076.423 1.076 1.14v57.94c0 .717-.453 1.14-1.076 1.14H11.949c-.623 0-1.076-.423-1.076-1.14V35.029c0-.715.451-1.135 1.07-1.138z' color='%23000' font-weight='400' font-family='sans-serif' overflow='visible'/%3E%3Cpath d='M20.721 84.1V43.9H32.42l11.697 14.78L55.81 43.9h11.696v40.2H55.81V61.044l-11.694 14.78-11.698-14.78V84.1H20.722zm73.104 0L76.28 64.591h11.697V43.9h11.698v20.69h11.698zm0 0'/%3E%3C/svg%3E");
+}
+
+.code-icon--prompt {
+  --icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 128 128'%3E%3Cpath fill-rule='evenodd' d='M64 6a9 9 0 0 1 4.5 16.79V34H92a18 18 0 0 1 18 18v38a18 18 0 0 1-18 18H36a18 18 0 0 1-18-18V52a18 18 0 0 1 18-18h23.5V22.79A9 9 0 0 1 64 6zM36 44a8 8 0 0 0-8 8v38a8 8 0 0 0 8 8h56a8 8 0 0 0 8-8V52a8 8 0 0 0-8-8H36zm8 17a10 10 0 1 1 0 20 10 10 0 0 1 0-20zm40 0a10 10 0 1 1 0 20 10 10 0 0 1 0-20zM8 58a6 6 0 0 1 6 6v14a6 6 0 0 1-12 0V64a6 6 0 0 1 6-6zm112 0a6 6 0 0 1 6 6v14a6 6 0 0 1-12 0V64a6 6 0 0 1 6-6zm-70 56h28a6 6 0 0 1 0 12H50a6 6 0 0 1 0-12z'/%3E%3C/svg%3E");
+}
+
+.code-icon--css {
+  --icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 128 128'%3E%3Cpath d='M8.76 1l10.055 112.883 45.118 12.58 45.244-12.626L119.24 1H8.76zm89.591 25.862l-3.347 37.605.01.203-.014.467v-.004l-2.378 26.294-.262 2.336L64 101.607v.001l-.022.019-28.311-7.888L33.75 72h13.883l.985 11.054 15.386 4.17-.004.008v-.002l15.443-4.229L81.075 65H48.792l-.277-3.043-.631-7.129L47.553 51h34.749l1.264-14H30.64l-.277-3.041-.63-7.131L29.401 23h69.281l-.331 3.862z'/%3E%3C/svg%3E");
+}
+
+.code-icon--html {
+  --icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 128 128'%3E%3Cpath d='M9.032 2l10.005 112.093 44.896 12.401 45.02-12.387L118.968 2H9.032zm89.126 26.539l-.627 7.172L97.255 39H44.59l1.257 14h50.156l-.336 3.471-3.233 36.119-.238 2.27L64 102.609v.002l-.034.018-28.177-7.423L33.876 74h13.815l.979 10.919L63.957 89H64v-.546l15.355-3.875L80.959 67H33.261l-3.383-38.117L29.549 25h68.939l-.33 3.539z'/%3E%3C/svg%3E");
+}
+
+.code-icon--rust {
+  --icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 128 128'%3E%3Cpath d='M62.96.242c-.232.135-1.203 1.528-2.16 3.097-2.4 3.94-2.426 3.942-5.65.55-2.098-2.208-2.605-2.612-3.28-2.607-.44.002-.995.152-1.235.332-.24.18-.916 1.612-1.504 3.183-1.346 3.6-1.41 3.715-2.156 3.86-.46.086-1.343-.407-3.463-1.929-1.565-1.125-3.1-2.045-3.411-2.045-1.291 0-1.655.706-2.27 4.4-.78 4.697-.754 4.681-4.988 2.758-1.71-.776-3.33-1.41-3.603-1.41-.274 0-.792.293-1.15.652-.652.652-.653.655-.475 4.246l.178 3.595-.68.364c-.602.322-1.017.283-3.684-.348-3.48-.822-4.216-.8-4.92.15l-.516.693.692 2.964c.38 1.63.745 3.2.814 3.487.067.287-.05.746-.26 1.02-.348.448-.717.49-3.94.44-5.452-.086-5.761.382-3.51 5.3.718 1.56 1.305 2.98 1.305 3.15 0 .898-.717 1.224-3.794 1.727-1.722.28-3.218.51-3.326.51-.107 0-.43.235-.717.522-.937.936-.671 1.816 1.453 4.814 2.646 3.735 2.642 3.75-1.73 5.421-4.971 1.902-5.072 2.37-1.287 5.96 3.525 3.344 3.53 3.295-.461 5.804C.208 62.8.162 62.846.085 63.876c-.093 1.253-.071 1.275 3.538 3.48 3.57 2.18 3.57 2.246.067 5.56C-.078 76.48.038 77 5.013 78.877c4.347 1.64 4.353 1.66 1.702 5.394-1.502 2.117-1.981 3-1.981 3.653 0 1.223.637 1.535 4.44 2.174 3.206.54 3.92.857 3.92 1.741 0 .182-.588 1.612-1.307 3.177-2.236 4.87-1.981 5.275 3.31 5.275 4.93 0 4.799-.15 3.737 4.294-.8 3.35-.813 3.992-.088 4.715.554.556 1.6.494 4.87-.289 2.499-.596 2.937-.637 3.516-.328l.66.354-.177 3.594c-.178 3.593-.177 3.595.475 4.248.358.36.884.652 1.165.652.282 0 1.903-.63 3.604-1.404 4.22-1.916 4.194-1.932 4.973 2.75.617 3.711.977 4.4 2.294 4.4.327 0 1.83-.88 3.34-1.958 2.654-1.893 3.342-2.19 4.049-1.74.182.115.89 1.67 1.572 3.455 1.003 2.625 1.37 3.31 1.929 3.576 1.062.51 1.72.1 4.218-2.62 3.016-3.286 3.14-3.27 5.602.72 2.72 4.406 3.424 4.396 6.212-.089 2.402-3.864 2.374-3.862 5.621-.47 2.157 2.25 2.616 2.61 3.343 2.61.464 0 1.019-.175 1.23-.388.214-.213.92-1.786 1.568-3.496.649-1.71 1.321-3.2 1.495-3.31.687-.436 1.398-.13 4.048 1.752 1.56 1.108 3.028 1.96 3.377 1.96 1.296 0 1.764-.92 2.302-4.535.46-3.082.554-3.378 1.16-3.685.596-.302.954-.2 3.75 1.07 1.701.77 3.323 1.402 3.604 1.402.282 0 .816-.302 1.184-.672l.672-.67-.184-3.448c-.177-3.29-.16-3.468.364-3.943.54-.488.596-.486 3.615.204 3.656.835 4.338.857 5.025.17.671-.67.664-.818-.254-4.69-1.03-4.346-1.168-4.19 3.78-4.19 3.374 0 3.75-.049 4.18-.523.718-.793.547-1.702-.896-4.779-.729-1.55-1.32-2.96-1.315-3.135.024-.914.743-1.227 4.065-1.767 2.033-.329 3.553-.71 3.829-.96.923-.833.584-1.918-1.523-4.873-2.642-3.703-2.63-3.738 1.599-5.297 5.064-1.866 5.209-2.488 1.419-6.09-3.51-3.335-3.512-3.317.333-5.677 4.648-2.853 4.655-3.496.082-6.335-3.933-2.44-3.93-2.406-.405-5.753 3.78-3.593 3.678-4.063-1.295-5.965-4.388-1.679-4.402-1.72-1.735-5.38 1.588-2.18 1.982-2.903 1.982-3.65 0-1.306-.586-1.598-4.436-2.22-3.216-.52-3.924-.835-3.924-1.75 0-.174.588-1.574 1.307-3.113 1.406-3.013 1.604-4.22.808-4.94-.428-.387-1-.443-4.067-.392-3.208.054-3.618.008-4.063-.439-.486-.488-.48-.557.278-3.725.931-3.88.935-3.975.17-4.694-.777-.73-1.262-.718-4.826.121-2.597.612-3.027.653-3.617.337l-.67-.36.185-3.582.186-3.58-.67-.67c-.369-.37-.891-.67-1.163-.67-.27 0-1.884.64-3.583 1.421-2.838 1.306-3.143 1.393-3.757 1.072-.612-.32-.714-.637-1.237-3.829-.603-3.693-.977-4.412-2.288-4.412-.311 0-1.853.925-3.426 2.055-2.584 1.856-2.93 2.032-3.574 1.807-.533-.186-.843-.59-1.221-1.599-.28-.742-.817-2.172-1.194-3.177-.762-2.028-1.187-2.482-2.328-2.482-.637 0-1.213.458-3.28 2.604-3.25 3.375-3.261 3.374-5.65-.545C66.073 1.78 65.075.382 64.81.24c-.597-.32-1.3-.32-1.85.002m2.96 11.798c2.83 2.014 1.326 6.75-2.144 6.75-3.368 0-5.064-4.057-2.66-6.36 1.358-1.3 3.304-1.459 4.805-.39m-3.558 12.507c1.855.705 2.616.282 6.852-3.8l3.182-3.07 1.347.18c4.225.56 12.627 4.25 17.455 7.666 4.436 3.14 10.332 9.534 12.845 13.93l.537.942-2.38 5.364c-1.31 2.95-2.382 5.673-2.382 6.053 0 .878.576 2.267 1.13 2.726.234.195 2.457 1.265 4.939 2.378l4.51 2.025.178 1.148c.23 1.495.26 5.167.052 6.21l-.163.816h-2.575c-2.987 0-2.756-.267-2.918 3.396-.118 2.656-.76 4.124-2.22 5.075-2.377 1.551-6.304 1.27-7.97-.57-.255-.284-.752-1.705-1.105-3.16-1.03-4.254-2.413-6.64-5.193-8.965-.878-.733-1.595-1.418-1.595-1.522 0-.102.965-.915 2.145-1.803 4.298-3.24 6.77-7.012 7.04-10.747.519-7.126-5.158-13.767-13.602-15.92-2.002-.51-2.857-.526-27.624-.526-14.057 0-25.56-.092-25.56-.204 0-.263 3.125-3.295 4.965-4.816 5.054-4.178 11.618-7.465 18.417-9.22l2.35-.61 3.34 3.387c1.839 1.863 3.64 3.5 4.003 3.637M20.3 46.34c1.539 1.008 2.17 3.54 1.26 5.062-1.405 2.356-4.966 2.455-6.373.178-2.046-3.309 1.895-7.349 5.113-5.24m90.672.13c4.026 2.454.906 8.493-3.404 6.586-2.877-1.273-2.97-5.206-.155-6.64 1.174-.6 2.523-.579 3.56.053M32.163 61.5v15.02h-13.28l-.526-2.285c-1.036-4.5-1.472-9.156-1.211-12.969l.182-2.679 4.565-2.047c2.864-1.283 4.706-2.262 4.943-2.625 1.038-1.584.94-2.715-.518-5.933l-.68-1.502h6.523V61.5M70.39 47.132c2.843.74 4.345 2.245 4.349 4.355.002 1.55-.765 2.52-2.67 3.38-1.348.61-1.562.625-10.063.708l-8.686.084v-8.92h7.782c6.078 0 8.112.086 9.288.393m-2.934 21.554c1.41.392 3.076 1.616 3.93 2.888.898 1.337 1.423 3.076 2.667 8.836 1.05 4.87 1.727 6.46 3.62 8.532 2.345 2.566 1.8 2.466 13.514 2.466 5.61 0 10.198.09 10.198.2 0 .197-3.863 4.764-4.03 4.764-.048 0-2.066-.422-4.484-.939-6.829-1.458-7.075-1.287-8.642 6.032l-1.008 4.702-.91.448c-1.518.75-6.453 2.292-9.01 2.82-4.228.87-8.828 1.162-12.871.821-6.893-.585-16.02-3.259-16.377-4.8-.075-.327-.535-2.443-1.018-4.704-.485-2.26-1.074-4.404-1.31-4.764-1.13-1.724-2.318-1.83-7.547-.674-1.98.44-3.708.796-3.84.796-.248 0-3.923-4.249-3.923-4.535 0-.09 8.728-.194 19.396-.23l19.395-.066.07-6.89c.05-4.865-.018-6.997-.23-7.25-.234-.284-1.485-.358-6.011-.358H53.32v-8.36l6.597.001c3.626.002 7.02.12 7.539.264M37.57 100.02c3.084 1.88 1.605 6.804-2.043 6.8-3.74 0-5.127-4.88-1.94-6.826 1.055-.643 2.908-.63 3.983.026m56.48.206c1.512 1.108 2.015 3.413 1.079 4.95-2.46 4.034-8.612.827-6.557-3.419 1.01-2.085 3.695-2.837 5.478-1.53'/%3E%3C/svg%3E");
+}
+
+.code-icon--erlang {
+  --icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 128 128'%3E%3Cpath d='M18.2 24.1L1 24v80h19.7v-.1C11 93.6 5.2 79.2 5.3 62.1 5.2 47 10 33.9 18.2 24.1zm92.9 79.8zM127 24h-16.4c6.2 9 9.6 19.3 9.1 32.1.1 1.2.1 1.9 0 4.9H46.3c0 22 7.7 38.3 27.3 38.4 13.5-.1 23.2-10.1 29.9-20.9l19 9.5c-3.4 6.1-7.2 11-11.4 16H127V24zm-16.5.1zm-45.4 1.5c-9 0-16.8 7.4-17.6 16.4H81c-.3-9-6.8-16.4-15.9-16.4z'/%3E%3C/svg%3E");
+}
+
+.code-icon--python {
+  --icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 128 128'%3E%3Cpath d='M49.33 62h29.159C86.606 62 93 55.132 93 46.981V19.183c0-7.912-6.632-13.856-14.555-15.176-5.014-.835-10.195-1.215-15.187-1.191-4.99.023-9.612.448-13.805 1.191C37.098 6.188 35 10.758 35 19.183V30h29v4H23.776c-8.484 0-15.914 5.108-18.237 14.811-2.681 11.12-2.8 17.919 0 29.53C7.614 86.983 12.569 93 21.054 93H31V79.952C31 70.315 39.428 62 49.33 62zm-1.838-39.11c-3.026 0-5.478-2.479-5.478-5.545 0-3.079 2.451-5.581 5.478-5.581 3.015 0 5.479 2.502 5.479 5.581-.001 3.066-2.465 5.545-5.479 5.545zm74.789 25.921C120.183 40.363 116.178 34 107.682 34H97v12.981C97 57.031 88.206 65 78.489 65H49.33C41.342 65 35 72.326 35 80.326v27.8c0 7.91 6.745 12.564 14.462 14.834 9.242 2.717 17.994 3.208 29.051 0C85.862 120.831 93 116.549 93 108.126V97H64v-4h43.682c8.484 0 11.647-5.776 14.599-14.66 3.047-9.145 2.916-17.799 0-29.529zm-41.955 55.606c3.027 0 5.479 2.479 5.479 5.547 0 3.076-2.451 5.579-5.479 5.579-3.015 0-5.478-2.502-5.478-5.579 0-3.068 2.463-5.547 5.478-5.547z'/%3E%3C/svg%3E");
+}
+
+.code-icon--phoenix {
+  --icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 128 128'%3E%3Cpath d='m48.067 81.275-1.006-.183c-7.145-1.329-11.66-5.65-13.797-12.447-1.337-4.237 1.087-7.355 5.53-7.56 3.637-.17 6.129 1.922 8.33 4.355 2.839 3.135 5.44 6.486 8.228 9.67 4.014 4.583 8.744 7.534 15.215 6.623 5.801-.816 10.86-3.144 15.258-6.977.661-.576 1.387-1.079 2.085-1.615l-.44-.518c-3.694 1.15-7.46 1.533-11.31 1.34-5.823-.292-11.373-1.51-16.338-4.706-4.531-2.918-7.873-6.828-9.46-12.05-1.283-4.22 1.34-7.171 5.715-6.561 1.727.242 3.181 1.02 4.489 2.122 1.062.9 2.083 1.85 3.167 2.722 5.104 4.102 12.235 4.33 18.71-.124-10.648-.048-17.893-5.907-24.256-13.33-2.49-2.905-4.921-5.861-7.464-8.722-4.919-5.533-10.375-10.407-17.844-12.072-9.548-2.122-18.762-.732-27.606 3.316-1.763.807-3.456 1.748-5.273 3.26.9 0 1.39.01 1.88 0 4.46-.117 7.802 1.864 10.212 5.512 1.754 2.655 2.58 5.657 3.21 8.745.935 4.584.45 9.255.991 13.861 1.387 11.837 7.437 20.097 18.701 24.327 4.132 1.552 8.368 2.068 13.072 1.01zm-28.471-54c-1.779.448-3.201-.27-4.666-1.753 2.51-.625 4.724-.868 7.103-.963-.195 1.546-1.107 2.38-2.435 2.716zm58.332 69.126c-.155-1.141-1.13-1.643-1.896-2.238-3.384-2.636-7.345-3.57-11.543-3.646-2.506-.047-4.986-.233-7.347-1.112-1.084-.4-2.298-.92-2.268-2.318.027-1.422 1.263-1.823 2.388-2.159.92-.272 1.87-.45 2.917-.695-2.661-1.706-5.261-1.941-8.726-.547-5.456 2.19-10.833 1.932-16.27-.03-3.07-1.11-5.795-2.85-8.63-4.39l-.078.055a5.395 5.395 0 0 0 .072-.054c-.07-.213-.195-.219-.359-.098l.222.195c2.351 3.855 5.53 6.957 9.121 9.608 6.914 5.103 14.465 8.148 23.302 6.798a121.601 121.601 0 0 1 8.608-1.008c3.61-.292 7.047.726 10.487 1.639zm-16.66-55.31c-.192-.138-.376-.484-.767-.126 3.181 4.302 7.264 7.47 12.182 9.466 7.936 3.221 15.991 3.773 24.23.93 6.397-2.206 10.995-.051 13.384 6.16.346-7.209-3.896-12.462-10.65-13.49-3.8-.58-7.31.68-10.867 1.713-9.905 2.872-19.112 1.455-27.513-4.653zm49.367 28.116c1.29.107 2.582.224 3.872.337-2.916-2.56-6.47-2.765-10.067-2.56-5.473.31-9.417 3.47-13.014 7.24-3.17 3.326-6.034 7.055-10.76 8.392.08.142.1.214.122.214.636.009 1.272.038 1.907.009 6.868-.31 13.338-1.759 18.483-6.744 1.622-1.568 3.07-3.311 4.636-4.94 1.306-1.36 2.887-2.113 4.821-1.95zm-15.954-8.512c-5.125.449-9.576 2.568-13.757 5.364-3.22 2.15-6.66 3.168-10.529 2.497-.68-.12-1.366-.208-2.049-.31l-.023.284c.246.128.483.275.738.378.645.255 1.28.562 1.95.72 7.442 1.77 14.568.864 20.991-3.286 4.049-2.616 8.24-3.112 12.783-2.436.46.07.917.151 1.378.196.426.04.872.463 1.449.005-3.971-2.869-8.25-3.82-12.931-3.412zM76.366 43.298c2.688.093 5.364-.26 8.177-1.93-.825.072-1.172.072-1.508.138-3.875.772-7.351-.073-10.45-2.521-1.135-.898-2.29-1.775-3.442-2.656-4.563-3.488-9.797-4.656-15.52-4.556.091.28.1.474.198.574 6.229 6.297 13.435 10.637 22.545 10.95zm45.07 32.319c-3.853-3.823-9.026-4.314-13.812-.979 3.168.141 5.546 1.152 7.474 3.15a23.695 23.695 0 0 0 2.155 2.015c2.917 2.352 7.858 2.465 10.747.282-3.392-1.323-3.392-1.323-6.563-4.468zm-38.384 29.272c-3.386-6.306-9.079-7.728-15.657-7.305a17.62 17.62 0 0 1 5.426 2.534c1.532 1.068 2.82 2.388 4.09 3.745 2.514 2.685 6.44 4.33 9.043 3.774-1.195-.751-2.257-1.547-2.902-2.748zm31.516-35.215c0-.042.001-.081.004-.124l-.01.011.01-.01-.065-.008.038.032.022.097zM78.114 96.55a13.871 13.871 0 0 0-.132-.076.232.232 0 0 0 .027.079c.01.015.07 0 .106-.003zm-.132-.076-.015-.061-.015.018.015-.018-.04-.01.01.046.043.025z'/%3E%3C/svg%3E");
+}
+
+/* --- Search (built-in engine, opt-in via `search: "cherry"`) ---------- */
+/* Cherry renders these results itself, so there is no third-party UI to
+   bridge: the tokens apply directly and both renditions follow. */
+
+.site-search-input {
+  width: 100%;
+  padding: 0.3rem 0.6rem;
+  font: inherit;
+  font-size: 0.85rem;
+  color: var(--color-fg);
+  background: var(--color-bg);
+  border: 1px solid var(--color-border);
+  border-radius: 6px;
+}
+
+.site-search-input::placeholder {
+  color: var(--color-muted);
+}
+
+.site-search-input:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 1px;
+}
+
+.site-search-results {
+  display: none;
+}
+
+/* Open state is a panel under the input, overlaying the page rather
+   than pushing the header around. */
+.site-search-open .site-search-results {
+  display: block;
+  position: absolute;
+  top: calc(100% + 0.625rem);
+  right: 0;
+  z-index: 60;
+  width: min(30rem, 88vw);
+  max-height: min(65vh, 30rem);
+  padding: 0.35rem;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  background: var(--color-bg);
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  box-shadow: 0 14px 40px color-mix(in srgb, black 25%, transparent);
+}
+
+.site-search-results ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.site-search-results a {
+  display: block;
+  padding: 0.5rem 0.7rem;
+  color: var(--color-fg);
+  text-decoration: none;
+  border-radius: 6px;
+}
+
+.site-search-results a:hover,
+.site-search-results a:focus-visible {
+  background: var(--color-surface);
+}
+
+.site-search-title {
+  display: block;
+  font-weight: 600;
+}
+
+.site-search-date {
+  display: block;
+  margin-top: 0.15rem;
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  color: var(--color-muted);
+}
+
+.site-search-excerpt {
+  display: block;
+  margin-top: 0.25rem;
+  font-size: 0.8125rem;
+  line-height: 1.5;
+  color: var(--color-muted);
+}
+
+.site-search-empty {
+  margin: 0;
+  padding: 0.6rem 0.7rem;
+  font-size: 0.8125rem;
+  color: var(--color-muted);
+}
+
+@media print {
+  .site-search {
+    display: none;
+  }
+}
+
+} /* @layer theme */
+
+/* The theme's own voice — still the theme layer, so the site's unlayered
+ * overrides (`tokens:` block, custom.css) keep winning by declaration
+ * order, never by specificity arithmetic. */
+@layer theme {
+
+/* ---------- the careers layout: default portfolio view + the CV ---------- */
+
+.page-cv main .wrap {
+  max-width: 64rem;
+}
+
+.cv-careers .cv-header {
+  max-width: var(--measure);
+}
+
+.view-switch {
+  display: flex;
+  gap: 1rem;
+  font-family: var(--font-mono);
+  font-size: 0.8125rem;
+  margin: 0 0 1.75rem;
+}
+
+.view-switch a {
+  color: var(--color-muted);
+  text-decoration: none;
+}
+
+.view-switch a:hover {
+  color: var(--color-accent);
+}
+
+.view-switch [aria-current] {
+  color: var(--color-fg);
+  font-weight: 600;
+}
+
+.cv-columns {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 16rem;
+  column-gap: 3.5rem;
+  align-items: start;
+}
+
+.cv-careers .cv-main > .cv-section:first-child h2,
+.cv-careers .cv-side > .cv-side-section:first-child h2 {
+  margin-top: 0.5rem;
+}
+
+.cv-careers .cv-entry {
+  margin-bottom: 1.75rem;
+}
+
+.entry-org {
+  font-weight: 400;
+  color: var(--color-muted);
+}
+
+.cv-tags {
+  list-style: none;
+  margin: 0.6rem 0 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+
+.cv-tags a,
+.cv-careers .cv-skills a {
+  display: inline-block;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  line-height: 1;
+  padding: 0.35rem 0.55rem;
+  border-radius: 0.25rem;
+  background: color-mix(in srgb, var(--color-accent) 12%, var(--color-bg));
+  color: color-mix(in srgb, var(--color-accent) 80%, var(--color-fg));
+  text-decoration: none;
+}
+
+.cv-tags a:hover,
+.cv-tags a:focus-visible,
+.cv-careers .cv-skills a:hover,
+.cv-careers .cv-skills a:focus-visible {
+  background: color-mix(in srgb, var(--color-accent) 24%, var(--color-bg));
+}
+
+.cv-careers .cv-skills {
+  display: flex;
+  flex-direction: column;
+  gap: 0.55rem;
+}
+
+.cv-careers .cv-skills li {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.6rem;
+}
+
+.cv-careers .cv-skills a {
+  font-size: 0.8125rem;
+}
+
+.cv-careers .cv-skill-years {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  white-space: nowrap;
+}
+
+.cv-side .oss-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.cv-side .oss-list li {
+  margin-bottom: 0.6rem;
+}
+
+.cv-side .oss-role {
+  display: block;
+}
+
+@media (max-width: 52rem) {
+  .cv-columns {
+    grid-template-columns: minmax(0, 1fr);
+    row-gap: 1.5rem;
+  }
+}
+
+@media print {
+  .page-cv main .wrap {
+    max-width: none;
+  }
+
+  .cv-columns {
+    display: block;
+  }
+
+  .view-switch {
+    display: none;
+  }
+
+  .cv-tags a,
+  .cv-careers .cv-skills a {
+    background: none;
+    padding: 0;
+  }
+
+  .cv-tags {
+    gap: 0.3rem 0.9rem;
+  }
+}
+
+/* ---------- broadsheet: the masthead, the front page, the drop cap ---------- */
+
+body {
+  font-size: 1.0625rem;
+  line-height: 1.6;
+}
+
+/* The masthead. */
+.masthead {
+  padding: 1.25rem 0 0;
+}
+
+.masthead .wrap {
+  flex-direction: column;
+  align-items: stretch;
+  gap: 0;
+  max-width: 64rem;
+  border-top: 3px double var(--color-border);
+  padding-top: 0.75rem;
+}
+
+.masthead .site-title {
+  display: block;
+  text-align: center;
+  font-family: "Playfair Display", "Playfair Display Fallback", Georgia, serif;
+  font-weight: 900;
+  font-size: clamp(2.5rem, 2rem + 3vw, 4.25rem);
+  line-height: 1;
+  letter-spacing: -0.02em;
+  padding: 0.5rem 0 0.25rem;
+}
+
+.standfirst {
+  margin: 0;
+  text-align: center;
+  font-style: italic;
+  font-size: 0.9375rem;
+  color: var(--color-muted);
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.masthead .site-nav {
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 0.5rem 1.5rem;
+  padding: 0.5rem 0;
+  border-bottom: 3px double var(--color-border);
+  font-family: var(--font-prose);
+  font-variant-caps: all-small-caps;
+  letter-spacing: 0.12em;
+  font-size: 1rem;
+}
+
+.masthead .site-nav a {
+  color: var(--color-fg);
+}
+
+.theme-toggle {
+  border-radius: 0;
+  border-color: var(--color-muted);
+  font-variant-caps: normal;
+  letter-spacing: 0;
+  font-size: 0.75rem;
+}
+
+.site-search-input,
+#search input {
+  border-radius: 0;
+}
+
+main {
+  padding-top: 2.5rem;
+}
+
+.site-footer {
+  border-top: 3px double var(--color-border);
+}
+
+.site-footer .wrap {
+  max-width: 64rem;
+}
+
+h1,
+h2,
+h3,
+.profile h1,
+.cv-header h1 {
+  font-family: "Playfair Display", "Playfair Display Fallback", Georgia, serif;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+
+h1 {
+  font-size: clamp(2rem, 1.4rem + 2.6vw, 3.25rem);
+  line-height: 1.08;
+}
+
+h2 {
+  font-size: 1.5rem;
+  line-height: 1.2;
+}
+
+.post-meta {
+  font-variant-caps: all-small-caps;
+  letter-spacing: 0.08em;
+  font-family: var(--font-prose);
+  font-size: 0.9375rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid var(--color-border);
+}
+
+/* The drop cap on a post's first paragraph. */
+.page-post article > .post-meta + p::first-letter {
+  font-family: "Playfair Display", "Playfair Display Fallback", Georgia, serif;
+  font-weight: 900;
+  font-size: 3.6em;
+  line-height: 0.8;
+  float: left;
+  padding: 0.08em 0.1em 0 0;
+  color: var(--color-accent);
+}
+
+blockquote {
+  font-family: "Playfair Display", "Playfair Display Fallback", Georgia, serif;
+  font-style: italic;
+  font-size: 1.25rem;
+  border-left: 0;
+  border-top: 1px solid var(--color-border);
+  border-bottom: 1px solid var(--color-border);
+  padding: 0.75rem 0;
+  margin: 1.5rem 0;
+  text-align: center;
+}
+
+/* The front page. */
+.page-blog main .wrap {
+  max-width: 64rem;
+}
+
+.front-head {
+  font-size: 1rem;
+  font-variant-caps: all-small-caps;
+  letter-spacing: 0.18em;
+  font-family: var(--font-prose);
+  font-weight: 400;
+  text-align: center;
+  margin: 0 0 1rem;
+}
+
+.front-page {
+  column-count: 3;
+  column-gap: 2rem;
+  column-rule: 1px solid var(--color-border);
+  border-top: 1px solid var(--color-border);
+  padding-top: 1.25rem;
+}
+
+.lead {
+  break-inside: avoid;
+  margin: 0 0 1.5rem;
+  padding-bottom: 1.25rem;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.dateline {
+  display: block;
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--color-muted);
+  margin-bottom: 0.35rem;
+}
+
+.headline {
+  margin: 0 0 0.5rem;
+  font-size: 1.5rem;
+  line-height: 1.1;
+}
+
+.headline a {
+  color: var(--color-fg);
+  text-decoration: none;
+}
+
+.headline a:hover {
+  color: var(--color-accent);
+}
+
+.lead-standfirst {
+  margin: 0;
+  font-size: 0.9375rem;
+  color: var(--color-muted);
+}
+
+@media (max-width: 56rem) {
+  .front-page {
+    column-count: 2;
+  }
+}
+
+@media (max-width: 36rem) {
+  .front-page {
+    column-count: 1;
+  }
+}
+
+@media print {
+  .front-page {
+    column-count: 2;
+  }
+}
+
+/* ---------- search chrome: plain, whatever the nav does ---------- */
+
+.site-nav .site-search,
+.site-nav .site-search-input,
+.site-nav .site-search-results,
+.site-nav .site-search-results a,
+.site-nav .site-search-title,
+.site-nav .site-search-excerpt,
+.site-nav .site-search-empty {
+  font-family: var(--font-prose);
+  text-transform: none;
+  font-variant-caps: normal;
+  letter-spacing: normal;
+  font-style: normal;
+}
+
+.site-nav .site-search-input {
+  font-size: 0.9375rem;
+}
+
+.site-nav .site-search-results a {
+  font-size: 0.9375rem;
+  font-weight: 400;
+  line-height: 1.4;
+  text-decoration: none;
+}
+
+.site-nav .site-search-title {
+  font-weight: 600;
+}
+
+.site-nav .site-search-date {
+  font-family: var(--font-mono);
+  text-transform: none;
+  letter-spacing: normal;
+}
+
+.site-nav .site-search-results a::before,
+.site-nav .site-search-results a::after,
+.site-nav .site-search-input::before,
+.site-nav .site-search-input::after {
+  content: none;
+}
+
+@media (pointer: coarse) {
+  .site-nav .site-search-input {
+    font-size: 1rem;
+  }
+}
+} /* @layer theme */

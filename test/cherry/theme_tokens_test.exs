@@ -5,8 +5,9 @@ defmodule Cherry.ThemeTokensTest do
 
   @color_literal ~r/#[0-9a-fA-F]{3,8}\b|rgba?\(|hsla?\(|oklch\(/
 
-  # Every official theme obeys the same token discipline.
-  for name <- ["default", "cherrybomb"] do
+  # Every official theme obeys the same token discipline; a new theme
+  # joins the gate by existing under priv/themes/.
+  for name <- Theme.builtin_names() do
     describe "the #{name} theme" do
       @root Theme.builtin_root(name)
 

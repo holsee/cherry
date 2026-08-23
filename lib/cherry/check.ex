@@ -48,10 +48,12 @@ defmodule Cherry.Check do
   defp broken_links(build) do
     targets = link_targets(build)
     base = build.site.base_path
+    deployed = deploy_prefixes(build.site)
 
     for %Page{} = page <- html_pages(build),
         url <- internal_urls(page.content, base),
-        not MapSet.member?(targets, resolve_link(url, base)) do
+        not MapSet.member?(targets, resolve_link(url, base)),
+        not deployed?(url, deployed) do
       %Diagnostic{
         file: page.source,
         rule: "broken-link",
@@ -59,6 +61,19 @@ defmodule Cherry.Check do
         severity: :error
       }
     end
+  end
+
+  # `deploy_paths:` names root-relative prefixes the deployment serves
+  # from beside this build (a sibling build mounted under the same
+  # origin); links under them are the deployment's promise, not ours.
+  defp deploy_prefixes(site) do
+    for prefix <- site.deploy_paths do
+      "/" <> String.trim_leading(prefix, "/")
+    end
+  end
+
+  defp deployed?(url, prefixes) do
+    Enum.any?(prefixes, &String.starts_with?(url, &1))
   end
 
   defp html_pages(build) do
@@ -85,23 +100,30 @@ defmodule Cherry.Check do
     |> Enum.filter(&internal?(&1, base))
   end
 
-  # Protocol-relative URLs (`//host/…`) are external even though they
-  # start with the base path.
-  defp internal?(url, base) do
-    String.starts_with?(url, base) and not String.starts_with?(url, "//")
+  # Every root-absolute URL is a claim about this site, including one that
+  # escapes the base path (`/blog/` on a site built under `/t/prism/`):
+  # that page is not emitted either. Protocol-relative URLs (`//host/…`)
+  # are external.
+  defp internal?(url, _base) do
+    String.starts_with?(url, "/") and not String.starts_with?(url, "//")
   end
 
   defp resolve_link(url, base) do
-    rel =
-      url
-      |> String.trim_leading(base)
-      |> String.split(~r/[?#]/, parts: 2)
-      |> hd()
+    if String.starts_with?(url, base) do
+      rel =
+        url
+        |> String.trim_leading(base)
+        |> String.split(~r/[?#]/, parts: 2)
+        |> hd()
 
-    cond do
-      rel == "" -> "index.html"
-      String.ends_with?(rel, "/") -> rel <> "index.html"
-      true -> rel
+      cond do
+        rel == "" -> "index.html"
+        String.ends_with?(rel, "/") -> rel <> "index.html"
+        true -> rel
+      end
+    else
+      # Outside the base: nothing in the build can satisfy it.
+      {:outside_base, url}
     end
   end
 

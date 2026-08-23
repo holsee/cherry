@@ -6,8 +6,10 @@ defmodule Cherry.Commands.GenTheme do
 
       mix cherry.gen.theme NAME [--from THEME] [--source DIR] [--json]
 
-  Copies the official theme (`--from default`, or `cherrybomb`) into
-  `themes/NAME/` — manifest, templates, stylesheet, islands — and
+  Copies an official theme (`--from NAME`, default: `default`; the
+  error for an unknown name lists them all) into `themes/NAME/` —
+  manifest, templates, stylesheet, islands; templates a CSS-only theme
+  inherits are materialised into the copy — and
   renames it. Point `cherry.exs` at it with `theme: "themes/NAME"` and
   every file is yours; the swap contract keeps the site building
   throughout.
@@ -73,9 +75,28 @@ defmodule Cherry.Commands.GenTheme do
       File.mkdir_p!(Path.dirname(dest))
       File.cp_r!(Theme.builtin_root(from), dest)
       rename_manifest(dest, name, from)
+      materialise_inherited(dest, from)
 
       {:ok, %{path: Path.join("themes", name), name: name, from: from}}
     end
+  end
+
+  # An inheriting theme (contract 1.1) does not ship every declared
+  # template; the fork should, so it stays self-contained and editable.
+  # Copy the framework's file for each declared template the copy lacks.
+  defp materialise_inherited(dest, from) do
+    with {:ok, theme} <- Theme.load(Theme.builtin_root(from)) do
+      for spec <- theme.templates,
+          target = Path.join([dest, "templates", "#{spec.name}.html.eex"]),
+          not File.exists?(target),
+          source = Path.join([Theme.default_root(), "templates", "#{spec.name}.html.eex"]),
+          File.exists?(source) do
+        File.mkdir_p!(Path.dirname(target))
+        File.cp!(source, target)
+      end
+    end
+
+    :ok
   end
 
   # The copy keeps everything except the identity: name and a fresh version.

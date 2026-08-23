@@ -1,0 +1,20 @@
+<% import Cherry.Theme.Helpers %><%= if @doc.path == "index.html" do %><section class="hero hero-film">
+<%!-- The film: muted, looping, poster first. cinema-hero.js pauses it
+     for reduced motion, data saver, and while scrolled out of view. --%>
+<video class="hero-video" autoplay muted loop playsinline preload="metadata" poster="<%= href(@site, "assets/hero-poster.jpg") %>" aria-hidden="true" tabindex="-1">
+<source src="<%= href(@site, "assets/hero.mp4") %>" type="video/mp4">
+</video>
+<div class="hero-card">
+<%= if @doc.meta.title != @site.title do %><p class="hero-kicker"><%= h(@site.title) %></p>
+<% end %><h1 class="hero-title"><%= h(@doc.meta.title) %></h1>
+<%= if desc = Map.get(@doc.meta, :description) || @site.description do %><p class="hero-lede"><%= h(desc) %></p>
+<% end %><a class="hero-cue" href="#read">Scroll</a>
+</div>
+</section>
+<article id="read">
+<%= @doc.html %>
+</article>
+<% else %><article>
+<%= @doc.html %>
+</article>
+<% end %>

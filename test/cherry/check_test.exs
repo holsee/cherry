@@ -29,6 +29,18 @@ defmodule Cherry.CheckTest do
       assert diagnostic.message =~ "/nope/"
     end
 
+    test "a link under a declared deploy path is the deployment's promise" do
+      site = %{site([]) | deploy_paths: ["t/"]}
+
+      build =
+        build_token(
+          site: site,
+          pages: [html_page("about/index.html", ~s(<a href="/t/prism/">demo</a>))]
+        )
+
+      assert [] = errors(Check.run(build))
+    end
+
     test "links to emitted pages, assets, anchors, and external URLs all pass" do
       build =
         build_token(
@@ -67,6 +79,20 @@ defmodule Cherry.CheckTest do
 
       assert [%Diagnostic{rule: "broken-link", message: message}] = errors(Check.run(build))
       assert message =~ "/repo/gone/"
+    end
+
+    test "a root-absolute link that escapes the base path is an error" do
+      build =
+        build_token(
+          site: site(base_path: "/repo/"),
+          pages: [
+            html_page("index.html", ~s(<a href="/about/">escapes</a>)),
+            html_page("about/index.html", "<p>about</p>")
+          ]
+        )
+
+      assert [%Diagnostic{rule: "broken-link", message: message}] = errors(Check.run(build))
+      assert message =~ "/about/"
     end
   end
 

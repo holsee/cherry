@@ -1,0 +1,14 @@
+<% import Cherry.Theme.Helpers %><h1 class="board-title" data-flip>Departures</h1>
+<table class="board">
+<thead>
+<tr><th scope="col">Date</th><th scope="col">Title</th><th scope="col" class="board-tags">Tags</th><th scope="col" class="board-status">Status</th></tr>
+</thead>
+<tbody>
+<%= for {post, i} <- Enum.with_index(@posts) do %><tr>
+<td><time datetime="<%= Date.to_iso8601(post.meta.date) %>"><%= Date.to_iso8601(post.meta.date) %></time></td>
+<td><a href="<%= post.url %>" data-flip><%= h(post.meta.title) %></a></td>
+<td class="board-tags"><%= for tag <- post.meta.tags do %><a href="<%= href(@site, "blog/tags/" <> tag_slug(tag) <> "/") %>"><%= h(tag) %></a> <% end %></td>
+<td class="board-status"><span class="board-flag <%= if i == 0, do: "is-new", else: "" %>" data-flip><%= if i == 0, do: "NEW", else: "ON TIME" %></span></td>
+</tr>
+<% end %></tbody>
+</table>

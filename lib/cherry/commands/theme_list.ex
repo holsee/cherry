@@ -76,7 +76,15 @@ defmodule Cherry.Commands.ThemeList do
       Enum.map(data.templates, fn template ->
         state = if template.overlay, do: " [overlay: #{template.overlay}]", else: ""
 
-        "  #{String.pad_trailing(template.name, 10)} #{template.resolves_from}#{state}" <>
+        # "framework" means the theme does not ship this template and the
+        # default theme's copy renders instead — worth saying out loud.
+        level =
+          case template.resolves_from do
+            "framework" -> "inherited (framework)"
+            other -> other
+          end
+
+        "  #{String.pad_trailing(template.name, 10)} #{level}#{state}" <>
           "\n    assigns: #{Enum.join(template.assigns, ", ")}"
       end)
 

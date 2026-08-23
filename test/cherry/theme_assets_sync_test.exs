@@ -3,8 +3,9 @@ defmodule Cherry.ThemeAssetsSyncTest do
 
   @moduledoc """
   The client-side islands are compiled from assets/js/ into every official
-  theme by `npm run build`. Both themes must carry byte-identical copies,
-  so a rebuild that only lands in one theme cannot ship.
+  theme by `npm run build` (build.mjs discovers themes from priv/themes).
+  All themes must carry byte-identical copies, so a rebuild that only
+  lands in some themes cannot ship.
   """
 
   @islands ~w(theme-toggle.js copy-code.js video-embed.js)
@@ -15,7 +16,7 @@ defmodule Cherry.ThemeAssetsSyncTest do
       themes_dir = Path.join(:code.priv_dir(:cherry), "themes")
 
       [reference | rest] =
-        for theme <- ~w(default cherrybomb) do
+        for theme <- Cherry.Theme.builtin_names() do
           path = Path.join([themes_dir, theme, "assets", island])
           assert File.regular?(path), "#{theme} is missing assets/#{island}"
           {theme, File.read!(path)}

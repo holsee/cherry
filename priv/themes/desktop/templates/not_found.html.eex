@@ -1,0 +1,8 @@
+<% import Cherry.Theme.Helpers %><div class="dialog" role="alert">
+<div class="dialog-icon" aria-hidden="true">!</div>
+<div class="dialog-body">
+<h1>The page could not be found.</h1>
+<p>The item may have been moved or renamed. Check the address, or go back to the start.</p>
+<p class="dialog-actions"><a class="btn btn-default" href="<%= href(@site, "") %>">OK</a><a class="btn" href="<%= href(@site, "blog/") %>">Blog</a></p>
+</div>
+</div>

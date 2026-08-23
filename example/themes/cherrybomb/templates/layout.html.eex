@@ -1,4 +1,4 @@
-<%!-- cherry:eject theme=cherrybomb version=0.1.0 sha256=d1d200440e383d716a5e42c760022e875b78b0d4b2af16ab56815f56737f4407 --%>
+<%!-- cherry:eject theme=cherrybomb version=0.1.0 sha256=e35349bd72499fd5a72c4cc3d14cd12158ee71d0a87203b03e5e3475ccaa15a6 --%>
 <% import Cherry.Theme.Helpers %><!doctype html>
 <html lang="en">
 <head>
@@ -9,10 +9,14 @@
      unlayered vendor stylesheet would beat everything in @layer theme. --%><%= @head_extra %><%= if @search == "pagefind" do %><style>@import url("<%= href(@site, "pagefind/pagefind-ui.css") %>") layer(pagefind);</style>
 <% end %><link rel="stylesheet" href="<%= href(@site, "assets/site.css") %>">
 <script>
-/* No-flash: apply the stored theme before first paint. */
+/* No-flash: apply the stored theme before first paint.
+   A ?theme=light|dark query param wins for this view without being
+   stored — shareable forced-rendition links, and what the screenshot
+   harness drives. */
 (function () {
   try {
-    var t = localStorage.getItem("cherry-theme");
+    var m = location.search.match(/[?&]theme=(light|dark)/);
+    var t = m ? m[1] : localStorage.getItem("cherry-theme");
     if (t === "light" || t === "dark") document.documentElement.dataset.theme = t;
   } catch (e) {}
 })();

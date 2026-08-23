@@ -64,6 +64,8 @@ tokens: [
 
 Change values in the manifest, shapes in the CSS. The live-reloading `cherry serve` makes this loop immediate.
 
+If the stylesheet *is* your whole theme, you can skip the templates entirely: keep the declared inventory in the manifest and add `inherit_templates: true`. Every template you do not ship renders with the default theme's copy, and `theme.list` marks it `inherited (framework)`. Ship a template file later and it wins over the inherited one, file by file.
+
 ## 4 · Templates, in either language
 
 The nine templates are EEx, and you can edit them as they are. But a theme of your own is also the natural place for the HEEx lane: delete a template's `.eex` and write the `.heex`, or keep both and let the extension decide, since `.heex` outranks `.eex` at the same level:

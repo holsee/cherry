@@ -26,9 +26,9 @@
 ---
 
 CherryBomb is a modern take on [Octopress](http://octopress.org): your site is a repo,
-publishing is a task, everything is hackable — without the part where upgrading the
+publishing is a task/push, everything is hackable — without the part where upgrading the
 framework ruins your week. The engine is Elixir, the CLI is `cherry`, and the output
-is plain HTML you can host anywhere.
+is **plain HTML** you can host anywhere.
 
 ## Install
 
@@ -60,12 +60,12 @@ mix cherry.new mysite
 The scaffold is a complete site: content directories, a `cherry.exs` config, a first
 post, a GitHub Pages deploy workflow, an `AGENTS.md` describing the publish loop, and
 a `mix.exs` that depends on the cherry release matching the installer — from there
-the site's own `{:cherry, "~> 0.5.0"}` dependency pulls the real framework:
+the site's own `{:cherry, "~> 0.6.0"}` dependency pulls the real framework:
 
 ```elixir
 def deps do
   [
-    {:cherry, "~> 0.5.0"}
+    {:cherry, "~> 0.6.0"}
   ]
 end
 ```
