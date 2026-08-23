@@ -6,7 +6,12 @@ description: "Install, override, and extend the warp theme the Cherry way: its t
 
 Velocity: a WebGL warp field of light streaks under a transparent mast and a banner title on every page, set in Syne.
 
-See it live in the [exhibition](https://cherrybomb.dev/t/warp/), or back in [the gallery](/themes/). Like every official theme, warp implements theme contract 1.1: every colour flows through the tokens below, the stylesheet lives in the `theme` cascade layer so your unlayered overrides always win, and any template it does not ship falls back to the default theme's copy.
+<figure class="theme-hero">
+<picture><source srcset="/images/themes/warp-dark.png" media="(prefers-color-scheme: dark)"><img src="/images/themes/warp-light.png" alt="The warp theme home page" width="1200" height="750"></picture>
+<p class="theme-hero-actions"><a class="button" href="/t/warp/">Live demo</a></p>
+</figure>
+
+Like every official theme in [the gallery](/themes/), warp implements theme contract 1.1: every colour flows through the tokens below, the stylesheet lives in the `theme` cascade layer so your unlayered overrides always win, and any template it does not ship falls back to the default theme's copy.
 
 ### Install
 

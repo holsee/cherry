@@ -6,7 +6,12 @@ description: "Install, override, and extend the transit theme the Cherry way: it
 
 Zero-JS page transitions: a post's title morphs from the index into its page with cross-document View Transitions, reading progress drawn by a scroll timeline; Gabarito.
 
-See it live in the [exhibition](https://cherrybomb.dev/t/transit/), or back in [the gallery](/themes/). Like every official theme, transit implements theme contract 1.1: every colour flows through the tokens below, the stylesheet lives in the `theme` cascade layer so your unlayered overrides always win, and any template it does not ship falls back to the default theme's copy.
+<figure class="theme-hero">
+<picture><source srcset="/images/themes/transit-dark.png" media="(prefers-color-scheme: dark)"><img src="/images/themes/transit-light.png" alt="The transit theme home page" width="1200" height="750"></picture>
+<p class="theme-hero-actions"><a class="button" href="/t/transit/">Live demo</a></p>
+</figure>
+
+Like every official theme in [the gallery](/themes/), transit implements theme contract 1.1: every colour flows through the tokens below, the stylesheet lives in the `theme` cascade layer so your unlayered overrides always win, and any template it does not ship falls back to the default theme's copy.
 
 ### Install
 

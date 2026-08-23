@@ -6,7 +6,12 @@ description: "Install, override, and extend the constellation theme the Cherry w
 
 An observatory: a living constellation field behind a centred mast and a full-viewport home hero, Unbounded display over Geist.
 
-See it live in the [exhibition](https://cherrybomb.dev/t/constellation/), or back in [the gallery](/themes/). Like every official theme, constellation implements theme contract 1.1: every colour flows through the tokens below, the stylesheet lives in the `theme` cascade layer so your unlayered overrides always win, and any template it does not ship falls back to the default theme's copy.
+<figure class="theme-hero">
+<picture><source srcset="/images/themes/constellation-dark.png" media="(prefers-color-scheme: dark)"><img src="/images/themes/constellation-light.png" alt="The constellation theme home page" width="1200" height="750"></picture>
+<p class="theme-hero-actions"><a class="button" href="/t/constellation/">Live demo</a></p>
+</figure>
+
+Like every official theme in [the gallery](/themes/), constellation implements theme contract 1.1: every colour flows through the tokens below, the stylesheet lives in the `theme` cascade layer so your unlayered overrides always win, and any template it does not ship falls back to the default theme's copy.
 
 ### Install
 

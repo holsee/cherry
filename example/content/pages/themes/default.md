@@ -6,7 +6,12 @@ description: "Install, override, and extend the default theme the Cherry way: it
 
 Cherry's default theme — typography-first, light/dark via tokens.
 
-See it live in the [exhibition](https://cherrybomb.dev/t/default/), or back in [the gallery](/themes/). Like every official theme, default implements theme contract 1.0: every colour flows through the tokens below, the stylesheet lives in the `theme` cascade layer so your unlayered overrides always win, and any template it does not ship falls back to the default theme's copy.
+<figure class="theme-hero">
+<picture><source srcset="/images/themes/default-dark.png" media="(prefers-color-scheme: dark)"><img src="/images/themes/default-light.png" alt="The default theme home page" width="1200" height="750"></picture>
+<p class="theme-hero-actions"><a class="button" href="/t/default/">Live demo</a></p>
+</figure>
+
+Like every official theme in [the gallery](/themes/), default implements theme contract 1.0: every colour flows through the tokens below, the stylesheet lives in the `theme` cascade layer so your unlayered overrides always win, and any template it does not ship falls back to the default theme's copy.
 
 ### Install
 

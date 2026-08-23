@@ -6,7 +6,12 @@ description: "Install, override, and extend the desktop theme the Cherry way: it
 
 The retro OS, played straight: a window with a title bar and gadgets, bevelled controls, a Finder list view for the index, a dialog for 404; Pixelify Sans chrome over the system stack.
 
-See it live in the [exhibition](https://cherrybomb.dev/t/desktop/), or back in [the gallery](/themes/). Like every official theme, desktop implements theme contract 1.1: every colour flows through the tokens below, the stylesheet lives in the `theme` cascade layer so your unlayered overrides always win, and any template it does not ship falls back to the default theme's copy.
+<figure class="theme-hero">
+<picture><source srcset="/images/themes/desktop-dark.png" media="(prefers-color-scheme: dark)"><img src="/images/themes/desktop-light.png" alt="The desktop theme home page" width="1200" height="750"></picture>
+<p class="theme-hero-actions"><a class="button" href="/t/desktop/">Live demo</a></p>
+</figure>
+
+Like every official theme in [the gallery](/themes/), desktop implements theme contract 1.1: every colour flows through the tokens below, the stylesheet lives in the `theme` cascade layer so your unlayered overrides always win, and any template it does not ship falls back to the default theme's copy.
 
 ### Install
 

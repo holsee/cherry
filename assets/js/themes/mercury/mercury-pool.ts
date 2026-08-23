@@ -1,9 +1,11 @@
-// Mercury's pool: a WebGL chrome surface in the band behind the mast.
-// A height field of drifting blobs plus the pointer's dent plus click
-// ripples; the normal of that field indexes a procedural reflection
-// built from the theme's tokens (fg for the dark bands, surface for
-// the highlights, accent tinting the mid-tones). Re-read on theme
-// flips. Reduced motion: one frame. Off-screen: the loop idles.
+// Mercury's pool: a WebGL liquid-metal surface in the band behind the
+// mast. A domain-warped height field of slow blobs plus the pointer's
+// eased dent (a wake, not a spotlight) plus click ripples; the normal
+// of that field drives a soft studio ramp built from the theme's
+// tokens (fg for the depths, surface for the sheen, accent in the
+// fresnel rim). The range is deliberately compressed - mercury reads
+// in the mid-tones, and the type above it needs the headroom.
+// Re-read on theme flips. Reduced motion: one frame. Off-screen: idle.
 
 const band = document.querySelector<HTMLElement>(".mercury-band");
 const canvas = band?.querySelector<HTMLCanvasElement>(".mercury-pool");
@@ -34,26 +36,27 @@ uniform vec3 ground;
 
 float blob(vec2 p, vec2 c, float r) {
   float d = length(p - c);
-  return r * r / (d * d + 0.02);
+  return r * r / (d * d + 0.06);
 }
 
 float field(vec2 p) {
   vec2 A = vec2(size.x / size.y, 1.0);
+  // a gentle domain warp: the surface swirls instead of translating
+  p += 0.07 * vec2(sin(p.y * 2.6 + t * 0.13), cos(p.x * 2.1 + t * 0.10));
   float h = 0.0;
-  h += blob(p, A * vec2(0.12 + 0.08 * sin(t * 0.31), 0.5 + 0.2 * cos(t * 0.23)), 0.22);
-  h += blob(p, A * vec2(0.36 + 0.1 * cos(t * 0.27 + 1.0), 0.45 + 0.22 * sin(t * 0.19)), 0.26);
-  h += blob(p, A * vec2(0.6 + 0.08 * sin(t * 0.37 + 2.0), 0.6 + 0.18 * cos(t * 0.29)), 0.2);
-  h += blob(p, A * vec2(0.8 + 0.1 * sin(t * 0.17 + 3.0), 0.7 + 0.15 * sin(t * 0.41)), 0.18);
-  h += blob(p, A * vec2(0.95 + 0.06 * cos(t * 0.21 + 4.0), 0.35 + 0.2 * sin(t * 0.33)), 0.2);
-  // the pointer's dent
+  h += blob(p, A * vec2(0.14 + 0.06 * sin(t * 0.11), 0.55 + 0.12 * cos(t * 0.09)), 0.32);
+  h += blob(p, A * vec2(0.40 + 0.08 * cos(t * 0.10 + 1.0), 0.42 + 0.14 * sin(t * 0.08)), 0.36);
+  h += blob(p, A * vec2(0.66 + 0.06 * sin(t * 0.13 + 2.0), 0.62 + 0.11 * cos(t * 0.12)), 0.32);
+  h += blob(p, A * vec2(0.90 + 0.05 * cos(t * 0.09 + 4.0), 0.40 + 0.13 * sin(t * 0.10)), 0.30);
+  // the pointer's dent - its position is eased CPU-side into a wake
   float pd = length(p - pointer * A);
-  h -= 0.35 * exp(-pd * pd * 40.0);
-  // a ripple ring expanding from the last click
+  h -= 0.30 * exp(-pd * pd * 26.0);
+  // a ripple ring expanding from the last click, slow and wide
   float age = t - ripple.z;
-  if (age > 0.0 && age < 2.5) {
+  if (age > 0.0 && age < 3.5) {
     float rd = length(p - ripple.xy * A);
-    float ring = sin((rd - age * 0.35) * 40.0) * exp(-rd * 6.0) * exp(-age * 1.6);
-    h += ring * ripple.w * 0.4;
+    float ring = sin((rd - age * 0.30) * 30.0) * exp(-rd * 4.0) * exp(-age * 1.1);
+    h += ring * ripple.w * 0.45;
   }
   return h;
 }
@@ -65,15 +68,19 @@ void main() {
   float h = field(p);
   float hx = field(p + vec2(e, 0.0)) - h;
   float hy = field(p + vec2(0.0, e)) - h;
-  vec3 n = normalize(vec3(-hx, -hy, e * 2.2));
-  // a chrome reflection: bands by the normal's vertical component
-  float band = n.y * 0.5 + 0.5 + 0.15 * sin(n.x * 9.0);
-  float stripes = smoothstep(0.35, 0.5, band) - smoothstep(0.5, 0.62, band) * 0.6 + 0.5 * smoothstep(0.78, 0.95, band);
-  float fresnel = pow(1.0 - abs(n.z), 2.0);
-  vec3 color = mix(dark, light, clamp(stripes + fresnel * 0.6, 0.0, 1.0));
-  color = mix(color, tint, 0.18 * smoothstep(0.45, 0.7, band) * (1.0 - fresnel));
-  // the pool fades into the page at the bottom of the band
-  float fade = smoothstep(0.0, 0.28, uv.y);
+  // a flatter z keeps the normals soft: viscous, not spiky
+  vec3 n = normalize(vec3(-hx, -hy, e * 3.4));
+  // studio lighting: a wide sky ramp, one soft key light, a tinted rim
+  float sky = smoothstep(-0.6, 0.75, n.y);
+  vec3 color = mix(dark, light, 0.2 + 0.58 * sky);
+  vec3 L = normalize(vec3(-0.25, 0.5, 0.83));
+  float spec = pow(max(dot(n, L), 0.0), 24.0);
+  color += light * spec * 0.3;
+  float fresnel = pow(1.0 - abs(n.z), 3.0);
+  color = mix(color, tint, 0.16 * fresnel + 0.07 * (1.0 - sky));
+  // the pool fades into the page well before the lede, and the whole
+  // surface sits a step toward the ground so the type keeps headroom
+  float fade = smoothstep(0.05, 0.55, uv.y) * 0.88;
   color = mix(ground, color, fade);
   gl_FragColor = vec4(color, 1.0);
 }`;
@@ -102,7 +109,9 @@ void main() {
 
   const still = window.matchMedia("(prefers-reduced-motion: reduce)");
   let raf = 0;
-  let pointer: [number, number] = [-2, -2];
+  // target follows the pointer; drawn follows target with viscous lag
+  let target: [number, number] = [-2, -2];
+  let drawn: [number, number] = [-2, -2];
   const ripple: [number, number, number, number] = [0, 0, -10, 0];
 
   const loadTokens = (): void => {
@@ -120,8 +129,10 @@ void main() {
     gl.uniform2f(uSize, canvas.width, canvas.height);
   };
   const frame = (ms: number): void => {
+    // ease the drawn dent toward the pointer: the lag is the wake
+    drawn = [drawn[0] + (target[0] - drawn[0]) * 0.07, drawn[1] + (target[1] - drawn[1]) * 0.07];
     gl.uniform1f(uTime, ms / 1000);
-    gl.uniform2f(uPointer, pointer[0], pointer[1]);
+    gl.uniform2f(uPointer, drawn[0], drawn[1]);
     gl.uniform4f(uRipple, ripple[0], ripple[1], ripple[2], ripple[3]);
     gl.drawArrays(gl.TRIANGLES, 0, 3);
   };
@@ -143,7 +154,7 @@ void main() {
   };
   window.addEventListener("pointermove", (e) => {
     const [x, y] = toBand(e);
-    pointer = y >= -0.1 && y <= 1.1 ? [x, y] : [-2, -2];
+    target = y >= -0.1 && y <= 1.1 ? [x, y] : [-2, -2];
   });
   window.addEventListener("pointerdown", (e) => {
     const [x, y] = toBand(e);

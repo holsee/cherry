@@ -6,7 +6,12 @@ description: "Install, override, and extend the kage theme the Cherry way: its t
 
 Cinema: a dark-first scroll of scenes - every block rises into view, the mast hides as you read, a progress hairline - Instrument Serif italic over Hanken Grotesk.
 
-See it live in the [exhibition](https://cherrybomb.dev/t/kage/), or back in [the gallery](/themes/). Like every official theme, kage implements theme contract 1.1: every colour flows through the tokens below, the stylesheet lives in the `theme` cascade layer so your unlayered overrides always win, and any template it does not ship falls back to the default theme's copy.
+<figure class="theme-hero">
+<picture><source srcset="/images/themes/kage-dark.png" media="(prefers-color-scheme: dark)"><img src="/images/themes/kage-light.png" alt="The kage theme home page" width="1200" height="750"></picture>
+<p class="theme-hero-actions"><a class="button" href="/t/kage/">Live demo</a></p>
+</figure>
+
+Like every official theme in [the gallery](/themes/), kage implements theme contract 1.1: every colour flows through the tokens below, the stylesheet lives in the `theme` cascade layer so your unlayered overrides always win, and any template it does not ship falls back to the default theme's copy.
 
 ### Install
 

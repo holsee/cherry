@@ -6,7 +6,12 @@ description: "Install, override, and extend the loom theme the Cherry way: its t
 
 Woven cloth: a verlet cloth hangs behind the mast and ripples under the pointer, warp-thread rules, a weaver's draft for the index; Young Serif over Atkinson Hyperlegible Next.
 
-See it live in the [exhibition](https://cherrybomb.dev/t/loom/), or back in [the gallery](/themes/). Like every official theme, loom implements theme contract 1.1: every colour flows through the tokens below, the stylesheet lives in the `theme` cascade layer so your unlayered overrides always win, and any template it does not ship falls back to the default theme's copy.
+<figure class="theme-hero">
+<picture><source srcset="/images/themes/loom-dark.png" media="(prefers-color-scheme: dark)"><img src="/images/themes/loom-light.png" alt="The loom theme home page" width="1200" height="750"></picture>
+<p class="theme-hero-actions"><a class="button" href="/t/loom/">Live demo</a></p>
+</figure>
+
+Like every official theme in [the gallery](/themes/), loom implements theme contract 1.1: every colour flows through the tokens below, the stylesheet lives in the `theme` cascade layer so your unlayered overrides always win, and any template it does not ship falls back to the default theme's copy.
 
 ### Install
 

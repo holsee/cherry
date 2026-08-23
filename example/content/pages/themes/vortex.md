@@ -6,7 +6,12 @@ description: "Install, override, and extend the vortex theme the Cherry way: its
 
 Kinetic type: the site name spun on two counter-rotating text rings, titles that land letter by letter, Bricolage Grotesque at display size.
 
-See it live in the [exhibition](https://cherrybomb.dev/t/vortex/), or back in [the gallery](/themes/). Like every official theme, vortex implements theme contract 1.1: every colour flows through the tokens below, the stylesheet lives in the `theme` cascade layer so your unlayered overrides always win, and any template it does not ship falls back to the default theme's copy.
+<figure class="theme-hero">
+<picture><source srcset="/images/themes/vortex-dark.png" media="(prefers-color-scheme: dark)"><img src="/images/themes/vortex-light.png" alt="The vortex theme home page" width="1200" height="750"></picture>
+<p class="theme-hero-actions"><a class="button" href="/t/vortex/">Live demo</a></p>
+</figure>
+
+Like every official theme in [the gallery](/themes/), vortex implements theme contract 1.1: every colour flows through the tokens below, the stylesheet lives in the `theme` cascade layer so your unlayered overrides always win, and any template it does not ship falls back to the default theme's copy.
 
 ### Install
 

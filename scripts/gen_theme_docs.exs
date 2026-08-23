@@ -58,7 +58,12 @@ defmodule GenThemeDocs do
 
     #{description}
 
-    See it live in the [exhibition](https://cherrybomb.dev/t/#{name}/), or back in [the gallery](/themes/). Like every official theme, #{name} implements theme contract #{contract}: every colour flows through the tokens below, the stylesheet lives in the `theme` cascade layer so your unlayered overrides always win, and any template it does not ship falls back to the default theme's copy.
+    <figure class="theme-hero">
+    <picture><source srcset="/images/themes/#{name}-dark.png" media="(prefers-color-scheme: dark)"><img src="/images/themes/#{name}-light.png" alt="The #{name} theme home page" width="1200" height="750"></picture>
+    <p class="theme-hero-actions"><a class="button" href="/t/#{name}/">Live demo</a></p>
+    </figure>
+
+    Like every official theme in [the gallery](/themes/), #{name} implements theme contract #{contract}: every colour flows through the tokens below, the stylesheet lives in the `theme` cascade layer so your unlayered overrides always win, and any template it does not ship falls back to the default theme's copy.
 
     ### Install
 

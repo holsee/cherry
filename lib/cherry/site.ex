@@ -69,6 +69,15 @@ defmodule Cherry.Site do
                   "`position: :start` places it before them. `href` is site-relative " <>
                   "(\"guides/\" — base_path is applied) or absolute (http…), passed verbatim."
             ],
+            deploy_paths: [
+              type: {:list, :string},
+              default: [],
+              doc:
+                "Root-relative path prefixes the deployment serves from beside " <>
+                  "this build (a sibling build mounted under the same origin, " <>
+                  ~s{e.g. `deploy_paths: ["t/"]` for a theme exhibition at /t/). } <>
+                  "`cherry check` treats internal links under them as satisfied."
+            ],
             tokens: [
               type: {:custom, __MODULE__, :validate_tokens, []},
               default: [],
@@ -95,6 +104,7 @@ defmodule Cherry.Site do
     :root,
     :output,
     nav: [],
+    deploy_paths: [],
     tokens: [],
     custom_css: nil,
     icons: %Icons{}
@@ -112,6 +122,7 @@ defmodule Cherry.Site do
           author: String.t(),
           social_image: String.t() | nil,
           nav: [nav_entry()],
+          deploy_paths: [String.t()],
           tokens: [{String.t(), String.t()}],
           custom_css: String.t() | nil,
           icons: Icons.t(),
@@ -172,6 +183,7 @@ defmodule Cherry.Site do
            author: Keyword.get(validated, :author, validated[:title]),
            social_image: validated[:social_image],
            nav: Enum.map(validated[:nav], &Map.new/1),
+           deploy_paths: validated[:deploy_paths],
            tokens: validated[:tokens],
            custom_css: detect_custom_css(root),
            icons: Icons.detect(root),

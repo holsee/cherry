@@ -6,7 +6,12 @@ description: "Install, override, and extend the cathode theme the Cherry way: it
 
 A CRT: scanlines, phosphor bloom, a bezel around the page and a cursor that blinks after every title - Azeret Mono at 300 to 800.
 
-See it live in the [exhibition](https://cherrybomb.dev/t/cathode/), or back in [the gallery](/themes/). Like every official theme, cathode implements theme contract 1.1: every colour flows through the tokens below, the stylesheet lives in the `theme` cascade layer so your unlayered overrides always win, and any template it does not ship falls back to the default theme's copy.
+<figure class="theme-hero">
+<picture><source srcset="/images/themes/cathode-dark.png" media="(prefers-color-scheme: dark)"><img src="/images/themes/cathode-light.png" alt="The cathode theme home page" width="1200" height="750"></picture>
+<p class="theme-hero-actions"><a class="button" href="/t/cathode/">Live demo</a></p>
+</figure>
+
+Like every official theme in [the gallery](/themes/), cathode implements theme contract 1.1: every colour flows through the tokens below, the stylesheet lives in the `theme` cascade layer so your unlayered overrides always win, and any template it does not ship falls back to the default theme's copy.
 
 ### Install
 

@@ -6,7 +6,12 @@ description: "Install, override, and extend the erosion theme the Cherry way: it
 
 Sediment: thousands of grains carried on a slow flow field behind a soft-serif magazine layout, verdigris on stone.
 
-See it live in the [exhibition](https://cherrybomb.dev/t/erosion/), or back in [the gallery](/themes/). Like every official theme, erosion implements theme contract 1.1: every colour flows through the tokens below, the stylesheet lives in the `theme` cascade layer so your unlayered overrides always win, and any template it does not ship falls back to the default theme's copy.
+<figure class="theme-hero">
+<picture><source srcset="/images/themes/erosion-dark.png" media="(prefers-color-scheme: dark)"><img src="/images/themes/erosion-light.png" alt="The erosion theme home page" width="1200" height="750"></picture>
+<p class="theme-hero-actions"><a class="button" href="/t/erosion/">Live demo</a></p>
+</figure>
+
+Like every official theme in [the gallery](/themes/), erosion implements theme contract 1.1: every colour flows through the tokens below, the stylesheet lives in the `theme` cascade layer so your unlayered overrides always win, and any template it does not ship falls back to the default theme's copy.
 
 ### Install
 

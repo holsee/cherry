@@ -6,7 +6,12 @@ description: "Install, override, and extend the topo theme the Cherry way: its t
 
 Contour lines: a drifting marching-squares relief field across the page that clears around the reading column; Alegreya and Alegreya Sans.
 
-See it live in the [exhibition](https://cherrybomb.dev/t/topo/), or back in [the gallery](/themes/). Like every official theme, topo implements theme contract 1.1: every colour flows through the tokens below, the stylesheet lives in the `theme` cascade layer so your unlayered overrides always win, and any template it does not ship falls back to the default theme's copy.
+<figure class="theme-hero">
+<picture><source srcset="/images/themes/topo-dark.png" media="(prefers-color-scheme: dark)"><img src="/images/themes/topo-light.png" alt="The topo theme home page" width="1200" height="750"></picture>
+<p class="theme-hero-actions"><a class="button" href="/t/topo/">Live demo</a></p>
+</figure>
+
+Like every official theme in [the gallery](/themes/), topo implements theme contract 1.1: every colour flows through the tokens below, the stylesheet lives in the `theme` cascade layer so your unlayered overrides always win, and any template it does not ship falls back to the default theme's copy.
 
 ### Install
 

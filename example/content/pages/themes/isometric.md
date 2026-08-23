@@ -6,7 +6,12 @@ description: "Install, override, and extend the isometric theme the Cherry way: 
 
 A product site: left rail navigation over an animated isometric grid floor, teal on graphite, Sora throughout - all CSS.
 
-See it live in the [exhibition](https://cherrybomb.dev/t/isometric/), or back in [the gallery](/themes/). Like every official theme, isometric implements theme contract 1.1: every colour flows through the tokens below, the stylesheet lives in the `theme` cascade layer so your unlayered overrides always win, and any template it does not ship falls back to the default theme's copy.
+<figure class="theme-hero">
+<picture><source srcset="/images/themes/isometric-dark.png" media="(prefers-color-scheme: dark)"><img src="/images/themes/isometric-light.png" alt="The isometric theme home page" width="1200" height="750"></picture>
+<p class="theme-hero-actions"><a class="button" href="/t/isometric/">Live demo</a></p>
+</figure>
+
+Like every official theme in [the gallery](/themes/), isometric implements theme contract 1.1: every colour flows through the tokens below, the stylesheet lives in the `theme` cascade layer so your unlayered overrides always win, and any template it does not ship falls back to the default theme's copy.
 
 ### Install
 

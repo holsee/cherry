@@ -6,7 +6,12 @@ description: "Install, override, and extend the teletype theme the Cherry way: i
 
 All-mono devlog: paper printout by day, amber-phosphor terminal by night.
 
-See it live in the [exhibition](https://cherrybomb.dev/t/teletype/), or back in [the gallery](/themes/). Like every official theme, teletype implements theme contract 1.1: every colour flows through the tokens below, the stylesheet lives in the `theme` cascade layer so your unlayered overrides always win, and any template it does not ship falls back to the default theme's copy.
+<figure class="theme-hero">
+<picture><source srcset="/images/themes/teletype-dark.png" media="(prefers-color-scheme: dark)"><img src="/images/themes/teletype-light.png" alt="The teletype theme home page" width="1200" height="750"></picture>
+<p class="theme-hero-actions"><a class="button" href="/t/teletype/">Live demo</a></p>
+</figure>
+
+Like every official theme in [the gallery](/themes/), teletype implements theme contract 1.1: every colour flows through the tokens below, the stylesheet lives in the `theme` cascade layer so your unlayered overrides always win, and any template it does not ship falls back to the default theme's copy.
 
 ### Install
 

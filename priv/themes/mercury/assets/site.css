@@ -1514,21 +1514,26 @@ body {
   top: 0;
   left: 0;
   right: 0;
-  height: 24rem;
+  /* Inner pages keep a slim strip of pool behind the mast; only the
+   * home hero swims in it, so content text always starts on solid
+   * ground. */
+  height: 12rem;
   z-index: -1;
   overflow: hidden;
   background:
-    linear-gradient(to bottom, transparent 60%, var(--color-bg)),
+    linear-gradient(to bottom, transparent 38%, var(--color-bg) 82%),
     linear-gradient(
       172deg,
-      var(--color-surface) 0%,
-      color-mix(in srgb, var(--color-fg) 70%, var(--color-surface)) 22%,
-      var(--color-surface) 30%,
-      color-mix(in srgb, var(--color-fg) 85%, var(--color-accent)) 48%,
-      color-mix(in srgb, var(--color-surface) 80%, var(--color-accent)) 56%,
-      color-mix(in srgb, var(--color-fg) 60%, var(--color-surface)) 78%,
-      var(--color-surface) 100%
+      color-mix(in srgb, var(--color-surface) 75%, var(--color-bg)) 0%,
+      color-mix(in srgb, var(--color-fg) 40%, var(--color-surface)) 30%,
+      color-mix(in srgb, var(--color-surface) 85%, var(--color-accent)) 52%,
+      color-mix(in srgb, var(--color-fg) 30%, var(--color-surface)) 76%,
+      color-mix(in srgb, var(--color-surface) 80%, var(--color-bg)) 100%
     );
+}
+
+.page-home .mercury-band {
+  height: 24rem;
 }
 
 .mercury-pool {
@@ -1653,19 +1658,11 @@ video.video-local {
 }
 
 .chrome-type {
-  color: transparent;
-  background: linear-gradient(
-    178deg,
-    var(--color-surface) 0%,
-    color-mix(in srgb, var(--color-fg) 75%, var(--color-surface)) 28%,
-    var(--color-surface) 42%,
-    color-mix(in srgb, var(--color-fg) 88%, var(--color-accent)) 52%,
-    color-mix(in srgb, var(--color-fg) 55%, var(--color-surface)) 80%,
-    var(--color-surface) 100%
-  );
-  -webkit-background-clip: text;
-  background-clip: text;
-  filter: drop-shadow(0 2px 0 color-mix(in srgb, var(--color-fg) 35%, transparent));
+  color: var(--color-fg);
+  text-shadow:
+    0 1px 0 color-mix(in srgb, var(--color-bg) 60%, transparent),
+    0 0 24px color-mix(in srgb, var(--color-bg) 85%, transparent),
+    0 0 48px color-mix(in srgb, var(--color-bg) 70%, transparent);
 }
 
 .hero-lede {
@@ -1673,12 +1670,15 @@ video.video-local {
   margin: 1.25rem 0 0;
   font-size: 1.2rem;
   line-height: 1.5;
-  color: var(--color-muted);
+  color: color-mix(in srgb, var(--color-fg) 82%, var(--color-muted));
+  text-shadow:
+    0 0 16px color-mix(in srgb, var(--color-bg) 90%, transparent),
+    0 0 32px color-mix(in srgb, var(--color-bg) 75%, transparent);
   text-wrap: pretty;
 }
 
 @media (max-width: 44rem) {
-  .mercury-band {
+  .page-home .mercury-band {
     height: 26rem;
   }
 
@@ -1704,8 +1704,7 @@ video.video-local {
 
   .chrome-type {
     color: var(--color-fg);
-    background: none;
-    filter: none;
+    text-shadow: none;
   }
 
   .site-header .wrap {
