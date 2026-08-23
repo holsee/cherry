@@ -13,6 +13,19 @@ const blocks = Array.from(
   )
 );
 
+// Blocks already in the first viewport are never hidden: they get both
+// classes in the same frame, before first paint, so nothing depends on
+// an observer tick that some engines skip on a fresh navigation.
+const fold = window.innerHeight;
+const below = blocks.filter((el) => {
+  el.classList.add("kage-scene");
+  if (el.getBoundingClientRect().top < fold) {
+    el.classList.add("is-seen");
+    return false;
+  }
+  return true;
+});
+
 if ("IntersectionObserver" in window) {
   let pending = 0;
   const seen = new IntersectionObserver(
@@ -30,27 +43,18 @@ if ("IntersectionObserver" in window) {
     },
     { rootMargin: "0px 0px -10% 0px", threshold: 0.05 }
   );
-  for (const el of blocks) {
-    el.classList.add("kage-scene");
-    seen.observe(el);
-  }
-  // Some engines skip the first observer tick for content already in
-  // view on a fresh navigation or a bfcache restore; anything in the
-  // first viewport is shown regardless, shortly after load.
-  const reveal = (): void => {
-    const h = window.innerHeight;
-    for (const el of blocks) {
-      if (el.classList.contains("is-seen")) continue;
-      if (el.getBoundingClientRect().top < h) {
+  for (const el of below) seen.observe(el);
+  // Belt and braces: a bfcache restore shows whatever is on screen.
+  window.addEventListener("pageshow", () => {
+    for (const el of below) {
+      if (!el.classList.contains("is-seen") && el.getBoundingClientRect().top < window.innerHeight) {
         el.classList.add("is-seen");
         seen.unobserve(el);
       }
     }
-  };
-  window.addEventListener("load", () => setTimeout(reveal, 400));
-  window.addEventListener("pageshow", reveal);
+  });
 } else {
-  for (const el of blocks) el.classList.add("kage-scene", "is-seen");
+  for (const el of below) el.classList.add("is-seen");
 }
 
 const progress = document.querySelector<HTMLElement>(".kage-progress");
