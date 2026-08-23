@@ -5,7 +5,7 @@ All notable changes to Cherry are documented here. Format follows
 
 Entries are terse one-liners linked to their PR: `- Thing that changed. (#12)`
 
-## [Unreleased]
+## [0.6.0] — 2026-08-23
 
 ### Added
 - `deploy_paths` site config: declare root-relative prefixes a deployment serves beside the build (`deploy_paths: ["t/"]` for the theme exhibition at /t/), and `cherry check` treats internal links under them as satisfied - so the gallery's demo links are plain root-relative URLs that work locally and deployed, with no exhibition-specific link rewriting. (#142)
