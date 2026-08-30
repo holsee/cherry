@@ -53,6 +53,20 @@ defmodule Cherry.Site do
               type: :string,
               doc: "Site-relative path to a fallback social card image, e.g. `card.png`."
             ],
+            analytics: [
+              type: {:custom, Cherry.Analytics, :validate, []},
+              doc:
+                "Optional visitor analytics, one provider: " <>
+                  ~s(`analytics: [cloudflare: "beacon-token"]`. ) <>
+                  "`cloudflare`, `plausible` and `goatcounter` are cookieless and " <>
+                  "render their beacon directly; `google` (a GA4 `G-…` id) sets " <>
+                  "cookies, so it ships a consent gate instead and does not load " <>
+                  "until the visitor accepts. `plausible` and `goatcounter` can be " <>
+                  "self-hosted, so both take an origin override — " <>
+                  ~s(`[plausible: [id: "example.com", host: "https://stats.example.com"]]`; ) <>
+                  "GoatCounter needs no `id:` beside a `host:`. Omitted means no " <>
+                  "analytics at all."
+            ],
             nav: [
               type:
                 {:list,
@@ -89,6 +103,7 @@ defmodule Cherry.Site do
             ]
           )
 
+  alias Cherry.Analytics
   alias Cherry.Site.Icons
 
   @enforce_keys [:title, :url, :base_path, :root, :output]
@@ -101,6 +116,7 @@ defmodule Cherry.Site do
     :description,
     :author,
     :social_image,
+    :analytics,
     :root,
     :output,
     nav: [],
@@ -121,6 +137,7 @@ defmodule Cherry.Site do
           description: String.t() | nil,
           author: String.t(),
           social_image: String.t() | nil,
+          analytics: Analytics.t() | nil,
           nav: [nav_entry()],
           deploy_paths: [String.t()],
           tokens: [{String.t(), String.t()}],
@@ -182,6 +199,7 @@ defmodule Cherry.Site do
            description: validated[:description],
            author: Keyword.get(validated, :author, validated[:title]),
            social_image: validated[:social_image],
+           analytics: validated[:analytics],
            nav: Enum.map(validated[:nav], &Map.new/1),
            deploy_paths: validated[:deploy_paths],
            tokens: validated[:tokens],

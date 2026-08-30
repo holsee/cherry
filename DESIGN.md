@@ -299,6 +299,16 @@ This directly answers Jekyll's frozen-copies problem and shadcn's unanswered FAQ
 
 The default is neither. A site that sets nothing pays for nothing, and the core stays dependency-free.
 
+**Analytics:** optional, off by default, and classified by what a provider stores rather than by what it is called.
+
+`analytics: [cloudflare: "token"]` — or `plausible:`, or `goatcounter:` — renders one deferred beacon into the framework-owned head, beside the SEO block and the font preloads, so it reaches every page of every theme including the 404 that carries no SEO head, and no theme has to cooperate. These three set no cookies, touch no storage and do not fingerprint, so the ePrivacy Directive's Article 5(3) never fires and **no consent banner is shown**. A banner for a cookieless beacon is theatre, and it trains people to dismiss the banners that matter.
+
+`analytics: [google: "G-…"]` sets `_ga` cookies, so it is the one provider that ships a consent gate (`assets/js/consent.ts`, ~3 kB, inlined). The gate is real rather than decorative: GA is not in the document at all until the visitor accepts, because a banner that appears after the tag has already fired is decoration, not compliance. Accept and reject are the same button at the same size — under EDPB and CNIL guidance refusing must be exactly as easy as agreeing. The choice lives in `localStorage`, which needs no consent of its own because recording consent is itself the strictly-necessary exemption; `window.cherryConsent.reset()`, or any element marked `data-cherry-consent-reopen`, withdraws it.
+
+Plausible and GoatCounter can be run on your own machines, so both take an origin override — `analytics: [plausible: [id: "example.com", host: "https://stats.example.com"]]`. Cloudflare and GA have no self-hosted edition, so `host:` is *refused* for them rather than silently ignored; the registry records self-hostability beside the consent class precisely so the config can say no. GoatCounter needs no `id:` beside a `host:` (a self-hosted instance is the site), while Plausible always needs one, because `data-domain` is how it tells sites apart.
+
+The default is neither, and one provider at a time: two analytics scripts on a page is a mistake every time, so the config says so instead of merging them.
+
 ---
 
 ## 9. Hosting: GH Pages first-class, anywhere trivially

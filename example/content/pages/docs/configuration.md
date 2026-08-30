@@ -36,6 +36,7 @@ The file is schema-validated at load: an unknown key or a bad value is a build e
 | `search` | string | `"cherry"` builds the index in-process with no Node anywhere; `"pagefind"` shells out to Pagefind at the end of the build. Unset means no search. |
 | `base_path` | string | For project pages served under a subpath, e.g. `"/repo"`. Every link, image, feed URL, and component src is rewritten. |
 | `social_image` | string | Site-relative fallback social card, e.g. `"og-card.png"`. Pages without their own image use it, and it upgrades the Twitter card to `summary_large_image`. |
+| `analytics` | keyword list | One analytics provider, e.g. `[cloudflare: "token"]`. `cloudflare`, `plausible` and `goatcounter` are cookieless and ship no consent banner; `google` sets cookies, so it ships a consent gate and does not load until the visitor accepts. See the [analytics guide](/guides/analytics/). |
 | `nav` | list | Extra nav entries; see below. |
 | `tokens` | keyword list | Theme token overrides; see below. |
 
