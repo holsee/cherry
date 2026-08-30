@@ -172,7 +172,7 @@ defmodule Cherry.MixProject do
       # priv/ is listed by subdirectory so local dialyzer PLT caches
       # (priv/plts) never ship in the package.
       files:
-        ~w(lib priv/themes priv/serve priv/search mix.exs README.md LICENSE-MIT LICENSE-APACHE assets/LICENSE CHANGELOG.md)
+        ~w(lib priv/themes priv/serve priv/search priv/consent mix.exs README.md LICENSE-MIT LICENSE-APACHE assets/LICENSE CHANGELOG.md)
     ]
   end
 end

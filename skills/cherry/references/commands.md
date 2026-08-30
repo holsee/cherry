@@ -62,7 +62,8 @@ an invalid write is rolled back and reported, so the file is never
 left broken.
 
 Writable keys are the scalar ones: ["title", "url", "description", "author", "theme", "search", "base_path", "social_image"].
-Structured settings like `nav:` are refused rather than rewritten,
+Structured settings like `nav:` and `analytics:` are read but refused
+for writing rather than rewritten,
 because rewriting them would lose the formatting and comments around
 them; edit those in the file.
 

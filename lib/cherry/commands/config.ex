@@ -16,7 +16,8 @@ defmodule Cherry.Commands.Config do
   left broken.
 
   Writable keys are the scalar ones: #{inspect(~w(title url description author theme search base_path social_image))}.
-  Structured settings like `nav:` are refused rather than rewritten,
+  Structured settings like `nav:` and `analytics:` are read but refused
+  for writing rather than rewritten,
   because rewriting them would lose the formatting and comments around
   them; edit those in the file.
 
@@ -38,11 +39,12 @@ defmodule Cherry.Commands.Config do
 
   @behaviour Cherry.CLI.Command
 
+  alias Cherry.Analytics
   alias Cherry.CLI.{Context, Error}
   alias Cherry.Site
 
   @writable ~w(title url description author theme search base_path social_image)
-  @readable @writable ++ ~w(nav tokens)
+  @readable @writable ++ ~w(analytics nav tokens)
 
   @impl Cherry.CLI.Command
   @spec doc() :: String.t()
@@ -137,9 +139,24 @@ defmodule Cherry.Commands.Config do
 
   defp source(opts), do: Keyword.get(opts, :source, File.cwd!())
 
+  defp readable_value(site, "analytics"), do: analytics_value(site.analytics)
   defp readable_value(site, "nav"), do: site.nav
   defp readable_value(site, "tokens"), do: Map.new(site.tokens)
   defp readable_value(site, key), do: Map.get(site, String.to_existing_atom(key))
+
+  # A plain map, not the struct: this is what `--json` hands an agent, and
+  # the consent class is the part worth reading — it decides whether a
+  # consent gate ships with the beacon.
+  defp analytics_value(nil), do: nil
+
+  defp analytics_value(%Analytics{} = analytics) do
+    %{
+      provider: Atom.to_string(analytics.provider),
+      id: analytics.id,
+      host: analytics.host,
+      consent_required: Analytics.consent_required?(analytics)
+    }
+  end
 
   defp token_value(site, token) do
     Enum.find_value(site.tokens, fn {name, value} -> name == token && value end)

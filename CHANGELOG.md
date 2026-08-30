@@ -5,6 +5,11 @@ All notable changes to Cherry are documented here. Format follows
 
 Entries are terse one-liners linked to their PR: `- Thing that changed. (#12)`
 
+## [Unreleased]
+
+### Added
+- `analytics:` site config: one provider, rendered into the framework-owned head so it reaches every page of every theme (including the 404, which carries no SEO head) with no theme cooperating. Providers are classified by what they store, not by vendor: `cloudflare`, `plausible` and `goatcounter` are cookieless and render their beacon directly with no consent banner at all, while `google` (a GA4 `G-…` id) sets cookies and so ships a consent gate instead — GA is not in the document until the visitor accepts, accept and reject are the same button at the same size, and the choice is withdrawable via `window.cherryConsent.reset()` or any `data-cherry-consent-reopen` element. Omitting the key emits nothing. `plausible` and `goatcounter` take a `host:` override for self-hosted instances (refused for `cloudflare` and `google`, which have no self-hosted edition). `cherry config analytics` reads it back as a map carrying its consent class; like `nav:` it is structured, so it is read but never rewritten. See ADR 0008.
+
 ## [0.6.1] — 2026-08-23
 
 ### Fixed

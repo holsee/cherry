@@ -44,6 +44,7 @@ for (const theme of themes) {
   }
 }
 
+buildSync({ ...opts, entryPoints: ["assets/js/consent.ts"], outfile: "priv/consent/consent.js" });
 buildSync({ ...opts, entryPoints: ["assets/js/livereload.ts"], outfile: "priv/serve/livereload.js" });
 buildSync({ ...opts, entryPoints: ["assets/js/search.ts"], outfile: "priv/search/search.js" });
 

@@ -29,6 +29,7 @@ Every guide is a worked project: the commands, their real output, and what it me
 <ul class="guide-list">
 <li><a href="/guides/deploy/">Deploying to GitHub Pages</a><p>gen.action writes the workflow; Pages setup, custom domains, and project-page base paths.</p></li>
 <li><a href="/guides/deploy-cloudflare/">Deploying to Cloudflare</a><p>gen.action --host cloudflare writes wrangler.jsonc and the workflow; Workers static assets, _headers and _redirects, custom domains.</p></li>
+<li><a href="/guides/analytics/">Adding analytics</a><p>One key, four providers, and the rule that decides whether a consent banner ships at all: cookieless beacons, self-hosted instances, and a GA gate that actually gates.</p></li>
 <li><a href="/guides/agents/">Scripting and agents</a><p>The --json envelope contract, schemas, llms.txt, and markdown mirrors, from jq one-liners to the shipped agent skill.</p></li>
 <li><a href="/guides/elixir/">Using Cherry from Elixir</a><p>The hex package behind the binary: cherry_new scaffolding, mix task parity, and the library API for custom tooling.</p></li>
 <li><a href="/guides/upgrade/">Staying current</a><p>cherry upgrade swaps the binary in place, checksum-verified against the release.</p></li>

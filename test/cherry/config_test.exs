@@ -30,6 +30,23 @@ defmodule Cherry.ConfigTest do
     test "refuses a key that is not config", %{tmp_dir: tmp} do
       assert {:error, %Error{code: :unknown_key, exit: 2}} = run(["nonsense"], site(tmp))
     end
+
+    test "reads analytics as a map carrying its consent class", %{tmp_dir: tmp} do
+      source = site(tmp, ~s|, analytics: [google: "G-ABC123"]|)
+
+      assert {:ok, %{key: "analytics", value: value}} = run(["analytics"], source)
+
+      assert value == %{
+               provider: "google",
+               id: "G-ABC123",
+               host: nil,
+               consent_required: true
+             }
+    end
+
+    test "reads analytics as nil when the site sets none", %{tmp_dir: tmp} do
+      assert {:ok, %{key: "analytics", value: nil}} = run(["analytics"], site(tmp))
+    end
   end
 
   describe "writing" do
@@ -159,17 +176,27 @@ defmodule Cherry.ConfigTest do
     end
   end
 
+  test "refuses to write analytics, the way it refuses any structured key", %{tmp_dir: tmp} do
+    source = site(tmp)
+    before = File.read!(Path.join(source, "cherry.exs"))
+
+    assert {:error, %Error{code: :unknown_key}} =
+             run(["analytics", ~s([cloudflare: "x"])], source)
+
+    assert File.read!(Path.join(source, "cherry.exs")) == before
+  end
+
   defp run(args, source) do
     Config.run(%Context{verb: "config", args: args, opts: [source: source]})
   end
 
-  defp site(tmp) do
+  defp site(tmp, extra \\ "") do
     source = Path.join(tmp, "site")
     File.mkdir_p!(Path.join(source, "content/posts"))
 
     File.write!(
       Path.join(source, "cherry.exs"),
-      ~s([title: "Orchard", url: "https://orchard.example"])
+      ~s([title: "Orchard", url: "https://orchard.example"#{extra}])
     )
 
     source

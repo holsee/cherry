@@ -11,6 +11,7 @@ defmodule Cherry.Theme.Renderer do
   way a Phoenix developer expects.
   """
 
+  alias Cherry.Analytics
   alias Cherry.Site
   alias Cherry.Theme
   alias Cherry.Theme.{ComponentLoader, RenderContext, Resolver}
@@ -90,7 +91,9 @@ defmodule Cherry.Theme.Renderer do
         site: site,
         inner: inner,
         page_title: context.page_title,
-        head_extra: font_preloads(site, theme) <> context.head_extra,
+        head_extra:
+          font_preloads(site, theme) <>
+            Analytics.head(site.analytics) <> context.head_extra,
         nav: context.nav,
         search: context.search,
         page_class: context.page_class
